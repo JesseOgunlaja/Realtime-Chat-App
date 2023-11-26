@@ -1,0 +1,51 @@
+.title {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.form label {
+  font-size: 18px;
+}
+
+.add-friend-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.text-input {
+  padding: 5px;
+  font-size: 20px;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.submit-button {
+  background: darkblue;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 20px;
+  color: white;
+}
+
+.submit-button:disabled {
+  opacity: 0.7;
+}
+
+@media (min-height: 100vw), (max-width: 800px) {
+  .page {
+    width: 100vw;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+  .form label {
+    text-align: center;
+  }
+}

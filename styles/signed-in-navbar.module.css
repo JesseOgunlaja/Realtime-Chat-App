@@ -1,0 +1,228 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: 100vh;
+  border-right: 1px solid black;
+}
+
+.logo {
+  margin-bottom: 50px;
+}
+
+.chats-text,
+.overview {
+  opacity: 0.8;
+  font-size: 15px;
+  padding: 2.5px;
+  margin-bottom: 10px;
+}
+
+.chats {
+  margin-bottom: 10px;
+}
+
+.chat {
+  font-size: 19px;
+  padding: 2.5px;
+  border-radius: 5px;
+  display: block;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.chat svg {
+  margin-left: auto;
+}
+
+.overview-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: auto;
+}
+
+.add-friend,
+.friends,
+.friend-requests,
+.settings {
+  display: flex;
+  gap: 4px;
+  height: 35px;
+  text-decoration: none;
+  color: white;
+  border-radius: 5px;
+}
+
+.add-friend-logo,
+.friends-logo,
+.friend-request-logo,
+.settings-logo {
+  border: 1px rgba(128, 128, 128, 0.7) solid;
+  color: rgba(128, 128, 128, 0.8);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1px 2.5px;
+}
+
+.add-friend-text,
+.friends-text,
+.friend-request-text,
+.settings-text {
+  font-size: 20px;
+  text-align: center;
+  text-decoration: none;
+  color: white;
+  height: 35px;
+  transform: translateY(6px);
+}
+
+.user-snippet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  border-top: 1px solid black;
+}
+
+.display-name {
+  font-size: 20px;
+}
+
+#faIcon {
+  font-size: 25px;
+  cursor: pointer;
+  /* user-select: none; */
+}
+
+.popup {
+  position: absolute;
+  left: 280px;
+  bottom: 40px;
+  background: #333;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.popup > * {
+  padding: 10px 30px;
+  font-size: 16px;
+  background: none;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+}
+
+.popup > :nth-child(1) {
+  border-bottom: 2px solid #232323;
+}
+
+.pending-friend-requests {
+  border-radius: 50%;
+  background: rgb(0, 140, 255);
+  width: 25px;
+  height: 25px;
+  font-size: 15px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(2px, -3px);
+  color: white !important;
+}
+
+.friend-request-text {
+  text-align: center;
+}
+
+.nav2,
+.top-bar,
+.menu-icon,
+.mobile-nav-container {
+  display: none;
+}
+
+@media (min-width: 100vh) {
+  .chat svg {
+    display: none;
+  }
+  .chat:hover svg {
+    display: block;
+  }
+  .add-friend:hover > .add-friend-text,
+  .friends:hover > .friends-text,
+  .friend-requests:hover > .friend-request-text span,
+  .settings:hover > .settings-text {
+    color: rgb(0, 140, 255);
+  }
+
+  .add-friend:hover,
+  .friends:hover,
+  .friend-requests:hover,
+  .settings:hover {
+    background: rgba(128, 128, 128, 0.1);
+  }
+
+  .chat:hover {
+    color: rgb(0, 140, 255) !important;
+    background: rgba(128, 128, 128, 0.1);
+  }
+}
+
+@media (min-height: 100vw), (max-width: 800px) {
+  .chat svg {
+    display: block;
+  }
+  .nav {
+    display: none;
+  }
+
+  .mobile-nav-container {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 2;
+  }
+
+  .top-bar {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #222;
+    width: 100%;
+  }
+
+  .menu-icon {
+    cursor: pointer;
+    font-size: 20px;
+    display: inline;
+  }
+
+  .nav2 {
+    position: absolute;
+    top: 76.5px;
+    display: flex;
+    left: 0;
+    height: calc(100vh - 76.5px);
+    background: #222;
+    width: 100vw;
+    padding: 10px;
+    flex-direction: column;
+    z-index: 2;
+    transition-property: opacity, visibility;
+    transition-duration: 250ms;
+  }
+}

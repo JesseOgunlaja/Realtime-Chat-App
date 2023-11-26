@@ -1,0 +1,135 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.header {
+  width: 100%;
+  border-bottom: 2px solid black;
+  padding: 10px;
+  background: #222;
+  margin-bottom: 10px;
+  margin-bottom: auto;
+}
+
+.header p {
+  font-size: 25px;
+}
+
+.form {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border-top: 1px solid rgb(0, 0, 0);
+  padding-top: 10px;
+  margin-top: 15px;
+  font-size: 20px;
+}
+
+.form textarea {
+  width: 80%;
+  resize: none;
+  height: 150px;
+  border-radius: 12.5px;
+  padding: 10px;
+  font-size: 19px;
+  display: block;
+}
+
+.form svg {
+  cursor: pointer;
+  position: absolute;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5px 15px;
+  border-radius: 7.5px;
+  font-size: 20px;
+  bottom: 10px;
+  right: calc(10px + 10%);
+  color: white;
+  font-size: 18px;
+  box-sizing: content-box;
+}
+
+.form svg > * {
+  transform: translateX(3px);
+}
+
+.messages {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+.my-message,
+.other-message {
+  display: flex;
+  width: fit-content;
+  max-width: 80%;
+  flex-direction: column;
+  padding: 5px;
+  color: white;
+  gap: 5px;
+  align-items: flex-end;
+}
+
+.my-message {
+  margin-left: auto;
+  transform: translate(-5px, -5px);
+  background: #215046;
+  border-radius: 5px 5px 0px 5px;
+}
+
+.other-message {
+  border-radius: 5px 5px 5px 0px;
+  transform: translate(5px, -5px);
+  background: #363638;
+}
+
+.message-text {
+  font-size: 18px;
+}
+
+.my-message .message-text {
+  text-align: right;
+  width: 100%;
+}
+
+.other-message .message-text {
+  text-align: left;
+  width: 100%;
+}
+
+.message-timestamp {
+  font-size: 12px;
+}
+
+.messages::-webkit-scrollbar {
+  background: transparent;
+  width: 3px;
+}
+
+.messages::-webkit-scrollbar-thumb {
+  background-color: #111;
+}
+
+@media (min-width: 100vh) and (min-width: 800px) {
+  .page {
+    width: calc(99vw - 300px);
+    height: 95vh;
+  }
+}
+
+@media (min-height: 100vw), (max-width: 800px) {
+  .page {
+    width: 99vw;
+    height: calc(95vh - 76.5px);
+  }
+}

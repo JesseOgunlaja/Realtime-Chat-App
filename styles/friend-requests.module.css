@@ -1,0 +1,45 @@
+.title {
+  font-size: 35px;
+  margin-bottom: 10px;
+}
+
+.all-requests {
+  display: flex;
+  flex-direction: column;
+}
+
+.incoming-friend-request,
+.outgoing-friend-request {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.incoming-friend-request p,
+.outgoing-friend-request p {
+  font-size: 20px;
+}
+
+.incoming-friend-request > :nth-child(2) {
+  background: rgb(0, 110, 255);
+  border-radius: 5px;
+  height: 30px;
+  width: 30px;
+  padding: 2.5px;
+  cursor: pointer;
+}
+
+.incoming-friend-request > :nth-child(3),
+.outgoing-friend-request > :nth-child(2) {
+  background: red;
+  border-radius: 5px;
+  height: 30px;
+  width: 30px;
+  padding: 2.5px;
+  cursor: pointer;
+}
+
+.no-friend-requests {
+  font-size: 20px;
+  opacity: 0.8;
+}

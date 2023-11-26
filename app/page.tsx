@@ -1,95 +1,62 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+import styles from "@/styles/home.module.css";
+import Link from "next/link";
+import Balancer from "react-wrap-balancer";
 
-export default function Home() {
+export default async function Home() {
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className={styles.container}>
+      <h1 className={styles.catchphrase}>Chat. Connect. Create.</h1>
+      <Balancer className={styles.description}>
+        The ability to communicate at the tip of your finger.
+      </Balancer>
+      <br />
+      <Link href="/signup" className={styles["start-now"]}>
+        Get started now
+      </Link>
+      <div className={styles["selling-points"]}>
+        <div className={styles["selling-point"]}>
+          <p className={styles["selling-point-title"]}>Realtime Chats</p>
+          <Balancer
+            ratio={0.5}
+            preferNative={false}
+            className={styles["selling-point-description"]}
           >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+            Our lightning fast servers allows you to communicate with your
+            friends in realtime.
+          </Balancer>
+        </div>
+        <div className={styles["selling-point"]}>
+          <p className={styles["selling-point-title"]}>Secure encryption</p>
+          <Balancer
+            ratio={0.5}
+            preferNative={false}
+            className={styles["selling-point-description"]}
+          >
+            Our end to end encryption allows us to keep your data safe from
+            attackers.
+          </Balancer>
+        </div>
+        <div className={styles["selling-point"]}>
+          <p className={styles["selling-point-title"]}>Flawless Accesibility</p>
+          <Balancer
+            ratio={0.4}
+            preferNative={false}
+            className={styles["selling-point-description"]}
+          >
+            Our chat features allow your chats to always be accessible at any
+            time.
+          </Balancer>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className={styles["our-goal"]}>
+        <h4 className={styles["our-goal-title"]}>
+          Enabling Universal Communication
+        </h4>
+        <Balancer className={styles["our-goal-description"]}>
+          Our goal is to allow people to commuincate with others all around the
+          world safely and securely, and most importantly for free.
+        </Balancer>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </div>
+  );
 }

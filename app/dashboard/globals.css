@@ -1,0 +1,11 @@
+@media (min-width: 100vh) and (min-width: 801px) {
+  main {
+    margin-left: 300px;
+  }
+}
+
+@media (max-width: 100vh), (max-width: 800px) {
+  main {
+    margin-top: 76.5px;
+  }
+}

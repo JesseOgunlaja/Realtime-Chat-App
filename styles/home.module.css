@@ -1,0 +1,187 @@
+.container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-bottom: 110px;
+  width: 99vw;
+}
+
+.catchphrase {
+  width: 65vw;
+  text-align: center;
+  display: block;
+  position: relative;
+  margin-top: 10px;
+  font-size: 60px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 2.5px;
+  background: linear-gradient(70deg, #2e3192, #1bffff, #2e3192);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  color: transparent;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.description {
+  text-align: center;
+  display: block;
+  font-size: 27.5px;
+}
+
+.start-now {
+  background: darkblue;
+  padding: 12.5px;
+  border-radius: 7.5px;
+  text-decoration: none;
+  color: white;
+  font-size: 25px;
+  width: 250px;
+  text-align: center;
+  transition: transform 500ms;
+  /* animation: slide-background-left 500ms forwards; */
+}
+
+.start-now:hover {
+  animation: slide-background-right 0.5s ease-in forwards;
+  transform: scale(1.04);
+}
+
+.selling-points {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+  /* flex: 1; */
+}
+
+.selling-point {
+  background: rgb(20, 20, 20) !important;
+  padding: 20px;
+  border-radius: 20px;
+  width: 30%;
+  text-align: center;
+  flex: 1;
+  position: relative;
+  transition: transform 500ms;
+}
+
+.selling-point-title {
+  font-weight: 600;
+  font-size: 25px;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.selling-point:nth-child(1)::after,
+.selling-point:nth-child(2)::after,
+.selling-point:nth-child(3)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  padding: 3px;
+  background: linear-gradient(70deg, #2e3192, #1bffff, #2e3192);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  background-size: 200% 100%;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+.our-goal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.our-goal-title {
+  font-weight: 600;
+  font-size: 32.5px;
+}
+
+.our-goal-description {
+  text-align: center;
+  width: 70vw;
+  font-size: 25px;
+}
+
+@keyframes slide-background-left {
+  0% {
+    background-size: 650%;
+  }
+  40% {
+    background-size: 650%;
+  }
+  100% {
+    background-size: 100%;
+  }
+}
+
+@keyframes slide-background-right {
+  0% {
+    background-size: 100%;
+  }
+  80% {
+    background-size: 650%;
+  }
+  100% {
+    background-size: 650%;
+  }
+}
+
+@media (min-width: 100vh) {
+  .catchphrase::before,
+  .catchphrase::after {
+    content: '"';
+  }
+  .selling-point:hover {
+    transform: scale(1.04);
+  }
+}
+
+@media (min-height: 100vw), (max-width: 800px) {
+  .catchphrase {
+    width: 100vw;
+    font-size: 55px;
+    font-weight: 500;
+  }
+  .selling-points {
+    flex-direction: column;
+  }
+  .selling-point {
+    width: 90vw;
+  }
+  .selling-point-title {
+    font-size: 21.25px;
+  }
+  .selling-point-description {
+    font-size: 18px;
+  }
+  .our-goal {
+    margin-bottom: 10px;
+  }
+  .our-goal-description {
+    font-size: 20px;
+    width: auto;
+    margin-top: 10px;
+  }
+  .selling-point-title {
+    font-weight: 600;
+  }
+}

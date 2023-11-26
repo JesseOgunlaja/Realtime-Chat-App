@@ -1,0 +1,161 @@
+.page {
+  width: 99vw;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  background: black;
+  padding: 20px;
+  width: 500px;
+  border-radius: 20px;
+  height: 600px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.form input[name] {
+  width: 80%;
+  padding: 15px;
+  font-size: 22.5px;
+  border-radius: 5px;
+}
+
+.form input[type="submit"] {
+  font-size: 22.5px;
+  background: white;
+  width: 80%;
+  padding: 15px 20px;
+  border-radius: 7.5px;
+  color: black;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+
+.password-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80%;
+}
+
+#password-input {
+  min-width: 70.70666452%;
+  max-width: 70.70666452%;
+  display: inline;
+  border-radius: 5px 0px 0px 5px;
+  color: black;
+  border-right: 2px black solid;
+}
+
+.show-password-button {
+  min-width: 29.29333548%;
+  max-width: 29.29333548%;
+  padding: 5px;
+  font-size: 22.5px;
+  border-radius: 0px;
+  display: inline;
+  border-radius: 0px 5px 5px 0px;
+  background: white;
+  height: 56px;
+  cursor: pointer;
+  color: black !important;
+}
+
+.agreement {
+  text-align: center;
+  display: block;
+  width: 80%;
+  font-size: 20px;
+}
+
+.agreement a {
+  color: blue !important;
+  text-decoration: none;
+}
+
+.agreement input[type="checkbox"] {
+  display: inline;
+  width: 15px;
+  height: 15px;
+  transform: translateY(1.2px);
+}
+
+.has-an-account-container,
+.no-account-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.has-an-account,
+.no-account {
+  color: #00a82d;
+  font-size: 18px;
+}
+
+.log-in-now,
+.sign-up-now {
+  font-size: 18px;
+}
+
+.log-in-now a,
+.sign-up-now a {
+  text-decoration: none;
+}
+
+.remember-me-container {
+  display: flex;
+}
+
+.remember-me-text,
+.remember-me-checkbox {
+  display: inline;
+}
+
+.remember-me-text {
+  font-size: 20px;
+  margin-right: 4.5px;
+}
+
+.remember-me-checkbox {
+  width: 15px;
+  height: 15px;
+  transform: translateY(7.4px);
+}
+
+@media (min-height: 100vw) {
+  .form input[type="submit"],
+  .password-input-container,
+  .form input[name] {
+    width: 95%;
+  }
+  .form input[type="submit"] {
+    font-weight: 400 !important;
+  }
+  .agreement {
+    width: 100%;
+  }
+  .agreement input[type="checkbox"] {
+    transform: translateY(-0.5px);
+  }
+  .remember-me-checkbox {
+    width: 16px;
+    height: 16px;
+  }
+}
