@@ -1,27 +1,15 @@
 import { io, Socket } from "socket.io-client";
-import { encryptString } from "./encryption";
 
 const WEBSOCKET_URL =
   process.env.NEXT_PUBLIC_WEBSOCKET_URL || process.env.WEBSOCKET_URL;
 
 export function trigger(id: string, event: string, data: unknown) {
-  const socket = io(WEBSOCKET_URL, {
-    auth: {
-      password: process.env.WEBSOCKET_KEY,
-    },
-  });
+  const socket = io(WEBSOCKET_URL);
   socket.emit(process.env.WEBSOCKET_KEY, id, event, data);
 }
 
 export function websocketChannel(key: string) {
-  const socket = io(WEBSOCKET_URL, {
-    auth: {
-      token: encryptString(key, true),
-    },
-    query: {
-      id: key,
-    },
-  });
+  const socket = io(WEBSOCKET_URL);
 
   return {
     bindToEvents: (
