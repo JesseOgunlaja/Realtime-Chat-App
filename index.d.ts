@@ -19,6 +19,7 @@ declare global {
       URL: string;
       NEXT_PUBLIC_URL: string;
       WEBSOCKET_KEY: string;
+      NEXT_PUBLIC_WEBSOCKET_URL: string;
     }
   }
 }
