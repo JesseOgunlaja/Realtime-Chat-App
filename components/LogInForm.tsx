@@ -1,12 +1,12 @@
 "use client";
 
 import styles from "@/styles/signup.module.css";
+import { decodeJWT, signJWT } from "@/utils/auth";
 import { decryptString, encryptString } from "@/utils/encryption";
 import Link from "next/link";
-import { FormEvent, useRef, useState, useEffect } from "react";
-import { toast } from "sonner";
-import { decodeJWT, signJWT } from "@/utils/auth";
 import { useRouter } from "next/navigation";
+import { FormEvent, useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -88,7 +88,7 @@ const SignUpForm = () => {
         }
         setTimeout(async () => {
           toast.dismiss(loadingToastID);
-          router.push("/dashboard");
+          window.location.reload();
         }, 2000);
       }
       if (data.message === "Error") {
