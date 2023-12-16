@@ -1,7 +1,8 @@
 import { io, Socket } from "socket.io-client";
 import { encryptString } from "./encryption";
 
-const WEBSOCKET_URL = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
+const WEBSOCKET_URL =
+  process.env.NEXT_PUBLIC_WEBSOCKET_URL || process.env.WEBSOCKET_URL;
 
 export function trigger(id: string, event: string, data: unknown) {
   const socket = io(WEBSOCKET_URL, {
