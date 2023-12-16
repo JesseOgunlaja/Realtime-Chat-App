@@ -154,6 +154,11 @@
     background: linear-gradient(70deg, #2e3192, #1bffff);
   }
 
+  .mobile-navbar ul li:nth-child(2) a {
+    width: 100%;
+    height: 100%;
+  }
+
   .mobile-navbar ul li:nth-child(1) a::after {
     content: "";
     position: absolute;

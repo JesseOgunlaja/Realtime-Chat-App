@@ -90,7 +90,7 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           toast.info("Accepted friend request", {
             description: `${
               user?.outgoingFriendRequests[indexDeleted as number].toDisplayName
-            } accpted the friend request you sent them`,
+            } accepted the friend request you sent them`,
           });
           setUser(currentUser);
         },
