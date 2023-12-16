@@ -5,7 +5,7 @@ import { containsEmoji } from "@/utils/utils";
 import { UUID } from "crypto";
 import { format } from "date-fns";
 import { SendHorizontal } from "lucide-react";
-import { Dispatch, FormEvent, useRef, useState } from "react";
+import { Dispatch, FormEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const ChatComponent = ({
@@ -23,6 +23,10 @@ const ChatComponent = ({
 }) => {
   const [message, setMessage] = useState<string>("");
   const messages = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messages.current!.scrollTop = messages.current!.scrollHeight;
+  }, [user]);
 
   async function sendMessage(e?: FormEvent<HTMLFormElement>) {
     e?.preventDefault();
@@ -86,11 +90,6 @@ const ChatComponent = ({
           user?.chats[chatIndex].messages.length !== 0 &&
           user?.chats[chatIndex].messages.map((message, index) => (
             <div
-              ref={(node) => {
-                if (node && user.chats.length === index) {
-                  node.scrollIntoView();
-                }
-              }}
               key={Math.random()}
               className={
                 styles[`${message.fromYou ? "my-message" : "other-message"}`]

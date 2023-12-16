@@ -5,7 +5,7 @@ import {
   redis,
 } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
-import { trigger } from "@/utils/websockets";
+import { trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 

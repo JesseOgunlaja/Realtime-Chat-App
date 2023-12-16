@@ -1,5 +1,5 @@
 import { User, getUserByName, redis } from "@/utils/redis";
-import { trigger } from "@/utils/websockets";
+import { trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
