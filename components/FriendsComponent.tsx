@@ -6,6 +6,7 @@ import { MessageSquare, MoreVertical } from "lucide-react";
 import Link from "next/link";
 import { Dispatch, useRef, useState } from "react";
 import Avatar from "react-avatar";
+import { toast } from "sonner";
 
 const FriendsComponent = ({
   user,
@@ -20,10 +21,26 @@ const FriendsComponent = ({
   const friendBeingDeletedID = useRef<UUID>();
   const dialog = useRef<HTMLDialogElement>(null);
 
+  window.onclick = (e) => {
+    const clickedElement = e.target as any;
+
+    if (clickedElement?.className?.baseVal !== "lucide lucide-more-vertical") {
+      const newVisibility = [...popupVisibility];
+      newVisibility.fill(false);
+      setPopupVisibility(newVisibility);
+    }
+  };
+
   function togglePopupVisibility(e: MouseEvent, index: number) {
     e.preventDefault();
 
-    const newVisibility = [...popupVisibility];
+    const newVisibility = [...popupVisibility].map((visibility, popupIndex) => {
+      if (popupIndex === index) {
+        return visibility;
+      }
+      return false;
+    });
+
     newVisibility[index] = !newVisibility[index];
     setPopupVisibility(newVisibility);
   }
@@ -35,12 +52,14 @@ const FriendsComponent = ({
       user.chats.findIndex((chat) => chat.id === friendBeingDeletedID.current),
       1
     );
-    user.friends.splice(
+    currentUser.friends.splice(
       user.friends.findIndex(
         (friend) => friend.id === friendBeingDeletedID.current
       ),
       1
     );
+    const loadingToastID = toast.loading("Loading", { duration: Infinity });
+    setUser(currentUser);
     const res = await fetch("/api/friends/remove", {
       method: "POST",
       headers: {
@@ -51,6 +70,20 @@ const FriendsComponent = ({
       }),
     });
     const data = await res.json();
+
+    if (data.message !== "Success") {
+      toast.error("An unexpected error occurred. Please try again.", {
+        id: loadingToastID,
+      });
+      setUser(user);
+    } else {
+      toast.success("Success", {
+        id: loadingToastID,
+      });
+    }
+    setTimeout(() => {
+      toast.dismiss(loadingToastID);
+    }, 1000);
   }
 
   function hideModal() {

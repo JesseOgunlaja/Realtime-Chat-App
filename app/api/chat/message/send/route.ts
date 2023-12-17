@@ -51,27 +51,39 @@ export async function POST(request: NextRequest) {
         fromYou: false,
       },
     });
+    trigger(JSON.parse(headersList.get("key") as string), "new-message-sent", {
+      chatID: user.chats[chatIndex].id,
+      message: {
+        message: body.message,
+        timestamp: body.timestamp,
+        fromYou: true,
+      },
+    });
     console.timeEnd("Start websocket event");
 
     console.time("Redis stuff");
+    const otherUser = (await redis.hgetall(
+      user.chats[chatIndex].withID
+    )) as User;
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(JSON.parse(headersList.get("key") as string), {
       chats: user.chats,
     });
 
-    const otherUser = (await redis.hgetall(
-      user.chats[chatIndex].withID
-    )) as User;
-    otherUser.chats[chatIndex].messages.push({
+    otherUser.chats[
+      otherUser.chats.findIndex((chat) => chat.id === body.chatID)
+    ].messages.push({
       message: body.message,
       timestamp: body.timestamp,
       fromYou: false,
     });
-    otherUser.chats[chatIndex].visible = true;
-
+    otherUser.chats[
+      otherUser.chats.findIndex((chat) => chat.id === body.chatID)
+    ].visible = true;
     redisPipeline.hset(user.chats[chatIndex].withID, {
       chats: otherUser.chats,
     });
+
     await redisPipeline.exec();
     console.timeEnd("Redis stuff");
 

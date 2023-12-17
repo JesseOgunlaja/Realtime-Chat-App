@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
 
     await redisPipeline.exec();
 
-    return NextResponse.json({ message: "success" }, { status: 200 });
+    return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
       { message: "Error", error: `${err}` },

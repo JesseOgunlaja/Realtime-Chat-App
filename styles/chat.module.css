@@ -63,7 +63,7 @@
 .messages {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
   overflow: auto;
   overflow-x: hidden;
 }
@@ -74,9 +74,9 @@
   width: fit-content;
   max-width: 80%;
   flex-direction: column;
-  padding: 5px;
+  padding: 10px;
   color: white;
-  gap: 5px;
+  gap: 2.5px;
   align-items: flex-end;
 }
 
@@ -84,11 +84,11 @@
   margin-left: auto;
   transform: translate(-5px, -5px);
   background: #215046;
-  border-radius: 5px 5px 0px 5px;
+  border-radius: 10px 10px 0px 10px;
 }
 
 .other-message {
-  border-radius: 5px 5px 5px 0px;
+  border-radius: 10px 10px 10px 0px;
   transform: translate(5px, -5px);
   background: #363638;
 }

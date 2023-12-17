@@ -6,6 +6,7 @@ import {
   IncomingFriendRequest,
   OutgoingFriendRequest,
   User,
+  message,
 } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
 import { websocketChannel } from "@/utils/websockets";
@@ -143,6 +144,34 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           currentUser.chats[chatIndex].visible = true;
           currentUser.chats[chatIndex].messages.push(data.message);
           setUser(currentUser);
+        },
+      },
+      {
+        event: "new-message-sent",
+        receiveFunction: function (data: {
+          chatID: UUID;
+          message: {
+            message: any;
+            timestamp: any;
+            fromYou: boolean;
+          };
+        }) {
+          const chatIndex = user.chats.findIndex(
+            (chat) => chat.id === data.chatID
+          );
+          console.log(user.chats[chatIndex].messages.at(-1));
+          console.log(data.message);
+          if (
+            compareObjects(
+              user.chats[chatIndex].messages.at(-1) as message,
+              data.message
+            ) === false
+          ) {
+            const currentUser = JSON.parse(JSON.stringify(user)) as User;
+            currentUser.chats[chatIndex].visible = true;
+            currentUser.chats[chatIndex].messages.push(data.message);
+            setUser(currentUser);
+          }
         },
       },
       {

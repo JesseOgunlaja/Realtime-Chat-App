@@ -3,8 +3,6 @@ import { encryptString } from "./encryption";
 
 export function websocketChannel(key: string) {
   const encryptedString = encryptString(key, true);
-  console.log(encryptedString);
-  console.log(process.env.NEXT_PUBLIC_WEBSOCKET_URL);
   const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
     auth: {
       token: String(encryptedString),

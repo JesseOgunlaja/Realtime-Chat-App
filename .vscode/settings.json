@@ -20,6 +20,6 @@
   },
   "peacock.color": "#007fff",
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true
+    "source.organizeImports": "explicit"
   }
 }
