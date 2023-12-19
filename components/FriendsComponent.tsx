@@ -24,6 +24,13 @@ const FriendsComponent = ({
   window.onclick = (e) => {
     const clickedElement = e.target as any;
 
+    if (!clickedElement?.className) {
+      const newVisibility = [...popupVisibility];
+      newVisibility.fill(false);
+      setPopupVisibility(newVisibility);
+      return;
+    }
+
     if (clickedElement?.className?.baseVal !== "lucide lucide-more-vertical") {
       const newVisibility = [...popupVisibility];
       newVisibility.fill(false);

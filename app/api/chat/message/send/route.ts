@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     }
 
     user.chats[chatIndex].messages.push({
-      message: body.message,
+      message: body.message.replaceAll("’", "'"),
       timestamp: body.timestamp,
       fromYou: true,
     });
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     trigger(user.chats[chatIndex].withID, "new-message", {
       chatID: user.chats[chatIndex].id,
       message: {
-        message: body.message,
+        message: body.message.replaceAll("’", "'"),
         timestamp: body.timestamp,
         fromYou: false,
       },
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     trigger(JSON.parse(headersList.get("key") as string), "new-message-sent", {
       chatID: user.chats[chatIndex].id,
       message: {
-        message: body.message,
+        message: body.message.replaceAll("’", "'"),
         timestamp: body.timestamp,
         fromYou: true,
       },
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     otherUser.chats[
       otherUser.chats.findIndex((chat) => chat.id === body.chatID)
     ].messages.push({
-      message: body.message,
+      message: body.message.replaceAll("’", "'"),
       timestamp: body.timestamp,
       fromYou: false,
     });

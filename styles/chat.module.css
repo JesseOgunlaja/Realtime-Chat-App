@@ -78,18 +78,18 @@
   color: white;
   gap: 2.5px;
   align-items: flex-end;
+  cursor: pointer;
+  position: relative;
 }
 
 .my-message {
   margin-left: auto;
-  transform: translate(-5px, -5px);
   background: #215046;
   border-radius: 10px 10px 0px 10px;
 }
 
 .other-message {
   border-radius: 10px 10px 10px 0px;
-  transform: translate(5px, -5px);
   background: #363638;
 }
 
@@ -118,6 +118,111 @@
 
 .messages::-webkit-scrollbar-thumb {
   background-color: #111;
+}
+
+.my-message-popup,
+.other-message-popup {
+  display: flex;
+  flex-direction: column;
+  background: black;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100px;
+  position: absolute;
+}
+
+.my-message-popup {
+  left: 0%;
+  bottom: 0%;
+  transform: translateX(-102%);
+}
+
+.other-message-popup {
+  right: 0%;
+  bottom: 0%;
+  transform: translateX(102%);
+}
+
+.my-message-popup button,
+.other-message-popup button {
+  color: white;
+  background: none;
+  z-index: 99999 !important;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.my-message-popup button:nth-child(1),
+.other-message-popup button:nth-child(1) {
+  padding-bottom: 2px;
+}
+
+.my-message-popup button:nth-child(2),
+.other-message-popup button:nth-child(2) {
+  color: red;
+  padding-top: 2px;
+  border-top: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+.dialog {
+  display: none;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 10;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(51, 51, 51, 0.5);
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.dialog > div {
+  width: min(500px, 96vw);
+  background: black;
+  text-align: center;
+  border-radius: 10px;
+  color: white;
+}
+
+.dialog div p {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.dialog div form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog div form input {
+  width: 350px;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 20px;
+}
+
+.dialog div form input[type="submit"] {
+  background: darkblue;
+  color: white;
+  margin-bottom: 40px;
+  cursor: pointer;
+}
+
+.bottomButton {
+  border-radius: 0px 0px 10px 10px;
+  background: white !important;
+  width: min(500px, 99vw);
+  padding: 15px 20px;
+  font-size: 25px;
+  color: black !important;
+  cursor: pointer;
 }
 
 @media (min-width: 100vh) and (min-width: 800px) {

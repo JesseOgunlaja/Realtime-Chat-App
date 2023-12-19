@@ -189,6 +189,31 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           });
         },
       },
+      {
+        event: "message-edited",
+        receiveFunction: function (data: { chats: Chat[] }) {
+          const currentUser = JSON.parse(JSON.stringify(user));
+          currentUser.chats = data.chats;
+          setUser(currentUser);
+        },
+      },
+      {
+        event: "message-edited-sent",
+        receiveFunction: function (data: { chats: Chat[]; chatID: UUID }) {
+          if (
+            JSON.stringify(
+              user.chats.find((chat) => chat.id === data.chatID)?.messages
+            ) !==
+            JSON.stringify(
+              data.chats.find((chat) => chat.id === data.chatID)?.messages
+            )
+          ) {
+            const currentUser = JSON.parse(JSON.stringify(user));
+            currentUser.chats = data.chats;
+            setUser(currentUser);
+          }
+        },
+      },
     ];
     channel.bindToEvents(binds);
     return () => {

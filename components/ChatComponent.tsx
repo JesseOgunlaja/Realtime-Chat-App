@@ -22,11 +22,30 @@ const ChatComponent = ({
   chatIndex: number;
 }) => {
   const [message, setMessage] = useState<string>("");
+  const [popupVisibility, setPopupVisibility] = useState<boolean[]>(
+    user.chats[chatIndex].messages.map(() => false)
+  );
   const messages = useRef<HTMLDivElement>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const messageBeingEditedIndex = useRef<number>(-1);
 
   useEffect(() => {
     messages.current!.scrollTop = messages.current!.scrollHeight;
   }, [user]);
+
+  window.onclick = (e) => {
+    const clickedElement = e.target as any;
+    if (
+      !clickedElement.className ||
+      typeof clickedElement.className !== "string" ||
+      !clickedElement.className?.includes("message") ||
+      clickedElement.className?.includes("messages")
+    ) {
+      const newVisibility = [...popupVisibility];
+      newVisibility.fill(false);
+      setPopupVisibility(newVisibility);
+    }
+  };
 
   async function sendMessage(e?: FormEvent<HTMLFormElement>) {
     e?.preventDefault();
@@ -34,10 +53,11 @@ const ChatComponent = ({
     if (message === "") return;
 
     const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const timestamp = Date.now();
     currentUser.chats[chatIndex as number].messages.push({
-      message: containsEmoji(message) ? message : message,
+      message: message.replaceAll("’", "'"),
       fromYou: true,
-      timestamp: Date.now(),
+      timestamp,
     });
     currentUser.chats[chatIndex as number].visible = true;
     setMessage("");
@@ -51,7 +71,7 @@ const ChatComponent = ({
       },
       body: JSON.stringify({
         message,
-        timestamp: Date.now(),
+        timestamp,
         chatID: chatID,
       }),
     });
@@ -74,8 +94,94 @@ const ChatComponent = ({
     return message;
   }
 
+  function togglePopupVisibility(index: number) {
+    const currentVisibility = [...popupVisibility].map(
+      (visibility, popupIndex) => {
+        if (popupIndex === index) {
+          return visibility;
+        }
+        return false;
+      }
+    );
+
+    currentVisibility[index] = !currentVisibility[index];
+    setPopupVisibility(currentVisibility);
+  }
+
+  function showEditMessageBox(index: number) {
+    dialog.current?.show();
+    dialog.current!.style.display = "flex";
+    messageBeingEditedIndex.current = index;
+  }
+
+  function hideEditMessageBox() {
+    dialog.current?.close();
+    dialog.current!.style.display = "none";
+  }
+
+  async function editMessage(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const formValues = Object.fromEntries(formData.entries());
+
+    if (formValues["new-message"] === "") return;
+
+    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+
+    currentUser.chats[chatIndex].messages[
+      messageBeingEditedIndex.current
+    ].message = (formValues["new-message"] as string).replaceAll("’", "'");
+    setUser(currentUser);
+    hideEditMessageBox();
+
+    const res = await fetch("/api/chat/message/edit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chatID,
+        message:
+          user.chats[chatIndex].messages[messageBeingEditedIndex.current],
+        newMessage: formValues["new-message"],
+      }),
+    });
+    const data = await res.json();
+
+    if (data.message !== "Success") {
+      toast.error(
+        "An unexpected error occured, while trying to edit the message."
+      );
+      showEditMessageBox(messageBeingEditedIndex.current);
+      setUser(user);
+    } else {
+      toast.success("Success");
+    }
+  }
+
   return (
     <div className={styles.page}>
+      <dialog ref={dialog} className={styles.dialog}>
+        <div>
+          <p>Edit message</p>
+          <form onSubmit={editMessage}>
+            <input
+              type="text"
+              name="new-message"
+              defaultValue={
+                user?.chats[chatIndex]?.messages[
+                  messageBeingEditedIndex.current
+                ]?.message
+              }
+            />
+            <input type="submit" />
+          </form>
+          <button onClick={hideEditMessageBox} className={styles.bottomButton}>
+            Back
+          </button>
+        </div>
+      </dialog>
       <style jsx global>{`
         body {
           overflow: hidden;
@@ -90,6 +196,7 @@ const ChatComponent = ({
           user?.chats[chatIndex].messages.length !== 0 &&
           user?.chats[chatIndex].messages.map((message, index) => (
             <div
+              onClick={() => togglePopupVisibility(index)}
               key={Math.random()}
               className={
                 styles[`${message.fromYou ? "my-message" : "other-message"}`]
@@ -101,6 +208,27 @@ const ChatComponent = ({
               <p className={styles["message-timestamp"]}>
                 {format(message.timestamp, "d MMM | HH:mm")}
               </p>
+              <div
+                style={{ display: popupVisibility[index] ? "flex" : "none" }}
+                className={
+                  styles[
+                    `${
+                      message.fromYou
+                        ? "my-message-popup"
+                        : "other-message-popup"
+                    }`
+                  ]
+                }
+              >
+                {message.fromYou ? (
+                  <button onClick={() => showEditMessageBox(index)}>
+                    Edit
+                  </button>
+                ) : (
+                  <button>Reply</button>
+                )}
+                <button>Delete</button>
+              </div>
             </div>
           ))}
       </div>
@@ -120,7 +248,7 @@ const ChatComponent = ({
               : "Loading..."
           }
         />
-        <SendHorizontal type="submit" />
+        <SendHorizontal onClick={() => sendMessage(undefined)} />
       </form>
     </div>
   );
