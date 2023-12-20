@@ -98,14 +98,7 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
       },
       {
         event: "new-message",
-        receiveFunction: function (data: {
-          chatID: UUID;
-          message: {
-            message: any;
-            timestamp: any;
-            fromYou: boolean;
-          };
-        }) {
+        receiveFunction: function (data: { chatID: UUID; message: message }) {
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
@@ -148,24 +141,16 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
       },
       {
         event: "new-message-sent",
-        receiveFunction: function (data: {
-          chatID: UUID;
-          message: {
-            message: any;
-            timestamp: any;
-            fromYou: boolean;
-          };
-        }) {
+        receiveFunction: function (data: { chatID: UUID; message: message }) {
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
-          console.log(user.chats[chatIndex].messages.at(-1));
-          console.log(data.message);
           if (
             compareObjects(
               user.chats[chatIndex].messages.at(-1) as message,
               data.message
-            ) === false
+            ) === false &&
+            user.chats[chatIndex].messages.at(-1)?.uuid != null
           ) {
             const currentUser = JSON.parse(JSON.stringify(user)) as User;
             currentUser.chats[chatIndex].visible = true;

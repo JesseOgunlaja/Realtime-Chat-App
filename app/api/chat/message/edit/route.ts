@@ -1,5 +1,4 @@
 import { User, redis } from "@/utils/redis";
-import { compareObjects } from "@/utils/utils";
 import { getSocket, trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -22,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     const messageBeingEditedIndex = user.chats[chatIndex].messages.findIndex(
-      (message) => compareObjects(message, body.message)
+      (message) => message.uuid === body.message.uuid
     );
 
     if (messageBeingEditedIndex === -1) {

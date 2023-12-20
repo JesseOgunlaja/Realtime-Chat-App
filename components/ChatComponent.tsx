@@ -4,7 +4,7 @@ import { User } from "@/utils/redis";
 import { containsEmoji } from "@/utils/utils";
 import { UUID } from "crypto";
 import { format } from "date-fns";
-import { SendHorizontal } from "lucide-react";
+import { Pencil, Reply, SendHorizontal, Trash2 } from "lucide-react";
 import { Dispatch, FormEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -58,6 +58,7 @@ const ChatComponent = ({
       message: message.replaceAll("’", "'"),
       fromYou: true,
       timestamp,
+      uuid: null as never,
     });
     currentUser.chats[chatIndex as number].visible = true;
     setMessage("");
@@ -82,6 +83,15 @@ const ChatComponent = ({
       toast.error(
         "An unexpected error occured, while trying to send the message."
       );
+    } else {
+      currentUser.chats[chatIndex as number].messages.pop();
+      currentUser.chats[chatIndex as number].messages.push({
+        message: message.replaceAll("’", "'"),
+        fromYou: true,
+        timestamp,
+        uuid: data.messageID,
+      });
+      setUser(JSON.parse(JSON.stringify(currentUser)));
     }
   }
 
@@ -109,9 +119,9 @@ const ChatComponent = ({
   }
 
   function showEditMessageBox(index: number) {
+    messageBeingEditedIndex.current = index;
     dialog.current?.show();
     dialog.current!.style.display = "flex";
-    messageBeingEditedIndex.current = index;
   }
 
   function hideEditMessageBox() {
@@ -164,10 +174,11 @@ const ChatComponent = ({
     <div className={styles.page}>
       <dialog ref={dialog} className={styles.dialog}>
         <div>
-          <p>Edit message</p>
+          <p>Edit Message</p>
           <form onSubmit={editMessage}>
             <input
               type="text"
+              key={messageBeingEditedIndex.current}
               name="new-message"
               defaultValue={
                 user?.chats[chatIndex]?.messages[
@@ -222,12 +233,18 @@ const ChatComponent = ({
               >
                 {message.fromYou ? (
                   <button onClick={() => showEditMessageBox(index)}>
-                    Edit
+                    <Pencil /> Edit
                   </button>
                 ) : (
-                  <button>Reply</button>
+                  <button>
+                    <Reply />
+                    Reply
+                  </button>
                 )}
-                <button>Delete</button>
+                <button>
+                  <Trash2 />
+                  Delete
+                </button>
               </div>
             </div>
           ))}

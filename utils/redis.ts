@@ -33,6 +33,7 @@ export type message = {
   message: string;
   fromYou: boolean;
   timestamp: number;
+  uuid: UUID;
 };
 
 export type Chat = {
