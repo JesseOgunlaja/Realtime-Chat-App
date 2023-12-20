@@ -58,7 +58,6 @@ export async function POST(request: NextRequest) {
       incomingFriendRequests: incomingRequestsFromOtherUser,
       user: otherUser,
     });
-    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(JSON.parse(String(requestHeaders.get("key"))), {
@@ -70,6 +69,8 @@ export async function POST(request: NextRequest) {
     });
 
     await redisPipeline.exec();
+
+    socket.disconnect();
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {

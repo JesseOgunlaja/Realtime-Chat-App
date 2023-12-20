@@ -217,6 +217,7 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
     ];
     channel.bindToEvents(binds);
     return () => {
+      console.log("hi");
       channel.disconnect();
     };
   }, [user]);

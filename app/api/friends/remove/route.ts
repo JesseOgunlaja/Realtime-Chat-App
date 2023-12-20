@@ -50,7 +50,6 @@ export async function POST(request: NextRequest) {
       newUser: otherUser,
       friendDeletedID: key,
     });
-    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
 
@@ -65,6 +64,8 @@ export async function POST(request: NextRequest) {
     });
 
     await redisPipeline.exec();
+
+    socket.disconnect();
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {

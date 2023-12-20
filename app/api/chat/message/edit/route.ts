@@ -55,7 +55,6 @@ export async function POST(request: NextRequest) {
       chatID: body.chatID,
       chats: otherUser.chats,
     });
-    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
 
@@ -68,6 +67,8 @@ export async function POST(request: NextRequest) {
     });
 
     await redisPipeline.exec();
+
+    socket.disconnect();
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {

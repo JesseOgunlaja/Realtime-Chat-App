@@ -92,7 +92,6 @@ export async function POST(request: NextRequest) {
         chats: otherUser.chats,
       }
     );
-    socket.disconnect();
     const redisPipeline = redis.pipeline();
 
     redisPipeline.hset(JSON.parse(requestHeaders.get("key") as string), {
@@ -106,6 +105,8 @@ export async function POST(request: NextRequest) {
       chats: otherUser.chats,
     });
     await redisPipeline.exec();
+
+    socket.disconnect();
 
     return NextResponse.json({ message: "Success", user }, { status: 200 });
   } catch (err) {

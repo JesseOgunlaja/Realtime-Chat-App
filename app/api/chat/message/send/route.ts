@@ -65,7 +65,6 @@ export async function POST(request: NextRequest) {
         },
       }
     );
-    socket.disconnect();
     console.timeEnd("Start websocket event");
 
     console.time("Redis stuff");
@@ -93,6 +92,8 @@ export async function POST(request: NextRequest) {
 
     await redisPipeline.exec();
     console.timeEnd("Redis stuff");
+
+    socket.disconnect();
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {
