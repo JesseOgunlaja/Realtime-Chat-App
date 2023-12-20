@@ -1,5 +1,5 @@
 import { User, getUserByName, redis } from "@/utils/redis";
-import { trigger } from "@/utils/websocketsServer";
+import { getSocket, trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -87,13 +87,15 @@ export async function POST(request: NextRequest) {
       toDisplayName: friendBeingAddedResult.user.displayName,
       toID: friendBeingAddedResult.key,
     });
-    trigger(key, "friend-request-sent", {
+    const socket = getSocket();
+    trigger(socket, key, "friend-request-sent", {
       newFriendRequest: {
         from: user.username,
         fromDisplayName: user.displayName,
         fromID: JSON.parse(String(requestHeaders.get("key"))),
       },
     });
+    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(key, {

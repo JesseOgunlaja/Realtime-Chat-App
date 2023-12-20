@@ -5,7 +5,7 @@ import {
   redis,
 } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
-import { trigger } from "@/utils/websocketsServer";
+import { getSocket, trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -53,10 +53,12 @@ export async function POST(request: NextRequest) {
     incomingRequestsFromOtherUser = incomingRequestsFromOtherUser.filter(
       (val) => val.fromID !== JSON.parse(String(requestHeaders.get("key")))
     );
-    trigger(friendRequestBeingDeleted.toID, "friend-request-deleted", {
+    const socket = getSocket();
+    trigger(socket, friendRequestBeingDeleted.toID, "friend-request-deleted", {
       incomingFriendRequests: incomingRequestsFromOtherUser,
       user: otherUser,
     });
+    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(JSON.parse(String(requestHeaders.get("key"))), {

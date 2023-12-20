@@ -1,9 +1,10 @@
+import MainContainer from "@/components/MainContainer";
+import Navbar from "@/components/Navbar";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import "./globals.css";
-import Navbar from "@/components/Navbar";
-import MainContainer from "@/components/MainContainer";
 import { Toaster } from "sonner";
+import "./globals.css";
 
 const poppins = Poppins({
   weight: ["400", "500", "600"],
@@ -23,6 +24,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <SpeedInsights />
       <body className={poppins.className}>
         <Navbar />
         <Toaster

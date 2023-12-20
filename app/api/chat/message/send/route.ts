@@ -1,5 +1,5 @@
 import { User, redis } from "@/utils/redis";
-import { trigger } from "@/utils/websocketsServer";
+import { getSocket, trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -43,7 +43,8 @@ export async function POST(request: NextRequest) {
     });
     user.chats[chatIndex].visible = true;
     console.time("Start websocket event");
-    trigger(user.chats[chatIndex].withID, "new-message", {
+    const socket = getSocket();
+    trigger(socket, user.chats[chatIndex].withID, "new-message", {
       chatID: user.chats[chatIndex].id,
       message: {
         message: body.message.replaceAll("’", "'"),
@@ -51,14 +52,20 @@ export async function POST(request: NextRequest) {
         fromYou: false,
       },
     });
-    trigger(JSON.parse(headersList.get("key") as string), "new-message-sent", {
-      chatID: user.chats[chatIndex].id,
-      message: {
-        message: body.message.replaceAll("’", "'"),
-        timestamp: body.timestamp,
-        fromYou: true,
-      },
-    });
+    trigger(
+      socket,
+      JSON.parse(headersList.get("key") as string),
+      "new-message-sent",
+      {
+        chatID: user.chats[chatIndex].id,
+        message: {
+          message: body.message.replaceAll("’", "'"),
+          timestamp: body.timestamp,
+          fromYou: true,
+        },
+      }
+    );
+    socket.disconnect();
     console.timeEnd("Start websocket event");
 
     console.time("Redis stuff");

@@ -1,5 +1,5 @@
 import { User, redis } from "@/utils/redis";
-import { trigger } from "@/utils/websocketsServer";
+import { getSocket, trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -45,10 +45,12 @@ export async function POST(request: NextRequest) {
       otherUser.chats.findIndex((chat) => chat.withID === chatID)
     );
 
-    trigger(friendID, "friend-removed", {
+    const socket = getSocket();
+    trigger(socket, friendID, "friend-removed", {
       newUser: otherUser,
       friendDeletedID: key,
     });
+    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
 
