@@ -95,7 +95,6 @@ export async function POST(request: NextRequest) {
         fromID: JSON.parse(String(requestHeaders.get("key"))),
       },
     });
-    socket.disconnect();
 
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(key, {

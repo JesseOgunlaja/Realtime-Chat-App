@@ -70,8 +70,6 @@ export async function POST(request: NextRequest) {
 
     await redisPipeline.exec();
 
-    socket.disconnect();
-
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
