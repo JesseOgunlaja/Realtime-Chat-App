@@ -1,5 +1,6 @@
 import MainContainer from "@/components/MainContainer";
 import Navbar from "@/components/Navbar";
+import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SpeedInsights />
+      <Analytics />
       <body className={poppins.className}>
         <Navbar />
         <Toaster
