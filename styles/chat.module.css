@@ -83,6 +83,7 @@
 }
 
 .my-message {
+  margin-right: 6.5px;
   margin-left: auto;
   background: #215046;
   border-radius: 10px 10px 0px 10px;
@@ -265,5 +266,8 @@
   .page {
     width: 99vw;
     height: calc(95vh - 76.5px);
+  }
+  .my-message {
+    margin-right: 15px;
   }
 }

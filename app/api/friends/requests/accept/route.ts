@@ -1,6 +1,6 @@
 import { IncomingFriendRequest, User, redis } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
-import { getSocket, trigger } from "@/utils/websocketsServer";
+import { trigger } from "@/utils/websocketsServer";
 import { UUID, randomUUID } from "crypto";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -81,17 +81,11 @@ export async function POST(request: NextRequest) {
       id: JSON.parse(requestHeaders.get("key") as string),
     });
 
-    const socket = getSocket();
-    trigger(
-      socket,
-      friendRequestBeingAccepted.fromID,
-      "friend-request-accepted",
-      {
-        outgoingFriendRequests: otherUser.outgoingFriendRequests,
-        friends: otherUser.friends,
-        chats: otherUser.chats,
-      }
-    );
+    trigger(friendRequestBeingAccepted.fromID, "friend-request-accepted", {
+      outgoingFriendRequests: otherUser.outgoingFriendRequests,
+      friends: otherUser.friends,
+      chats: otherUser.chats,
+    });
     const redisPipeline = redis.pipeline();
 
     redisPipeline.hset(JSON.parse(requestHeaders.get("key") as string), {

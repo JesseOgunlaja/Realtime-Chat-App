@@ -1,5 +1,5 @@
 import { User, getUserByName, redis } from "@/utils/redis";
-import { getSocket, trigger } from "@/utils/websocketsServer";
+import { trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -39,12 +39,12 @@ export async function POST(request: NextRequest) {
 
     if (
       user.friends.length !== 0 &&
-      user.friends.some((user) => {
-        user.username === friendBeingAddedUsername;
-      })
+      user.friends.findIndex((friend) => {
+        return friend.id === friendBeingAddedResult.key;
+      }) !== -1
     ) {
       return NextResponse.json(
-        { message: "You've already added thise user as a friend" },
+        { message: "You've already added this user as a friend" },
         { status: 400 }
       );
     }
@@ -87,8 +87,7 @@ export async function POST(request: NextRequest) {
       toDisplayName: friendBeingAddedResult.user.displayName,
       toID: friendBeingAddedResult.key,
     });
-    const socket = getSocket();
-    trigger(socket, key, "friend-request-sent", {
+    trigger(key, "friend-request-sent", {
       newFriendRequest: {
         from: user.username,
         fromDisplayName: user.displayName,

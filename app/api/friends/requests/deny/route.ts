@@ -5,7 +5,7 @@ import {
   redis,
 } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
-import { getSocket, trigger } from "@/utils/websocketsServer";
+import { trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -50,15 +50,9 @@ export async function POST(request: NextRequest) {
     outgoingRequestsFromOtherUser = outgoingRequestsFromOtherUser.filter(
       (val) => val.toID !== JSON.parse(String(requestHeaders.get("key")))
     ) as OutgoingFriendRequest[];
-    const socket = getSocket();
-    trigger(
-      socket,
-      friendRequestBeingDeclined.fromID,
-      "friend-request-declined",
-      {
-        outgoingFriendRequests: outgoingRequestsFromOtherUser,
-      }
-    );
+    trigger(friendRequestBeingDeclined.fromID, "friend-request-declined", {
+      outgoingFriendRequests: outgoingRequestsFromOtherUser,
+    });
 
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(JSON.parse(String(requestHeaders.get("key"))), {

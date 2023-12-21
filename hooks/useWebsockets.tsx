@@ -29,12 +29,18 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
         }) {
           const currentUser = JSON.parse(JSON.stringify(user)) as User;
           currentUser.outgoingFriendRequests = data.outgoingFriendRequests;
-          const indexDeleted = user?.outgoingFriendRequests.indexOf(
-            user?.outgoingFriendRequests.filter((val) =>
-              data.outgoingFriendRequests.every(
-                (val2) => !compareObjects(val, val2)
-              )
-            )[0]
+          const indexDeleted = user?.outgoingFriendRequests.findIndex(
+            (request) => {
+              return (
+                request.toID ===
+                user?.outgoingFriendRequests.filter(
+                  (val) =>
+                    data.outgoingFriendRequests.findIndex(
+                      (val2) => val.toID === val2.toID
+                    ) === -1
+                )[0].toID
+              );
+            }
           );
           toast.info("Friend request declined", {
             description: `${
@@ -66,6 +72,26 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
         }) {
           const currentUser = JSON.parse(JSON.stringify(user)) as User;
           currentUser.incomingFriendRequests = data.incomingFriendRequests;
+          const indexDeleted = user?.incomingFriendRequests.findIndex(
+            (request) => {
+              return (
+                request.fromID ===
+                user?.incomingFriendRequests.filter(
+                  (val) =>
+                    data.incomingFriendRequests.findIndex(
+                      (val2) => val.fromID === val2.fromID
+                    ) === -1
+                )[0].fromID
+              );
+            }
+          );
+          console.log(indexDeleted);
+          toast.info("Friend request declined", {
+            description: `${
+              user?.incomingFriendRequests[indexDeleted as number]
+                .fromDisplayName
+            } has cancelled the friend request they sent you`,
+          });
           setUser(currentUser);
         },
       },
@@ -81,16 +107,21 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           currentUser.friends = data.friends;
           currentUser.chats = data.chats;
 
-          const indexDeleted = user?.outgoingFriendRequests.indexOf(
-            user?.outgoingFriendRequests.filter((val: any) =>
-              data.outgoingFriendRequests.every(
-                (val2) => !compareObjects(val, val2)
-              )
-            )[0]
-          );
+          const newIndex = data?.friends.findIndex((friend) => {
+            return (
+              friend.id ===
+              data?.friends.filter(
+                (val) =>
+                  user.friends.findIndex((val2) => val.id === val2.id) === -1
+              )[0].id
+            );
+          });
+
+          console.log(newIndex);
+
           toast.info("Accepted friend request", {
             description: `${
-              user?.outgoingFriendRequests[indexDeleted as number].toDisplayName
+              data.friends[newIndex as number].alias
             } accepted the friend request you sent them`,
           });
           setUser(currentUser);
@@ -166,7 +197,7 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           friendDeletedID: UUID;
         }) {
           setUser(data.newUser);
-          toast.info("Deleted friend request", {
+          toast.info("Removed friend", {
             description: `${
               user.friends.find((friend) => friend.id === data.friendDeletedID)
                 ?.alias

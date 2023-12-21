@@ -1,5 +1,5 @@
 import { User, redis } from "@/utils/redis";
-import { getSocket, trigger } from "@/utils/websocketsServer";
+import { trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -46,11 +46,10 @@ export async function POST(request: NextRequest) {
       messageBeingEditedIndex
     ].message = body.newMessage.replaceAll("’", "'");
 
-    const socket = getSocket();
-    trigger(socket, user.chats[chatIndex].withID, "message-edited", {
+    trigger(user.chats[chatIndex].withID, "message-edited", {
       chats: otherUser.chats,
     });
-    trigger(socket, user.chats[chatIndex].withID, "message-edited-sent", {
+    trigger(user.chats[chatIndex].withID, "message-edited-sent", {
       chatID: body.chatID,
       chats: otherUser.chats,
     });

@@ -56,7 +56,9 @@ const FriendsComponent = ({
     hideModal();
     const currentUser = JSON.parse(JSON.stringify(user)) as User;
     currentUser.chats.splice(
-      user.chats.findIndex((chat) => chat.id === friendBeingDeletedID.current),
+      user.chats.findIndex(
+        (chat) => chat.withID === friendBeingDeletedID.current
+      ),
       1
     );
     currentUser.friends.splice(
