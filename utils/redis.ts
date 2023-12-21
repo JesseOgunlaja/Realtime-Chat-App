@@ -29,16 +29,16 @@ export async function getUserByName(
   }
 }
 
-export type message = {
+export type Message = {
   message: string;
   fromYou: boolean;
   timestamp: number;
-  uuid: UUID;
+  id: UUID;
 };
 
 export type Chat = {
   id: UUID;
-  messages: message[];
+  messages: Message[];
   with: string;
   withID: UUID;
   visible: boolean;

@@ -4,9 +4,9 @@ import {
   Chat,
   Friend,
   IncomingFriendRequest,
+  Message,
   OutgoingFriendRequest,
   User,
-  message,
 } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
 import { websocketChannel } from "@/utils/websockets";
@@ -129,7 +129,8 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
       },
       {
         event: "new-message",
-        receiveFunction: function (data: { chatID: UUID; message: message }) {
+        receiveFunction: function (data: { chatID: UUID; message: Message }) {
+          console.log(data.message.message);
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
@@ -157,7 +158,7 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
                 >
                   {user.chats[chatIndex].with}
                 </p>
-                <p>{JSON.parse(data.message.message)}</p>
+                <p>{data.message.message}</p>
               </Link>,
               {
                 duration: 3500,
@@ -172,16 +173,16 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
       },
       {
         event: "new-message-sent",
-        receiveFunction: function (data: { chatID: UUID; message: message }) {
+        receiveFunction: function (data: { chatID: UUID; message: Message }) {
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
           if (
             compareObjects(
-              user.chats[chatIndex].messages.at(-1) as message,
+              user.chats[chatIndex].messages.at(-1) as Message,
               data.message
             ) === false &&
-            user.chats[chatIndex].messages.at(-1)?.uuid != null
+            user.chats[chatIndex].messages.at(-1)?.id != null
           ) {
             const currentUser = JSON.parse(JSON.stringify(user)) as User;
             currentUser.chats[chatIndex].visible = true;
@@ -226,6 +227,42 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           ) {
             const currentUser = JSON.parse(JSON.stringify(user));
             currentUser.chats = data.chats;
+            setUser(currentUser);
+          }
+        },
+      },
+      {
+        event: "deleted-message",
+        receiveFunction: function (data: { chatID: UUID; messageID: UUID }) {
+          const currentUser = JSON.parse(JSON.stringify(user)) as User;
+          const chatIndex = user.chats.findIndex(
+            (chat) => chat.id === data.chatID
+          );
+          currentUser.chats[chatIndex].messages.splice(
+            user.chats[chatIndex].messages.findIndex(
+              (message) => message.id === data.messageID
+            ),
+            1
+          );
+          setUser(currentUser);
+        },
+      },
+      {
+        event: "message-deleted",
+        receiveFunction: function (data: {
+          newUser: User;
+          chatID: UUID;
+          messageID: UUID;
+        }) {
+          const currentUser = JSON.parse(JSON.stringify(user)) as User;
+          const chatIndex = user.chats.findIndex(
+            (chat) => chat.id === data.chatID
+          );
+          const messageIndex = user.chats[chatIndex].messages.findIndex(
+            (message) => message.id === data.messageID
+          );
+          if (messageIndex !== -1) {
+            currentUser.chats[chatIndex].messages.splice(messageIndex, 1);
             setUser(currentUser);
           }
         },

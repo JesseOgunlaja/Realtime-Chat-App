@@ -98,11 +98,7 @@
   font-size: 18px;
 }
 
-.my-message .message-text {
-  text-align: right;
-  width: 100%;
-}
-
+.my-message .message-text,
 .other-message .message-text {
   text-align: left;
   width: 100%;
@@ -131,67 +127,69 @@
   position: absolute;
 }
 
-.my-message-popup {
-  left: 0%;
-  bottom: 0%;
-  transform: translateX(-102%);
-}
-
-.other-message-popup {
-  right: 0%;
-  bottom: 0%;
-  transform: translateX(102%);
-}
-
 .my-message-popup button,
 .other-message-popup button {
-  padding: 10px;
   width: 100%;
   color: white;
   background: none;
   font-size: 18px;
   cursor: pointer;
-  text-align: left;
 }
 
-.my-message-popup > button:nth-child(1) > svg {
-  height: 18px;
-  transform: translate(-1px, 2.65px);
+.other-message-popup button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
 }
 
-.other-message-popup > button:nth-child(1) > svg {
-  height: 23px;
-  transform: translate(-1px, 3px);
-  margin-right: 1px;
+.other-message-popup button p {
+  display: inline;
 }
 
-.other-message-popup > button:nth-child(1) {
-  margin-right: 1.5px;
+.my-message-popup button:nth-child(1):hover,
+.other-message-popup button:hover {
+  background: white;
+  color: black;
+  border-radius: 2px;
 }
 
-.other-message-popup > button:nth-child(2) > svg {
-  margin-right: 2px !important;
-  transform: translate(-1.75px, 2px);
+.my-message-popup button:nth-child(1):hover ~ button:nth-child(2) {
+  box-shadow: none;
 }
 
-.my-message-popup > button:nth-child(2) > svg,
-.other-message-popup > button:nth-child(2) > svg {
-  height: 18px;
-  transform: translate(-1px, 3px);
-  margin-right: 3px;
+.my-message-popup button:nth-child(2):hover {
+  background: rgba(250, 0, 0, 0.8);
+  color: white;
+  box-shadow: none;
+  border-radius: 2px;
 }
 
-.my-message-popup button:nth-child(1),
-.other-message-popup button:nth-child(1) {
-  padding-top: 7.5px;
-  padding-bottom: 5px;
+.other-message-popup {
+  padding: 10px;
+  right: 0%;
+  bottom: 0%;
+  transform: translateX(102%);
 }
 
-.my-message-popup button:nth-child(2),
-.other-message-popup button:nth-child(2) {
+.my-message-popup {
+  left: 0%;
+  bottom: 0%;
+  transform: translateX(-102%);
+  padding: 10px;
+}
+
+.my-message-popup button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+}
+
+.my-message-popup button:nth-child(2) {
   color: red;
   padding-top: 5px;
-  border-top: 1.75px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0.2px -1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .dialog {
@@ -218,8 +216,17 @@
   color: white;
 }
 
+.dialog:nth-child(1) > div {
+  border-radius: 10px;
+}
+
+.dialog:nth-child(2) > div {
+  border-radius: 10px 10px 0px 0px;
+}
+
 .dialog div p {
   font-size: 20px;
+  padding-top: 5px;
   margin-bottom: 10px;
 }
 
@@ -245,7 +252,19 @@
   cursor: pointer;
 }
 
-.bottomButton {
+.dialog:nth-child(2) > :nth-child(2) > * {
+  width: 200px !important;
+}
+
+.dialog:nth-child(2) > :nth-child(1) {
+  padding-top: 20px !important;
+  height: 80px !important;
+  min-height: 0px !important;
+  justify-content: space-between !important;
+  width: 500px;
+}
+
+.dialog:nth-child(1) .bottomButton {
   border-radius: 0px 0px 10px 10px;
   background: white !important;
   width: min(500px, 99vw);
@@ -253,6 +272,29 @@
   font-size: 25px;
   color: black !important;
   cursor: pointer;
+}
+
+.dialog:nth-child(2) .bottomButton {
+  border-radius: 0px 0px 10px 10px;
+  width: min(500px, 99vw);
+}
+
+.dialog:nth-child(2) .bottomButton > * {
+  width: 50% !important;
+  padding: 15px 30px;
+  font-size: 25px;
+  color: black;
+  cursor: pointer;
+}
+
+.dialog:nth-child(2) .bottomButton > :nth-child(1) {
+  border-radius: 0px 0px 0px 10px;
+  background: white;
+}
+
+.dialog:nth-child(2) .bottomButton > :nth-child(2) {
+  background: red;
+  border-radius: 0px 0px 10px 0px;
 }
 
 @media (min-width: 100vh) and (min-width: 800px) {

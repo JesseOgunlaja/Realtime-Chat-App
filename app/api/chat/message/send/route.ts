@@ -37,13 +37,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Chat not found" }, { status: 400 });
     }
 
-    const messageUUID = randomUUID();
+    const messageID = randomUUID();
 
     user.chats[chatIndex].messages.push({
       message: body.message.replaceAll("’", "'"),
       timestamp: body.timestamp,
       fromYou: true,
-      uuid: messageUUID,
+      id: messageID,
     });
     user.chats[chatIndex].visible = true;
     console.time("Start websocket event");
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       message: {
         message: body.message.replaceAll("’", "'"),
         timestamp: body.timestamp,
-        uuid: messageUUID,
+        uuid: messageID,
         fromYou: false,
       },
     });
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
       message: {
         message: body.message.replaceAll("’", "'"),
         timestamp: body.timestamp,
-        uuid: messageUUID,
+        uuid: messageID,
         fromYou: true,
       },
     });
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       message: body.message.replaceAll("’", "'"),
       timestamp: body.timestamp,
       fromYou: false,
-      uuid: messageUUID,
+      id: messageID,
     });
     otherUser.chats[
       otherUser.chats.findIndex((chat) => chat.id === body.chatID)
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     console.timeEnd("Redis stuff");
 
     return NextResponse.json(
-      { message: "Success", messageID: messageUUID },
+      { message: "Success", messageID: messageID },
       { status: 200 }
     );
   } catch (err) {

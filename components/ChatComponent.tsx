@@ -25,12 +25,17 @@ const ChatComponent = ({
   const [popupVisibility, setPopupVisibility] = useState<boolean[]>(
     user.chats[chatIndex].messages.map(() => false)
   );
-  const messages = useRef<HTMLDivElement>(null);
+  const messagesContainer = useRef<HTMLDivElement>(null);
+
   const dialog = useRef<HTMLDialogElement>(null);
-  const messageBeingEditedIndex = useRef<number>(-1);
+  const dialog2 = useRef<HTMLDialogElement>(null);
+
+  const messageBeingEditedID = useRef<UUID>();
+  const messageBeingDeletedID = useRef<UUID>();
 
   useEffect(() => {
-    messages.current!.scrollTop = messages.current!.scrollHeight;
+    messagesContainer.current!.scrollTop =
+      messagesContainer.current!.scrollHeight;
   }, [user]);
 
   window.onclick = (e) => {
@@ -58,12 +63,13 @@ const ChatComponent = ({
       message: message.replaceAll("’", "'"),
       fromYou: true,
       timestamp,
-      uuid: null as never,
+      id: null as never,
     });
     currentUser.chats[chatIndex as number].visible = true;
     setMessage("");
     setUser(currentUser);
-    messages.current!.scrollTop = messages.current!.scrollHeight;
+    messagesContainer.current!.scrollTop =
+      messagesContainer.current!.scrollHeight;
 
     const res = await fetch("/api/chat/message/send", {
       method: "POST",
@@ -89,7 +95,7 @@ const ChatComponent = ({
         message: message.replaceAll("’", "'"),
         fromYou: true,
         timestamp,
-        uuid: data.messageID,
+        id: data.messageID,
       });
       setUser(JSON.parse(JSON.stringify(currentUser)));
     }
@@ -118,8 +124,8 @@ const ChatComponent = ({
     setPopupVisibility(currentVisibility);
   }
 
-  function showEditMessageBox(index: number) {
-    messageBeingEditedIndex.current = index;
+  function showEditMessageBox(ID: UUID) {
+    messageBeingEditedID.current = ID;
     dialog.current?.show();
     dialog.current!.style.display = "flex";
   }
@@ -140,7 +146,9 @@ const ChatComponent = ({
     const currentUser = JSON.parse(JSON.stringify(user)) as User;
 
     currentUser.chats[chatIndex].messages[
-      messageBeingEditedIndex.current
+      user.chats[chatIndex].messages.findIndex(
+        (message) => message.id === messageBeingEditedID.current
+      )
     ].message = (formValues["new-message"] as string).replaceAll("’", "'");
     setUser(currentUser);
     hideEditMessageBox();
@@ -152,8 +160,7 @@ const ChatComponent = ({
       },
       body: JSON.stringify({
         chatID,
-        message:
-          user.chats[chatIndex].messages[messageBeingEditedIndex.current],
+        messageID: messageBeingEditedID.current,
         newMessage: formValues["new-message"],
       }),
     });
@@ -163,8 +170,49 @@ const ChatComponent = ({
       toast.error(
         "An unexpected error occured, while trying to edit the message."
       );
-      showEditMessageBox(messageBeingEditedIndex.current);
+      showEditMessageBox(messageBeingEditedID.current!);
       setUser(user);
+    } else {
+      toast.success("Success");
+    }
+  }
+
+  function showDeleteMessageBox(ID: UUID) {
+    messageBeingDeletedID.current = ID;
+    dialog2.current?.show();
+    dialog2.current!.style.display = "flex";
+  }
+
+  function hideDeleteMessageBox() {
+    dialog2.current?.close();
+    dialog2.current!.style.display = "none";
+  }
+
+  async function deleteMessage() {
+    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const messageBeingDeletedIndex = user.chats[chatIndex].messages.findIndex(
+      (message) => message.id == messageBeingDeletedID.current
+    );
+    currentUser.chats[chatIndex].messages.splice(messageBeingDeletedIndex, 1);
+    setUser(currentUser);
+    hideDeleteMessageBox();
+
+    const res = await fetch("/api/chat/message/delete", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        chatID: chatID,
+        messageID: messageBeingDeletedID.current,
+      }),
+    });
+    const data = await res.json();
+    if (data.message !== "Success") {
+      setUser(user);
+      toast.error(
+        "An unexpected error occured, while trying to delete the message."
+      );
     } else {
       toast.success("Success");
     }
@@ -178,11 +226,13 @@ const ChatComponent = ({
           <form onSubmit={editMessage}>
             <input
               type="text"
-              key={messageBeingEditedIndex.current}
+              key={messageBeingEditedID.current}
               name="new-message"
               defaultValue={
                 user?.chats[chatIndex]?.messages[
-                  messageBeingEditedIndex.current
+                  user.chats[chatIndex].messages.findIndex(
+                    (message) => message.id === messageBeingEditedID.current
+                  )
                 ]?.message
               }
             />
@@ -190,6 +240,19 @@ const ChatComponent = ({
           </form>
           <button onClick={hideEditMessageBox} className={styles.bottomButton}>
             Back
+          </button>
+        </div>
+      </dialog>
+      <dialog ref={dialog2} className={styles.dialog}>
+        <div>
+          <p>Are you sure you want to delete this message?</p>
+        </div>
+        <div className={styles.bottomButton}>
+          <button className={styles.back} onClick={hideDeleteMessageBox}>
+            No
+          </button>
+          <button className={styles.delete} onClick={deleteMessage}>
+            Yes
           </button>
         </div>
       </dialog>
@@ -201,7 +264,7 @@ const ChatComponent = ({
       <div className={styles.header}>
         <p>{chatIndex != undefined ? user?.chats[chatIndex].with : null}</p>
       </div>
-      <div className={styles.messages} ref={messages}>
+      <div className={styles.messages} ref={messagesContainer}>
         {chatIndex != undefined &&
           user != undefined &&
           user?.chats[chatIndex].messages.length !== 0 &&
@@ -232,19 +295,22 @@ const ChatComponent = ({
                 }
               >
                 {message.fromYou ? (
-                  <button onClick={() => showEditMessageBox(index)}>
-                    <Pencil /> Edit
-                  </button>
+                  <>
+                    <button onClick={() => showEditMessageBox(message.id)}>
+                      <p>Edit</p>
+                      <Pencil />
+                    </button>
+                    <button onClick={() => showDeleteMessageBox(message.id)}>
+                      <p>Delete</p>
+                      <Trash2 />
+                    </button>
+                  </>
                 ) : (
                   <button>
+                    <p>Reply</p>
                     <Reply />
-                    Reply
                   </button>
                 )}
-                <button>
-                  <Trash2 />
-                  Delete
-                </button>
               </div>
             </div>
           ))}

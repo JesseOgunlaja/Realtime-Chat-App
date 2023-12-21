@@ -33,7 +33,7 @@ const Navbar = () => {
                 loading="eager"
                 width={50}
                 height={50}
-              ></Image>
+              />
             </Link>
           </li>
           <li>

@@ -15,24 +15,34 @@ export async function POST(request: NextRequest) {
 
     if (chatIndex === -1) {
       return NextResponse.json(
-        { message: "Chat not found with that ID" },
+        { message: "Can't find chat with that ID" },
         { status: 404 }
       );
     }
 
-    const messageBeingEditedIndex = user.chats[chatIndex].messages.findIndex(
+    const messageIndex = user.chats[chatIndex].messages.findIndex(
       (message) => message.id === body.messageID
     );
 
-    if (messageBeingEditedIndex === -1) {
+    if (messageIndex === -1) {
       return NextResponse.json(
-        { message: "Message not found" },
+        { message: "Can't find message with that ID" },
         { status: 404 }
       );
     }
 
-    user.chats[chatIndex].messages[messageBeingEditedIndex].message =
-      body.newMessage.replaceAll("’", "'");
+    trigger(user.chats[chatIndex].withID, "deleted-message", {
+      chatID: body.chatID,
+      messageID: body.messageID,
+    });
+
+    user.chats[chatIndex].messages.splice(messageIndex, 1);
+
+    trigger(JSON.parse(headersList.get("key") as string), "message-deleted", {
+      newUser: user,
+      chatID: body.chatID,
+      messageID: body.messageID,
+    });
 
     const otherUser = (await redis.hgetall(
       user.chats[chatIndex].withID
@@ -41,18 +51,14 @@ export async function POST(request: NextRequest) {
     const otherUserChatIndex = otherUser.chats.findIndex(
       (chat) => chat.id === body.chatID
     );
+    const otherUserMessageIndex = otherUser.chats[
+      otherUserChatIndex
+    ].messages.findIndex((message) => message.id === body.messageID);
 
-    otherUser.chats[otherUserChatIndex].messages[
-      messageBeingEditedIndex
-    ].message = body.newMessage.replaceAll("’", "'");
-
-    trigger(user.chats[chatIndex].withID, "message-edited", {
-      chats: otherUser.chats,
-    });
-    trigger(user.chats[chatIndex].withID, "message-edited-sent", {
-      chatID: body.chatID,
-      chats: otherUser.chats,
-    });
+    otherUser.chats[otherUserChatIndex].messages.splice(
+      otherUserMessageIndex,
+      1
+    );
 
     const redisPipeline = redis.pipeline();
 
