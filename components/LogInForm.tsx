@@ -129,7 +129,7 @@ const SignUpForm = () => {
           placeholder="Password"
           type={passwordVisibile ? "text" : "password"}
           name="password"
-          id={styles["password-input"]}
+          className={styles["password-input"]}
         />
         <button
           className={styles["show-password-button"]}

@@ -11,7 +11,7 @@ const Page = () => {
         <div className={styles["has-an-account-container"]}>
           <p className={styles["has-an-account"]}>Already have an account?</p>
           <p className={styles["log-in-now"]}>
-            Log in <Link href="/login">here</Link>
+            <Link href="/login">Log in here</Link>
           </p>
         </div>
       </div>

@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "update": "npm i next@latest react@latest react-dom@latest eslint-config-next@latest @types/react@latest @types/react-dom@latest"
+    "update": "npm i next@latest react@latest react-dom@latest eslint-config-next@latest @types/react@latest @types/react-dom@latest",
+    "unlighthouse-test": "npx unlighthouse --site https://whispernet.chat --desktop --no-cache"
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.1",

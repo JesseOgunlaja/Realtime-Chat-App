@@ -49,9 +49,9 @@ export default async function Home() {
         </div>
       </div>
       <div className={styles["our-goal"]}>
-        <h4 className={styles["our-goal-title"]}>
+        <p className={styles["our-goal-title"]}>
           Enabling Universal Communication
-        </h4>
+        </p>
         <Balancer className={styles["our-goal-description"]}>
           Our goal is to allow people to commuincate with others all around the
           world safely and securely, and most importantly for free.

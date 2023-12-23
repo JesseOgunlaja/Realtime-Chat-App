@@ -1,6 +1,7 @@
 "use client";
 import styles from "@/styles/friends.module.css";
 import { User } from "@/utils/redis";
+import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
 import { MessageSquare, MoreVertical } from "lucide-react";
 import Link from "next/link";
@@ -54,7 +55,7 @@ const FriendsComponent = ({
 
   async function removeFriend() {
     hideModal();
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
     currentUser.chats.splice(
       user.chats.findIndex(
         (chat) => chat.withID === friendBeingDeletedID.current

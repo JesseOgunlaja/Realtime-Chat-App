@@ -53,7 +53,7 @@
   width: 80%;
 }
 
-#password-input {
+.password-input {
   min-width: 70.70666452%;
   max-width: 70.70666452%;
   display: inline;
@@ -106,12 +106,12 @@
 .has-an-account,
 .no-account {
   color: #00a82d;
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .log-in-now,
 .sign-up-now {
-  font-size: 18px;
+  font-size: 20px;
 }
 
 .log-in-now a,

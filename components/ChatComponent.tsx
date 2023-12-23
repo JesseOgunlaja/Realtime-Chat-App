@@ -1,10 +1,15 @@
 "use client";
+import { usePreviousValue } from "@/hooks/usePreviousValue";
 import styles from "@/styles/chat.module.css";
 import { User } from "@/utils/redis";
-import { containsEmoji } from "@/utils/utils";
+import {
+  containsEmoji,
+  getNewReference,
+  removeUndefinedFromObject,
+} from "@/utils/utils";
 import { UUID } from "crypto";
 import { format } from "date-fns";
-import { Pencil, Reply, SendHorizontal, Trash2 } from "lucide-react";
+import { Pencil, Reply, SendHorizontal, Trash2, X } from "lucide-react";
 import { Dispatch, FormEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -21,34 +26,55 @@ const ChatComponent = ({
   chatID: UUID;
   chatIndex: number;
 }) => {
+  const prevUser = usePreviousValue(user);
   const [message, setMessage] = useState<string>("");
   const [popupVisibility, setPopupVisibility] = useState<boolean[]>(
     user.chats[chatIndex].messages.map(() => false)
   );
   const messagesContainer = useRef<HTMLDivElement>(null);
+  const sendMessageBox = useRef<HTMLTextAreaElement>(null);
+  const editMessageBox = useRef<HTMLInputElement>(null);
 
   const dialog = useRef<HTMLDialogElement>(null);
   const dialog2 = useRef<HTMLDialogElement>(null);
 
   const messageBeingEditedID = useRef<UUID>();
   const messageBeingDeletedID = useRef<UUID>();
+  const [messageBeingRepliedID, setMessageBeingRepliedID] = useState<UUID>();
+  const [messageBeingScrolledToIndex, setMessageBeingScrolledToIndex] =
+    useState<number>();
 
   useEffect(() => {
-    messagesContainer.current!.scrollTop =
-      messagesContainer.current!.scrollHeight;
+    if (
+      !prevUser ||
+      prevUser.chats[chatIndex].messages.length !==
+        user.chats[chatIndex].messages.length
+    ) {
+      messagesContainer.current!.scrollTop =
+        messagesContainer.current!.scrollHeight;
+    }
   }, [user]);
 
   window.onclick = (e) => {
-    const clickedElement = e.target as any;
-    if (
-      !clickedElement.className ||
-      typeof clickedElement.className !== "string" ||
-      !clickedElement.className?.includes("message") ||
-      clickedElement.className?.includes("messages")
-    ) {
-      const newVisibility = [...popupVisibility];
-      newVisibility.fill(false);
-      setPopupVisibility(newVisibility);
+    const container = messagesContainer.current;
+    if (container) {
+      const elementClicked = e.target as any;
+      const children = Array.from(container.children as HTMLCollection);
+
+      if (
+        children.every((el) => {
+          return (
+            elementClicked.className !== el.className &&
+            Array.from(el.children).every((el) => {
+              return elementClicked.className !== el.className;
+            })
+          );
+        })
+      ) {
+        const newVisibility = getNewReference(popupVisibility);
+        newVisibility.fill(false);
+        setPopupVisibility(newVisibility);
+      }
     }
   };
 
@@ -57,15 +83,19 @@ const ChatComponent = ({
 
     if (message === "") return;
 
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
     const timestamp = Date.now();
-    currentUser.chats[chatIndex as number].messages.push({
-      message: message.replaceAll("’", "'"),
-      fromYou: true,
-      timestamp,
-      id: null as never,
-    });
+    currentUser.chats[chatIndex as number].messages.push(
+      removeUndefinedFromObject({
+        message: message.replaceAll("’", "'"),
+        fromYou: true,
+        timestamp,
+        id: null as never,
+        replyID: messageBeingRepliedID,
+      })
+    );
     currentUser.chats[chatIndex as number].visible = true;
+    setMessageBeingRepliedID(undefined);
     setMessage("");
     setUser(currentUser);
     messagesContainer.current!.scrollTop =
@@ -78,12 +108,12 @@ const ChatComponent = ({
       },
       body: JSON.stringify({
         message,
-        timestamp,
         chatID: chatID,
+        replyID: messageBeingRepliedID,
       }),
     });
     const data = await res.json();
-    if (data.message != "Success") {
+    if (data.message !== "Success") {
       setUser(user);
       setMessage(message);
       toast.error(
@@ -91,13 +121,16 @@ const ChatComponent = ({
       );
     } else {
       currentUser.chats[chatIndex as number].messages.pop();
-      currentUser.chats[chatIndex as number].messages.push({
-        message: message.replaceAll("’", "'"),
-        fromYou: true,
-        timestamp,
-        id: data.messageID,
-      });
-      setUser(JSON.parse(JSON.stringify(currentUser)));
+      currentUser.chats[chatIndex as number].messages.push(
+        removeUndefinedFromObject({
+          message: message.replaceAll("’", "'"),
+          fromYou: true,
+          timestamp,
+          id: data.messageID,
+          replyID: messageBeingRepliedID,
+        })
+      );
+      setUser(getNewReference(currentUser));
     }
   }
 
@@ -128,6 +161,7 @@ const ChatComponent = ({
     messageBeingEditedID.current = ID;
     dialog.current?.show();
     dialog.current!.style.display = "flex";
+    editMessageBox.current?.focus();
   }
 
   function hideEditMessageBox() {
@@ -143,7 +177,7 @@ const ChatComponent = ({
 
     if (formValues["new-message"] === "") return;
 
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
 
     currentUser.chats[chatIndex].messages[
       user.chats[chatIndex].messages.findIndex(
@@ -189,7 +223,7 @@ const ChatComponent = ({
   }
 
   async function deleteMessage() {
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
     const messageBeingDeletedIndex = user.chats[chatIndex].messages.findIndex(
       (message) => message.id == messageBeingDeletedID.current
     );
@@ -218,6 +252,19 @@ const ChatComponent = ({
     }
   }
 
+  useEffect(() => {
+    if (!messageBeingRepliedID) return;
+
+    const element = messagesContainer.current;
+
+    if (!element) return;
+
+    if (element.scrollHeight - element.scrollTop - element.clientHeight <= 51) {
+      messagesContainer.current!.scrollTop =
+        messagesContainer.current!.scrollTop + 50;
+    }
+  }, [messageBeingRepliedID]);
+
   return (
     <div className={styles.page}>
       <dialog ref={dialog} className={styles.dialog}>
@@ -226,6 +273,7 @@ const ChatComponent = ({
           <form onSubmit={editMessage}>
             <input
               type="text"
+              ref={editMessageBox}
               key={messageBeingEditedID.current}
               name="new-message"
               defaultValue={
@@ -270,12 +318,61 @@ const ChatComponent = ({
           user?.chats[chatIndex].messages.length !== 0 &&
           user?.chats[chatIndex].messages.map((message, index) => (
             <div
+              style={{
+                background:
+                  message.id === messageBeingRepliedID
+                    ? message.fromYou
+                      ? "#102823"
+                      : "#1b1b1c"
+                    : undefined,
+              }}
               onClick={() => togglePopupVisibility(index)}
               key={Math.random()}
-              className={
+              className={`${
                 styles[`${message.fromYou ? "my-message" : "other-message"}`]
-              }
+              } ${
+                index === messageBeingScrolledToIndex
+                  ? styles["message-being-scrolled-to"]
+                  : ""
+              }`}
             >
+              {message.replyID ? (
+                <div
+                  onClick={() => {
+                    const messageBeingRepliedIndex = user.chats[
+                      chatIndex
+                    ].messages.findIndex(
+                      (messageBeingFound) =>
+                        messageBeingFound.id === message.replyID
+                    );
+                    setMessageBeingScrolledToIndex(messageBeingRepliedIndex);
+                    setTimeout(() => {
+                      setMessageBeingScrolledToIndex(undefined);
+                    }, 1050);
+                    messagesContainer.current?.children[
+                      messageBeingRepliedIndex
+                    ].scrollIntoView({ behavior: "smooth", block: "center" });
+                  }}
+                  className={styles["reply-container"]}
+                >
+                  <p className={styles["reply-to"]}>
+                    {user.chats[chatIndex].messages.find(
+                      (messageBeingFound) =>
+                        messageBeingFound.id === message.replyID
+                    )?.fromYou
+                      ? "You"
+                      : user.chats[chatIndex].with}
+                  </p>
+                  <p className={styles["reply-text"]}>
+                    {
+                      user.chats[chatIndex].messages.find(
+                        (messageBeingFound) =>
+                          messageBeingFound.id === message.replyID
+                      )?.message
+                    }
+                  </p>
+                </div>
+              ) : null}
               <p className={styles["message-text"]}>
                 {renderChatMessage(message.message)}
               </p>
@@ -300,13 +397,27 @@ const ChatComponent = ({
                       <p>Edit</p>
                       <Pencil />
                     </button>
+                    <button
+                      onClick={() => {
+                        sendMessageBox.current?.focus();
+                        setMessageBeingRepliedID(message.id);
+                      }}
+                    >
+                      <p>Reply</p>
+                      <Reply />
+                    </button>
                     <button onClick={() => showDeleteMessageBox(message.id)}>
                       <p>Delete</p>
                       <Trash2 />
                     </button>
                   </>
                 ) : (
-                  <button>
+                  <button
+                    onClick={() => {
+                      sendMessageBox.current?.focus();
+                      setMessageBeingRepliedID(message.id);
+                    }}
+                  >
                     <p>Reply</p>
                     <Reply />
                   </button>
@@ -316,7 +427,23 @@ const ChatComponent = ({
           ))}
       </div>
       <form onSubmit={sendMessage} className={styles.form}>
+        {messageBeingRepliedID ? (
+          <div className={styles["message-being-replied-to"]}>
+            <p>
+              Replying to{" "}
+              <b>
+                {user.chats[chatIndex].messages.find(
+                  (message) => message.id === messageBeingRepliedID
+                )?.fromYou
+                  ? "Yourself"
+                  : user.chats[chatIndex].with}
+              </b>
+            </p>
+            <X onClick={() => setMessageBeingRepliedID(undefined)} />
+          </div>
+        ) : null}
         <textarea
+          ref={sendMessageBox}
           value={message}
           onKeyDown={(e) => {
             if (e.key === "Enter" && !e.shiftKey) {

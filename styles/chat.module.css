@@ -20,7 +20,8 @@
 .form {
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   border-top: 1px solid rgb(0, 0, 0);
   padding-top: 10px;
@@ -38,7 +39,7 @@
   display: block;
 }
 
-.form svg {
+.form > svg {
   cursor: pointer;
   position: absolute;
   background: black;
@@ -80,6 +81,54 @@
   align-items: flex-end;
   cursor: pointer;
   position: relative;
+}
+
+.my-message .reply-container {
+  background: #003c34;
+}
+
+.other-message .reply-container {
+  background: #28282a;
+}
+
+.other-message.message-being-scrolled-to {
+  animation: highlightOtherMessage 1s;
+}
+
+.my-message.message-being-scrolled-to {
+  animation: highlightMyMessage 1s;
+}
+
+@keyframes highlightMyMessage {
+  0%,
+  100% {
+    background: #215046;
+  }
+  50% {
+    background: #102823;
+  }
+}
+
+@keyframes highlightOtherMessage {
+  0%,
+  100% {
+    background: #363638;
+  }
+  50% {
+    background: #1b1b1c;
+  }
+}
+
+.reply-container {
+  padding: 7.5px;
+  width: 100%;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+}
+
+.reply-to {
+  font-weight: bold;
 }
 
 .my-message {
@@ -148,20 +197,16 @@
 }
 
 .my-message-popup button:nth-child(1):hover,
+.my-message-popup button:nth-child(2):hover,
 .other-message-popup button:hover {
   background: white;
   color: black;
   border-radius: 2px;
 }
 
-.my-message-popup button:nth-child(1):hover ~ button:nth-child(2) {
-  box-shadow: none;
-}
-
-.my-message-popup button:nth-child(2):hover {
+.my-message-popup button:nth-child(3):hover {
   background: rgba(250, 0, 0, 0.8);
   color: white;
-  box-shadow: none;
   border-radius: 2px;
 }
 
@@ -186,7 +231,7 @@
   padding: 5px;
 }
 
-.my-message-popup button:nth-child(2) {
+.my-message-popup button:nth-child(3) {
   color: red;
   padding-top: 5px;
   box-shadow: 0.2px -1px 0 rgba(255, 255, 255, 0.5);
@@ -261,13 +306,13 @@
   height: 80px !important;
   min-height: 0px !important;
   justify-content: space-between !important;
-  width: 500px;
+  width: min(500px, 99vw);
 }
 
 .dialog:nth-child(1) .bottomButton {
   border-radius: 0px 0px 10px 10px;
   background: white !important;
-  width: min(500px, 99vw);
+  width: inherit;
   padding: 15px 20px;
   font-size: 25px;
   color: black !important;
@@ -295,6 +340,24 @@
 .dialog:nth-child(2) .bottomButton > :nth-child(2) {
   background: red;
   border-radius: 0px 0px 10px 0px;
+}
+
+.message-being-replied-to {
+  width: 80%;
+  background: #333;
+  border-radius: 10px 10px 0px 0px;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.message-being-replied-to ~ textarea {
+  border-radius: 0px 0px 12.5px 12.5px;
+}
+
+.message-being-replied-to svg {
+  cursor: pointer;
 }
 
 @media (min-width: 100vh) and (min-width: 800px) {

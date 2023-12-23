@@ -1,11 +1,12 @@
 "use client";
 import styles from "@/styles/signed-in-navbar.module.css";
 import { User as UserType } from "@/utils/redis";
-import { Dispatch, useState } from "react";
+import { getNewReference } from "@/utils/utils";
+import { UUID } from "crypto";
 import { LogOut, Menu, UserCog, UserPlus, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { UUID } from "crypto";
+import { Dispatch, useState } from "react";
 
 const SignedInNavbar = ({
   user,
@@ -19,7 +20,7 @@ const SignedInNavbar = ({
 
   async function hideChat(e: MouseEvent, chatID: UUID, index: number) {
     e.preventDefault();
-    const currentUser = JSON.parse(JSON.stringify(user)) as UserType;
+    const currentUser = getNewReference(user) as UserType;
     currentUser.chats[index].visible = false;
     setUser(currentUser);
     const res = await fetch("/api/chat/hide", {

@@ -104,7 +104,6 @@ export async function protectedRouteForwarder(request: NextRequest) {
       },
     });
   } catch (err) {
-    console.log(err);
     return NextResponse.json({ error: `${err}` }, { status: 500 });
   }
 }

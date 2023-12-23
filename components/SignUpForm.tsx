@@ -4,10 +4,10 @@ import styles from "@/styles/signup.module.css";
 import { encryptString } from "@/utils/encryption";
 import { PasswordSchema, UsernameSchema } from "@/utils/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 const SignUpForm = () => {
   const router = useRouter();
@@ -100,7 +100,7 @@ const SignUpForm = () => {
           placeholder="Password"
           type={passwordVisibile ? "text" : "password"}
           name="password"
-          id={styles["password-input"]}
+          className={styles["password-input"]}
         />
         <button
           className={styles["show-password-button"]}
@@ -118,7 +118,7 @@ const SignUpForm = () => {
           placeholder="Repeat password"
           type={repeatedPasswordVisibile ? "text" : "password"}
           name="repeated-password"
-          id={styles["password-input"]}
+          className={styles["password-input"]}
         />
         <button
           className={styles["show-password-button"]}
@@ -135,7 +135,11 @@ const SignUpForm = () => {
         Do you agree to our <Link href="/privacy-policy">Privacy Policy</Link>{" "}
         and <Link href="/terms-of-service">Terms of service</Link>
         {"   "}
-        <input type="checkbox" ref={AgreementCheckbox} />
+        <input
+          type="checkbox"
+          name="agreement-checkbox"
+          ref={AgreementCheckbox}
+        />
       </Balancer>
       <input type="submit" value="Sign up" readOnly />
     </form>

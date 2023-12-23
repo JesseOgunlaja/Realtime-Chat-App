@@ -40,8 +40,6 @@ export async function POST(request: NextRequest) {
       friendRequestBeingAccepted.fromID
     )) as User;
 
-    const originalOtherUser = JSON.parse(JSON.stringify(otherUser)) as User;
-
     const chatID = randomUUID();
 
     user.incomingFriendRequests = user.incomingFriendRequests.filter(

@@ -1,6 +1,7 @@
 "use client";
 import styles from "@/styles/add-friend.module.css";
 import { User } from "@/utils/redis";
+import { getNewReference } from "@/utils/utils";
 import { Dispatch, FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
@@ -46,7 +47,7 @@ const AddFriendComponent = ({
     });
     const data = await res.json();
     if (data.message === "Success") {
-      const currentUser = JSON.parse(JSON.stringify(user));
+      const currentUser = getNewReference(user);
       user!.outgoingFriendRequests = data.newOutgoingFriendRequests;
       setUser(currentUser);
       toast.success("Your friend request was sent successfully", {

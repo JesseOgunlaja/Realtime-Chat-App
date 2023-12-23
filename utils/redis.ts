@@ -34,6 +34,7 @@ export type Message = {
   fromYou: boolean;
   timestamp: number;
   id: UUID;
+  replyID?: UUID;
 };
 
 export type Chat = {

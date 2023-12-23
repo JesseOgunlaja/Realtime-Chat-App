@@ -11,7 +11,7 @@ const Page = () => {
         <div className={styles["no-account-container"]}>
           <p className={styles["no-account"]}>Don&apos;t have an account?</p>
           <p className={styles["sign-up-now"]}>
-            Sign up <Link href="/signup">here</Link>
+            <Link href="/signup"> Sign up here</Link>
           </p>
         </div>
       </div>

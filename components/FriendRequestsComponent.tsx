@@ -1,11 +1,12 @@
 "use client";
 
+import styles from "@/styles/friend-requests.module.css";
 import {
   IncomingFriendRequest,
   OutgoingFriendRequest,
   User,
 } from "@/utils/redis";
-import styles from "@/styles/friend-requests.module.css";
+import { getNewReference } from "@/utils/utils";
 import { Check, X } from "lucide-react";
 import { Dispatch } from "react";
 import { toast } from "sonner";
@@ -21,7 +22,7 @@ const FriendRequestsComponent = ({
     friendRequestBeingDeclined: IncomingFriendRequest,
     index: number
   ) {
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
     currentUser.incomingFriendRequests.splice(index, 1);
     setUser(currentUser);
     const loadingToastID = toast.loading("Loading", { duration: Infinity });
@@ -52,7 +53,7 @@ const FriendRequestsComponent = ({
     friendRequestBeingDeleted: OutgoingFriendRequest,
     index: number
   ) {
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
     currentUser.outgoingFriendRequests.splice(index, 1);
     setUser(currentUser);
     const loadingToastID = toast.loading("Loading", { duration: Infinity });
@@ -85,7 +86,7 @@ const FriendRequestsComponent = ({
     friendRequestBeingAccepted: IncomingFriendRequest,
     index: number
   ) {
-    const currentUser = JSON.parse(JSON.stringify(user)) as User;
+    const currentUser = getNewReference(user) as User;
     currentUser.incomingFriendRequests.splice(index, 1);
     setUser(currentUser);
     const loadingToastID = toast.loading("Loading", { duration: Infinity });
