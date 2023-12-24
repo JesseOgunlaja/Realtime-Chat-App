@@ -11,11 +11,7 @@ export async function POST(request: NextRequest) {
 
     const friendRequestBeingAccepted: IncomingFriendRequest =
       body.friendRequestBeingAccepted;
-    if (
-      typeof friendRequestBeingAccepted.from !== "string" ||
-      typeof friendRequestBeingAccepted.fromDisplayName !== "string" ||
-      typeof friendRequestBeingAccepted.fromID !== "string"
-    ) {
+    if (typeof friendRequestBeingAccepted.fromID !== "string") {
       return NextResponse.json(
         { message: "Invalid friend request" },
         { status: 400 }
@@ -48,13 +44,10 @@ export async function POST(request: NextRequest) {
     user.chats.push({
       id: chatID,
       messages: [],
-      with: otherUser.displayName,
       withID: friendRequestBeingAccepted.fromID,
       visible: true,
     });
     user.friends.push({
-      username: otherUser.username,
-      alias: otherUser.displayName,
       id: friendRequestBeingAccepted.fromID,
     });
 
@@ -69,13 +62,10 @@ export async function POST(request: NextRequest) {
     otherUser.chats.push({
       id: chatID,
       messages: [],
-      with: user.displayName,
       withID: JSON.parse(requestHeaders.get("key") as string) as UUID,
       visible: true,
     });
     otherUser.friends.push({
-      username: user.username,
-      alias: user.displayName,
       id: JSON.parse(requestHeaders.get("key") as string),
     });
 
