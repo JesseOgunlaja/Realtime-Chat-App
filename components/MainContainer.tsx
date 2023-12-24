@@ -6,10 +6,21 @@ const MainContainer = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const navPaths = ["/", "/signup", "/login"];
 
+  console.log(pathname);
+
   if (pathname.includes("/dashboard")) return <>{children}</>;
 
   return (
     <main style={{ marginTop: navPaths.includes(pathname) ? "110px" : "auto" }}>
+      {pathname === "/terms-of-service" || pathname === "/privacy-policy" ? (
+        <style jsx global>
+          {`
+            body {
+              padding: 0px;
+            }
+          `}
+        </style>
+      ) : null}
       {children}
     </main>
   );

@@ -48,8 +48,8 @@ const Page = () => {
       <p>
         Our Privacy Policy outlines how we collect, use, and disclose
         information from users. By using this app, you agree to the terms
-        outlined in the Privacy Policy. Please review the Privacy Policy{" "}
-        <Link href="/privacy-policy">here</Link>.
+        outlined in the Privacy Policy. Please review the{" "}
+        <Link href="/privacy-policy">Privacy Policy</Link>.
       </p>
 
       <h2>5. Disclaimer</h2>
