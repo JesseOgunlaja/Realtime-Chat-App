@@ -15,11 +15,7 @@ export async function POST(request: NextRequest) {
 
     const friendRequestBeingDeleted: OutgoingFriendRequest =
       body.friendRequestBeingDeleted;
-    if (
-      typeof friendRequestBeingDeleted.to !== "string" ||
-      typeof friendRequestBeingDeleted.toDisplayName !== "string" ||
-      typeof friendRequestBeingDeleted.toID !== "string"
-    ) {
+    if (typeof friendRequestBeingDeleted.toID !== "string") {
       return NextResponse.json(
         { message: "Invalid friend request" },
         { status: 400 }

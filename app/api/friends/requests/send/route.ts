@@ -9,6 +9,12 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const friendBeingAddedUsername = body.usernameBeingBefriended;
 
+    const usernamesWithIDs = (await redis.lrange("Usernames", 0, -1)) as {
+      name: string;
+      displayName: string;
+      id: UUID;
+    }[];
+
     if (!friendBeingAddedUsername) {
       return NextResponse.json(
         { message: "User being added was not passed" },
@@ -49,10 +55,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const friendBeingAddedID = usernamesWithIDs.find(
+      (usernameWIthID) =>
+        usernameWIthID.name.toUpperCase() ===
+        friendBeingAddedUsername.toUpperCase()
+    )?.id;
+
     if (
       user.outgoingFriendRequests.some(
-        (friendRequest) =>
-          friendRequest.to === friendBeingAddedUsername.toUpperCase()
+        (friendRequest) => friendRequest.toID === friendBeingAddedID
       )
     ) {
       return NextResponse.json(
@@ -62,8 +73,7 @@ export async function POST(request: NextRequest) {
     }
     if (
       user.incomingFriendRequests.some(
-        (friendRequest) =>
-          friendRequest.from === friendBeingAddedUsername.toUpperCase()
+        (friendRequest) => friendRequest.fromID === friendBeingAddedID
       )
     ) {
       return NextResponse.json(
@@ -77,14 +87,10 @@ export async function POST(request: NextRequest) {
       ...friendBeingAddedResult.user.incomingFriendRequests,
     ];
     currentIncomingFriendRequests.push({
-      from: user.username,
-      fromDisplayName: user.displayName,
       fromID: JSON.parse(String(requestHeaders.get("key"))),
     });
     const currentOutgoingFriendRequests = [...user.outgoingFriendRequests];
     currentOutgoingFriendRequests.push({
-      to: friendBeingAddedResult.user.username,
-      toDisplayName: friendBeingAddedResult.user.displayName,
       toID: friendBeingAddedResult.key,
     });
     trigger(key, "friend-request-sent", {
