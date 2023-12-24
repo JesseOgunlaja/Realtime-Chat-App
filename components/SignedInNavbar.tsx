@@ -61,12 +61,12 @@ const SignedInNavbar = ({
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
       <nav className={styles.nav}>
-        <Link href="/dashboard">
+        <Link className={styles.random} href="/dashboard">
           <Image
             loading="eager"
             priority
             className={styles.logo}
-            src="/logo.png"
+            src="/favicon.ico"
             height={50}
             width={50}
             alt="Website logo"
@@ -148,7 +148,7 @@ const SignedInNavbar = ({
               loading="eager"
               priority
               className={styles.logo2}
-              src="/logo.png"
+              src="/favicon.ico"
               height={50}
               width={50}
               alt="Website logo"

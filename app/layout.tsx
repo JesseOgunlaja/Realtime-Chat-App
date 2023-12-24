@@ -14,8 +14,12 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://whispernet.chat"),
   title: "WhisperNet",
   description: "The ability to communicate at the tip of your finger.",
+  openGraph: {
+    images: "/opengraph-image.png",
+  },
 };
 
 export default function RootLayout({
