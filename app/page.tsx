@@ -5,7 +5,10 @@ import Balancer from "react-wrap-balancer";
 export default async function Home() {
   return (
     <div className={styles.container}>
-      <h1 className={styles.catchphrase}>Chat. Connect. Create.</h1>
+      <h1 style={{ fontSize: "1px", color: "transparent", userSelect: "none" }}>
+        WhisperNet
+      </h1>
+      <h2 className={styles.catchphrase}>Chat. Connect. Create.</h2>
       <Balancer className={styles.description}>
         The ability to communicate at the tip of your finger.
       </Balancer>

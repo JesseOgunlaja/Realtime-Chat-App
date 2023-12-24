@@ -10,8 +10,8 @@ const Page = () => {
         padding: "20px",
       }}
     >
-      <title>Terms of Service</title>
-      <h1>Terms of Service</h1>
+      <title>WhisperNet Terms of Service</title>
+      <h1>WhisperNet Terms of Service</h1>
       <h2>1. Introduction</h2>
       <p>
         Welcome to WhisperNet, a chat application that allows users to

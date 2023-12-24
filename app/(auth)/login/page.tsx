@@ -6,7 +6,9 @@ const Page = () => {
   return (
     <div className={styles.page}>
       <div className={styles.container}>
-        <h1 className={styles.title}>Log in</h1>
+        <h1 className={styles.title}>
+          Log in to <span>WhisperNet</span>
+        </h1>
         <LogInForm />
         <div className={styles["no-account-container"]}>
           <p className={styles["no-account"]}>Don&apos;t have an account?</p>

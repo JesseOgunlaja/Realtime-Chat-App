@@ -1,5 +1,3 @@
-import React from "react";
-
 const Page = () => {
   return (
     <main
@@ -10,8 +8,8 @@ const Page = () => {
         padding: "20px",
       }}
     >
-      <title>Chat App Privacy Policy</title>
-      <h1>Privacy Policy</h1>
+      <title>WhisperNet Privacy Policy</title>
+      <h1>WhisperNet Privacy Policy</h1>
 
       <p>
         Your privacy is of utmost importance to us. This Privacy Policy is

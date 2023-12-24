@@ -20,6 +20,25 @@
   margin-bottom: 15px;
 }
 
+.title span {
+  background: linear-gradient(70deg, #2e3192, #1bffff, #2e3192);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  color: transparent;
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
 .form {
   width: 100%;
   display: flex;
