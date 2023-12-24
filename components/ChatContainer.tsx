@@ -12,6 +12,7 @@ const ChatContainer = (props: {
   uuid: UUID;
   chatID: UUID;
   chatIndex: number;
+  usernamesWithIDs: string;
 }) => {
   const [user, setUser] = useState<User>(props.user);
 
@@ -19,10 +20,15 @@ const ChatContainer = (props: {
 
   return (
     <>
-      <SignedInNavbar user={user || props.user} setUser={setUser} />
+      <SignedInNavbar
+        usernamesWithIDs={props.usernamesWithIDs}
+        user={user || props.user}
+        setUser={setUser}
+      />
       <ChatComponent
         user={user || props.user}
         setUser={setUser}
+        usernamesWithIDs={props.usernamesWithIDs}
         uuid={props.uuid}
         chatID={props.chatID}
         chatIndex={props.chatIndex}

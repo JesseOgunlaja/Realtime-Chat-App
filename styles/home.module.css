@@ -50,30 +50,25 @@
   width: 250px;
   text-align: center;
   transition: transform 500ms;
-  /* animation: slide-background-left 500ms forwards; */
 }
 
 .start-now:hover {
-  animation: slide-background-right 0.5s ease-in forwards;
   transform: scale(1.04);
 }
 
 .selling-points {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: grid;
   gap: 20px;
   padding: 20px;
-  /* flex: 1; */
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 .selling-point {
   background: rgb(20, 20, 20) !important;
   padding: 20px;
   border-radius: 20px;
-  width: 30%;
   text-align: center;
-  flex: 1;
   position: relative;
   transition: transform 500ms;
 }
@@ -121,30 +116,6 @@
   font-size: 25px;
 }
 
-@keyframes slide-background-left {
-  0% {
-    background-size: 650%;
-  }
-  40% {
-    background-size: 650%;
-  }
-  100% {
-    background-size: 100%;
-  }
-}
-
-@keyframes slide-background-right {
-  0% {
-    background-size: 100%;
-  }
-  80% {
-    background-size: 650%;
-  }
-  100% {
-    background-size: 650%;
-  }
-}
-
 @media (min-width: 100vh) {
   .catchphrase::before,
   .catchphrase::after {
@@ -162,7 +133,8 @@
     font-weight: 500;
   }
   .selling-points {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
   }
   .selling-point {
     width: 90vw;

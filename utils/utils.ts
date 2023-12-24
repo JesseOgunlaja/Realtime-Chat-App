@@ -1,3 +1,5 @@
+import { FormEvent } from "react";
+
 export const compareObjects = (
   x: Record<string, unknown>,
   y: Record<string, unknown>
@@ -12,7 +14,7 @@ export function containsEmoji(string: string) {
   return emojiRegex.test(string);
 }
 
-export function getNewReference(val: unknown) {
+export function getNewReference<T>(val: T): T {
   return JSON.parse(JSON.stringify(val));
 }
 
@@ -22,4 +24,10 @@ export function removeUndefinedFromObject<T>(obj: T): T {
       ([key, value]) => value !== undefined
     )
   ) as T;
+}
+
+export function getFormValues(e: FormEvent<HTMLFormElement>) {
+  const formData = new FormData(e.currentTarget);
+  const formValues = Object.fromEntries(formData.entries());
+  return formValues;
 }

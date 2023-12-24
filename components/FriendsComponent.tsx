@@ -1,5 +1,6 @@
 "use client";
 import styles from "@/styles/friends.module.css";
+import { decryptString } from "@/utils/encryption";
 import { User } from "@/utils/redis";
 import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
@@ -12,9 +13,11 @@ import { toast } from "sonner";
 const FriendsComponent = ({
   user,
   setUser,
+  usernamesWithIDs,
 }: {
   user: User;
   setUser: Dispatch<User>;
+  usernamesWithIDs: string;
 }) => {
   const [popupVisibility, setPopupVisibility] = useState(
     user?.friends.map(() => false)
@@ -101,6 +104,16 @@ const FriendsComponent = ({
     dialog.current!.style.display = "none";
   }
 
+  function getFriendDataFromID(id: UUID) {
+    return (
+      JSON.parse(decryptString(usernamesWithIDs, true)) as {
+        name: string;
+        displayName: string;
+        id: UUID;
+      }[]
+    ).find((usernameWithID) => usernameWithID.id === id);
+  }
+
   return (
     <div className={styles.page}>
       <dialog ref={dialog} className={styles.dialog}>
@@ -132,12 +145,12 @@ const FriendsComponent = ({
               }`}
             >
               <Avatar
-                name={friend.username}
+                name={getFriendDataFromID(friend.id)?.name}
                 round
                 size="40"
                 textSizeRatio={1.5}
               />
-              <p>{friend.alias}</p>
+              <p>{getFriendDataFromID(friend.id)?.displayName}</p>
               <MessageSquare />
               <MoreVertical
                 onClick={(e) =>

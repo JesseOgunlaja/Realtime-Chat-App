@@ -34,6 +34,7 @@ const Page = async ({ params }: { params: { chatID: string } }) => {
   return (
     <ChatContainer
       user={user}
+      usernamesWithIDs={data.usernamesWithIDs}
       uuid={key as UUID}
       chatIndex={chatIndex}
       chatID={params.chatID as UUID}

@@ -8,9 +8,11 @@ import { toast } from "sonner";
 const AddFriendComponent = ({
   user,
   setUser,
+  usernamesWithIDs,
 }: {
   user: User;
   setUser: Dispatch<User>;
+  usernamesWithIDs: string;
 }) => {
   const [friendBeingAdded, setFriendBeingAdded] = useState<string>("");
   const submitButtonRef = useRef<HTMLInputElement>(null);

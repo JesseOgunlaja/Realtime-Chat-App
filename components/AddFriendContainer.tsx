@@ -7,15 +7,27 @@ import { useState } from "react";
 import AddFriendComponent from "./AddFriendComponent";
 import SignedInNavbar from "./SignedInNavbar";
 
-const AddFriendContainer = (props: { user: User; uuid: UUID }) => {
+const AddFriendContainer = (props: {
+  user: User;
+  uuid: UUID;
+  usernamesWithIDs: string;
+}) => {
   const [user, setUser] = useState<User>(props.user);
 
   useWebsockets(props.uuid, user || props.user, setUser);
 
   return (
     <>
-      <SignedInNavbar user={user || props.user} setUser={setUser} />
-      <AddFriendComponent user={user || props.user} setUser={setUser} />
+      <SignedInNavbar
+        usernamesWithIDs={props.usernamesWithIDs}
+        user={user || props.user}
+        setUser={setUser}
+      />
+      <AddFriendComponent
+        usernamesWithIDs={props.usernamesWithIDs}
+        user={user || props.user}
+        setUser={setUser}
+      />
     </>
   );
 };

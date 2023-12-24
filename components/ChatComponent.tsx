@@ -1,9 +1,11 @@
 "use client";
 import { usePreviousValue } from "@/hooks/usePreviousValue";
 import styles from "@/styles/chat.module.css";
+import { decryptString } from "@/utils/encryption";
 import { User } from "@/utils/redis";
 import {
   containsEmoji,
+  getFormValues,
   getNewReference,
   removeUndefinedFromObject,
 } from "@/utils/utils";
@@ -19,14 +21,25 @@ const ChatComponent = ({
   uuid,
   chatID,
   chatIndex,
+  usernamesWithIDs,
 }: {
   user: User;
   setUser: Dispatch<User>;
   uuid: UUID;
   chatID: UUID;
   chatIndex: number;
+  usernamesWithIDs: string;
 }) => {
   const prevUser = usePreviousValue(user);
+  const chatWith = (
+    JSON.parse(decryptString(usernamesWithIDs, true)) as {
+      name: string;
+      displayName: string;
+      id: UUID;
+    }[]
+  ).find(
+    (usernameWithID) => usernameWithID.id === user.chats[chatIndex].withID
+  )?.displayName;
   const [message, setMessage] = useState<string>("");
   const [popupVisibility, setPopupVisibility] = useState<boolean[]>(
     user.chats[chatIndex].messages.map(() => false)
@@ -172,8 +185,7 @@ const ChatComponent = ({
   async function editMessage(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const formValues = Object.fromEntries(formData.entries());
+    const formValues = getFormValues(e);
 
     if (formValues["new-message"] === "") return;
 
@@ -310,7 +322,7 @@ const ChatComponent = ({
         }
       `}</style>
       <div className={styles.header}>
-        <p>{chatIndex != undefined ? user?.chats[chatIndex].with : null}</p>
+        <p>{chatIndex != undefined ? chatWith : null}</p>
       </div>
       <div className={styles.messages} ref={messagesContainer}>
         {chatIndex != undefined &&
@@ -361,7 +373,7 @@ const ChatComponent = ({
                         messageBeingFound.id === message.replyID
                     )?.fromYou
                       ? "You"
-                      : user.chats[chatIndex].with}
+                      : chatWith}
                   </p>
                   <p className={styles["reply-text"]}>
                     {
@@ -436,7 +448,7 @@ const ChatComponent = ({
                   (message) => message.id === messageBeingRepliedID
                 )?.fromYou
                   ? "Yourself"
-                  : user.chats[chatIndex].with}
+                  : chatWith}
               </b>
             </p>
             <X onClick={() => setMessageBeingRepliedID(undefined)} />
@@ -453,9 +465,7 @@ const ChatComponent = ({
           }}
           onChange={(e) => setMessage(e.target.value)}
           placeholder={
-            chatIndex != undefined
-              ? `Message ${user?.chats[chatIndex].with}`
-              : "Loading..."
+            chatIndex != undefined ? `Message ${chatWith}` : "Loading..."
           }
         />
         <SendHorizontal onClick={() => sendMessage(undefined)} />

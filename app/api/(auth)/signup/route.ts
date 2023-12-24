@@ -55,6 +55,7 @@ export async function POST(request: NextRequest) {
 
     await redis.rpush("Usernames", {
       name: username,
+      displayName,
       id: uuid,
     });
 

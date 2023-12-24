@@ -17,7 +17,13 @@ const Page = async () => {
   const user: User = data.user;
   const key: UUID = data.key;
 
-  return <FriendsContainer user={user} uuid={key} />;
+  return (
+    <FriendsContainer
+      user={user}
+      uuid={key}
+      usernamesWithIDs={data.usernamesWithIDs}
+    />
+  );
 };
 
 export default Page;

@@ -1,4 +1,4 @@
-import DashboardContainer from "@/components/DashboardContainer";
+import SettingsContainer from "@/components/SettingsContainer";
 import { User } from "@/utils/redis";
 import { UUID } from "crypto";
 import { cookies } from "next/headers";
@@ -17,13 +17,7 @@ const Page = async (props: any) => {
   const user: User = data.user;
   const key: UUID = data.key;
 
-  return (
-    <DashboardContainer
-      usernamesWithIDs={data.usernamesWithIDs}
-      uuid={key}
-      user={user}
-    />
-  );
+  return <SettingsContainer user={user} uuid={key} />;
 };
 
 export default Page;

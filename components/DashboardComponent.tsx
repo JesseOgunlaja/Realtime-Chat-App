@@ -1,14 +1,16 @@
 "use client";
-import { User } from "@/utils/redis";
 import styles from "@/styles/dashboard.module.css";
+import { User } from "@/utils/redis";
 import { Dispatch } from "react";
 
 const DashboardComponent = ({
   user,
   setUser,
+  usernamesWithIDs,
 }: {
   user: User;
   setUser: Dispatch<User>;
+  usernamesWithIDs: string;
 }) => {
   return (
     <>

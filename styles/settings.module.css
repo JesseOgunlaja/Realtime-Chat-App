@@ -1,0 +1,25 @@
+.section > p {
+  font-size: 30px;
+  margin-bottom: 10px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form > * {
+  font-size: 20px;
+}
+
+.form input {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.form input[type="submit"] {
+  color: white;
+  background: darkblue;
+  margin-top: 7.5px;
+}

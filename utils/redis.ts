@@ -40,26 +40,19 @@ export type Message = {
 export type Chat = {
   id: UUID;
   messages: Message[];
-  with: string;
   withID: UUID;
   visible: boolean;
 };
 
 export type IncomingFriendRequest = {
-  from: string;
-  fromDisplayName: string;
   fromID: UUID;
 };
 
 export type OutgoingFriendRequest = {
-  to: string;
-  toDisplayName: string;
   toID: UUID;
 };
 
 export type Friend = {
-  username: string;
-  alias: string;
   id: UUID;
 };
 

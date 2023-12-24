@@ -1,5 +1,6 @@
 "use client";
 import styles from "@/styles/signed-in-navbar.module.css";
+import { decryptString } from "@/utils/encryption";
 import { User as UserType } from "@/utils/redis";
 import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
@@ -11,9 +12,11 @@ import { Dispatch, useState } from "react";
 const SignedInNavbar = ({
   user,
   setUser,
+  usernamesWithIDs,
 }: {
   user: UserType;
   setUser: Dispatch<UserType>;
+  usernamesWithIDs: string;
 }) => {
   const [mobileNavbarVisibility, setMobileNavbarVisibility] =
     useState<boolean>(false);
@@ -34,6 +37,16 @@ const SignedInNavbar = ({
     });
     const data = await res.json();
     if (data.message !== "Success") setUser(user);
+  }
+
+  function chatWithFromID(id: UUID) {
+    return (
+      JSON.parse(decryptString(usernamesWithIDs, true)) as {
+        name: string;
+        displayName: string;
+        id: UUID;
+      }[]
+    ).find((usernameWithID) => usernameWithID.id === id)?.displayName;
   }
 
   return (
@@ -69,7 +82,7 @@ const SignedInNavbar = ({
                 className={styles.chat}
                 key={chat.id}
               >
-                {chat.with}
+                {chatWithFromID(chat.withID)}
                 <X
                   onClick={(e) =>
                     hideChat(e as unknown as MouseEvent, chat.id, index)
@@ -169,7 +182,7 @@ const SignedInNavbar = ({
                   className={styles.chat}
                   key={chat.id}
                 >
-                  {chat.with}
+                  {chatWithFromID(chat.withID)}
                 </Link>
               ))}
           </div>

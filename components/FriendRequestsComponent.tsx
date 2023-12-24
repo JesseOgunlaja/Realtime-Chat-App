@@ -1,12 +1,14 @@
 "use client";
 
 import styles from "@/styles/friend-requests.module.css";
+import { decryptString } from "@/utils/encryption";
 import {
   IncomingFriendRequest,
   OutgoingFriendRequest,
   User,
 } from "@/utils/redis";
 import { getNewReference } from "@/utils/utils";
+import { UUID } from "crypto";
 import { Check, X } from "lucide-react";
 import { Dispatch } from "react";
 import { toast } from "sonner";
@@ -14,9 +16,11 @@ import { toast } from "sonner";
 const FriendRequestsComponent = ({
   user,
   setUser,
+  usernamesWithIDs,
 }: {
   user: User;
   setUser: Dispatch<User>;
+  usernamesWithIDs: string;
 }) => {
   async function declineFriendRequest(
     friendRequestBeingDeclined: IncomingFriendRequest,
@@ -134,7 +138,19 @@ const FriendRequestsComponent = ({
             key={friendRequest.fromID}
             className={styles["incoming-friend-request"]}
           >
-            <p>{friendRequest.fromDisplayName}</p>
+            <p>
+              {
+                (
+                  JSON.parse(decryptString(usernamesWithIDs, true)) as {
+                    name: string;
+                    displayName: string;
+                    id: UUID;
+                  }[]
+                ).find(
+                  (usernameWithID) => usernameWithID.id === friendRequest.fromID
+                )?.displayName
+              }
+            </p>
             <Check onClick={() => acceptFriendRequest(friendRequest, index)} />
             <X onClick={() => declineFriendRequest(friendRequest, index)} />
           </div>
@@ -144,7 +160,19 @@ const FriendRequestsComponent = ({
             key={friendRequest.toID}
             className={styles["outgoing-friend-request"]}
           >
-            <p>{friendRequest.toDisplayName}</p>
+            <p>
+              {
+                (
+                  JSON.parse(decryptString(usernamesWithIDs, true)) as {
+                    name: string;
+                    displayName: string;
+                    id: UUID;
+                  }[]
+                ).find(
+                  (usernameWithID) => usernameWithID.id === friendRequest.toID
+                )?.displayName
+              }
+            </p>
             <X onClick={() => deleteMyFriendRequest(friendRequest, index)} />
           </div>
         ))}
