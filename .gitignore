@@ -37,3 +37,7 @@ next-env.d.ts
 
 #editor
 /.vscode
+
+#opengraph
+app/opengraph
+styles/opengraph.module.css
