@@ -1,5 +1,6 @@
 "use client";
 
+import { decryptString } from "@/utils/encryption";
 import {
   Chat,
   Friend,
@@ -16,8 +17,21 @@ import { usePathname } from "next/navigation";
 import { Dispatch, useEffect } from "react";
 import { toast } from "sonner";
 
-export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
+export function useWebsockets(
+  uuid: UUID,
+  user: User,
+  setUser: Dispatch<User>,
+  usernamesWithIDs: string
+) {
   const pathname = usePathname();
+
+  const decryptedUsernamesWithIDs = JSON.parse(
+    decryptString(usernamesWithIDs, true)
+  ) as {
+    name: string;
+    displayName: string;
+    id: UUID;
+  }[];
 
   useEffect(() => {
     const channel = websocketChannel(uuid);
@@ -44,7 +58,11 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           );
           toast.info("Friend request declined", {
             description: `${
-              user?.outgoingFriendRequests[indexDeleted as number].toDisplayName
+              decryptedUsernamesWithIDs.find(
+                (decryptedUsernameWithID) =>
+                  decryptedUsernameWithID.id ===
+                  user?.outgoingFriendRequests[indexDeleted as number].toID
+              )?.displayName
             } has declined your friend request`,
           });
           setUser(currentUser);
@@ -59,9 +77,12 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           currentUser.incomingFriendRequests.push(data.newFriendRequest);
           setUser(currentUser);
           toast.info("New friend request", {
-            description: `${data.newFriendRequest.from[0].concat(
-              data.newFriendRequest.from.substring(1).toLowerCase()
-            )} has sent you a friend request`,
+            description: `${
+              decryptedUsernamesWithIDs.find(
+                (decryptedUsernameWithID) =>
+                  decryptedUsernameWithID.id === data.newFriendRequest.fromID
+              )?.displayName
+            } has sent you a friend request`,
           });
         },
       },
@@ -87,8 +108,11 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           );
           toast.info("Friend request declined", {
             description: `${
-              user?.incomingFriendRequests[indexDeleted as number]
-                .fromDisplayName
+              decryptedUsernamesWithIDs.find(
+                (decryptedUsernameWithID) =>
+                  decryptedUsernameWithID.id ===
+                  user?.incomingFriendRequests[indexDeleted as number].fromID
+              )?.displayName
             } has cancelled the friend request they sent you`,
           });
           setUser(currentUser);
@@ -118,7 +142,11 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
 
           toast.info("Accepted friend request", {
             description: `${
-              data.friends[newIndex as number].alias
+              decryptedUsernamesWithIDs.find(
+                (decryptedUsernameWithID) =>
+                  decryptedUsernameWithID.id ===
+                  data.friends[newIndex as number].id
+              )?.displayName
             } accepted the friend request you sent them`,
           });
           setUser(currentUser);
@@ -152,7 +180,13 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
                     fontWeight: "bold",
                   }}
                 >
-                  {user.chats[chatIndex].with}
+                  {
+                    decryptedUsernamesWithIDs.find(
+                      (decryptedUsernameWithID) =>
+                        decryptedUsernameWithID.id ===
+                        user.chats[chatIndex].withID
+                    )?.displayName
+                  }
                 </p>
                 <p>{data.message.message}</p>
               </Link>,
@@ -194,8 +228,10 @@ export function useWebsockets(uuid: UUID, user: User, setUser: Dispatch<User>) {
           setUser(data.newUser);
           toast.info("Removed friend", {
             description: `${
-              user.friends.find((friend) => friend.id === data.friendDeletedID)
-                ?.alias
+              decryptedUsernamesWithIDs.find(
+                (decryptedUsernameWithID) =>
+                  decryptedUsernameWithID.id === data.friendDeletedID
+              )?.displayName
             } has removed you as a friend`,
           });
         },

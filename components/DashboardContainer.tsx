@@ -14,7 +14,12 @@ const DashboardContainer = (props: {
 }) => {
   const [user, setUser] = useState<User>(props.user);
 
-  useWebsockets(props.uuid, user || props.user, setUser);
+  useWebsockets(
+    props.uuid,
+    user || props.user,
+    setUser,
+    props.usernamesWithIDs
+  );
 
   return (
     <>
