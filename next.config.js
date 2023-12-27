@@ -4,9 +4,6 @@ const nextConfig = {
   transpilePackages: ["crypto-js"],
   webpack: (config, { isServer }) => {
     isServer && (config.externals = [...config.externals, "socket.io-client"]);
-    config.externals.push({
-      canvas: "commonjs canvas",
-    });
     return config;
   },
   images: {
