@@ -1,5 +1,6 @@
 import styles from "@/styles/home.module.css";
 import Link from "next/link";
+import Balancer from "react-wrap-balancer";
 
 export default async function Home() {
   return (
@@ -8,9 +9,9 @@ export default async function Home() {
         WhisperNet
       </h1>
       <h2 className={styles.catchphrase}>Chat. Connect. Create.</h2>
-      <p className={styles.description}>
+      <Balancer className={styles.description}>
         The ability to communicate at the tip of your finger.
-      </p>
+      </Balancer>
       <br />
       <Link href="/signup" className={styles["start-now"]}>
         Get started now
@@ -42,10 +43,10 @@ export default async function Home() {
         <p className={styles["our-goal-title"]}>
           Enabling Universal Communication
         </p>
-        <p className={styles["our-goal-description"]}>
+        <Balancer className={styles["our-goal-description"]}>
           My goal is to allow people to commuincate with others all around the
           world safely and securely, and most importantly for free.
-        </p>
+        </Balancer>
       </div>
     </div>
   );

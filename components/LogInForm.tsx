@@ -6,6 +6,7 @@ import { decryptString, encryptString } from "@/utils/encryption";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
+import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
 
 const SignUpForm = () => {
@@ -148,11 +149,11 @@ const SignUpForm = () => {
           type="checkbox"
         />
       </div>
-      <p className={styles.agreement}>
-        By clicking log in you agree to our{" "}
+      <Balancer className={styles.agreement}>
+        By clicking Log In, you agree to our{" "}
         <Link href="/privacy-policy">Privacy Policy</Link> and{" "}
         <Link href="/terms-of-service">Terms of service</Link>
-      </p>
+      </Balancer>
       <input type="submit" value="Log in" readOnly />
     </form>
   );

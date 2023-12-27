@@ -14,8 +14,8 @@ const Page = () => {
       <p>
         Your privacy is of utmost importance to us. This Privacy Policy is
         designed to help you understand how WhisperNet collects, uses, shares,
-        and protects your personal information. By using our chat application,
-        you agree to the terms and practices outlined in this policy.
+        and protects your personal information. By using WhisperNet, you agree
+        to the terms and practices outlined in this policy.
       </p>
 
       <h2>1. Information We Collect</h2>
@@ -25,10 +25,10 @@ const Page = () => {
       <h3>a. Personal Information</h3>
 
       <p>
-        When you sign up for our chat application, we may collect personal
-        information such as your name, email address, and profile picture. This
-        information is used to create and manage your account, personalize your
-        experience, and enable communication with other users.
+        When you sign up for WhisperNet, we may collect personal information
+        such as your name, email address, and profile picture. This information
+        is used to create and manage your account, personalize your experience,
+        and enable communication with other users.
       </p>
 
       <h3>b. Messages and Chat Content</h3>
@@ -43,10 +43,10 @@ const Page = () => {
       <h3>c. Usage Information</h3>
 
       <p>
-        We automatically collect information about how you use our chat app,
-        such as the frequency and duration of your interactions, the types of
-        content you access, and your device information. This data helps us
-        improve our services and fix any issues you may encounter.
+        We automatically collect information about how you use WhisperNet, such
+        as the frequency and duration of your interactions, the types of content
+        you access, and your device information. This data helps us improve our
+        services and fix any issues you may encounter.
       </p>
 
       <h3>d. Device Information</h3>
@@ -63,7 +63,7 @@ const Page = () => {
       <p>We use the information we collect for various purposes, including:</p>
 
       <ul>
-        <li>Providing, maintaining, and improving our chat application</li>
+        <li>Providing, maintaining, and improving WhisperNet</li>
         <li>Personalizing your user experience</li>
         <li>Facilitating communication with other users</li>
         <li>

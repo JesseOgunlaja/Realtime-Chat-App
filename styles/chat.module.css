@@ -13,8 +13,14 @@
   margin-bottom: auto;
 }
 
-.header p {
+.header p:nth-child(1) {
   font-size: 25px;
+}
+
+.header p:nth-child(2) {
+  letter-spacing: 0.3px;
+  font-size: 15px;
+  opacity: 0.8;
 }
 
 .form {

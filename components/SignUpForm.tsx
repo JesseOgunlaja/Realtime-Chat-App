@@ -131,7 +131,7 @@ const SignUpForm = () => {
           {repeatedPasswordVisibile ? "Hide" : "Show"}
         </button>
       </div>
-      <Balancer ratio={0.7} preferNative={false} className={styles.agreement}>
+      <Balancer preferNative={false} className={styles.agreement}>
         Do you agree to our <Link href="/privacy-policy">Privacy Policy</Link>{" "}
         and <Link href="/terms-of-service">Terms of service</Link>
         {"   "}

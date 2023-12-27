@@ -3,6 +3,7 @@
 import styles from "@/styles/settings.module.css";
 import { User } from "@/utils/redis";
 import { Dispatch } from "react";
+import DisplayNameSettingsComponent from "./DisplayNameSettingsComponent";
 import UsernameSettingsComponent from "./UsernameSettingsComponent";
 
 const SettingsComponent = ({
@@ -14,13 +15,14 @@ const SettingsComponent = ({
 }) => {
   return (
     <div className={styles.page}>
-      <style jsx global>{`
-        body {
-          justify-content: flex-start;
-        }
-      `}</style>
       <h1>Settings</h1>
       <UsernameSettingsComponent
+        user={user}
+        setUser={setUser}
+        styles={styles}
+      />
+      <br />
+      <DisplayNameSettingsComponent
         user={user}
         setUser={setUser}
         styles={styles}

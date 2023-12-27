@@ -3,7 +3,7 @@
   align-items: center;
   flex-direction: column;
   margin-bottom: 110px;
-  width: 99vw;
+  width: 95vw;
 }
 
 .catchphrase {
@@ -112,7 +112,6 @@
 
 .our-goal-description {
   text-align: center;
-  width: 70vw;
   font-size: 25px;
 }
 
@@ -128,7 +127,7 @@
 
 @media (min-height: 100vw), (max-width: 800px) {
   .catchphrase {
-    width: 100vw;
+    width: 100%;
     font-size: 55px;
     font-weight: 500;
   }
@@ -149,7 +148,7 @@
     margin-bottom: 10px;
   }
   .our-goal-description {
-    font-size: 20px;
+    font-size: 23px;
     width: auto;
     margin-top: 10px;
   }

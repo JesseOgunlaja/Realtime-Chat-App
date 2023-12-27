@@ -6,13 +6,25 @@ export const UsernameSchema = z
     message: "Username required",
   })
   .min(4, {
-    message: "Username must be more than 4 characters",
+    message: "Username must be 4 or more characters",
   })
   .max(20, {
-    message: "Username must be less than 20 characters",
+    message: "Username can't be more than 20 characters",
   })
   .regex(/^[a-zA-Z0-9]+$/, {
     message: "No symbols or spaces allowed",
+  });
+
+export const DisplayNameSchema = z
+  .string()
+  .min(1, {
+    message: "Username required",
+  })
+  .min(2, {
+    message: "Username must be 2 or more characters",
+  })
+  .max(20, {
+    message: "Username can't be more than 20 characters",
   });
 
 export const PasswordSchema = z
@@ -21,10 +33,10 @@ export const PasswordSchema = z
     message: "Password required",
   })
   .min(8, {
-    message: "Password must be more than 8 characters",
+    message: "Password must be 8 or more characters",
   })
   .max(64, {
-    message: "Password must be less than 64 characters",
+    message: "Password can't be more than 64 characters",
   })
   .regex(/^(?=.*[\W_])[a-zA-Z0-9\W_]+$/, {
     message: "Password must contain a symbol.",

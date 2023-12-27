@@ -57,6 +57,7 @@ export type Friend = {
 };
 
 export type User = {
+  profilePicture: string;
   username: string;
   displayName: string;
   password: string;

@@ -31,3 +31,12 @@ export function getFormValues(e: FormEvent<HTMLFormElement>) {
   const formValues = Object.fromEntries(formData.entries());
   return formValues;
 }
+
+export function renderChatMessage(message: string) {
+  if (containsEmoji(message)) {
+    return message.replace(/\\u[\dA-Fa-f]{4}/g, function (match) {
+      return String.fromCharCode(parseInt(match.slice(2), 16));
+    });
+  }
+  return message;
+}

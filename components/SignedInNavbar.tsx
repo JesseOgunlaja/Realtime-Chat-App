@@ -137,7 +137,20 @@ const SignedInNavbar = ({
         </div>
 
         <div className={styles["user-snippet"]}>
-          <p className={styles["display-name"]}>{user?.displayName}</p>
+          <div className={styles["user-details-container"]}>
+            <Image
+              loading="eager"
+              priority
+              src={user.profilePicture}
+              alt="Profile Picture"
+              height={40}
+              width={40}
+            />
+            <div className={styles["user-details-names"]}>
+              <p className={styles["display-name"]}>{user?.displayName}</p>
+              <p className={styles["user-name"]}>{user?.username}</p>
+            </div>
+          </div>
           <LogOut />
         </div>
       </nav>
@@ -244,7 +257,7 @@ const SignedInNavbar = ({
             </Link>
           </div>
           <div className={styles["user-snippet"]}>
-            <p className={styles["display-name"]}>{user?.displayName}</p>
+            <p className={styles["display-name"]}>{user?.username}</p>
             <LogOut />
           </div>
         </nav>

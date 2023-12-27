@@ -120,11 +120,6 @@ const FriendRequestsComponent = ({
 
   return (
     <div className={styles.page}>
-      <style jsx global>{`
-        body {
-          justify-content: flex-start;
-        }
-      `}</style>
       <h1 className={styles["title"]}>Friend requests</h1>
       {user &&
         user?.incomingFriendRequests.length +

@@ -10,9 +10,10 @@
   flex-direction: column;
   background: black;
   padding: 20px;
-  width: 500px;
+  width: min(500px, 92vw);
   border-radius: 20px;
-  height: 600px;
+  margin-bottom: 100px;
+  height: fit-content;
 }
 
 .title {
@@ -26,7 +27,6 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-size: 200% 100%;
-  color: transparent;
   animation: shimmer 2.5s ease-in-out infinite;
 }
 
@@ -52,6 +52,7 @@
   padding: 15px;
   font-size: 22.5px;
   border-radius: 5px;
+  z-index: 20;
 }
 
 .form input[type="submit"] {
@@ -60,6 +61,7 @@
   width: 80%;
   padding: 15px 20px;
   border-radius: 7.5px;
+  font-weight: 400 !important;
   color: black;
   margin-bottom: 20px;
   cursor: pointer;
@@ -76,7 +78,7 @@
   min-width: 70.70666452%;
   max-width: 70.70666452%;
   display: inline;
-  border-radius: 5px 0px 0px 5px;
+  border-radius: 5px 0px 0px 5px !important;
   color: black;
   border-right: 2px black solid;
 }
@@ -86,11 +88,11 @@
   max-width: 29.29333548%;
   padding: 5px;
   font-size: 22.5px;
+  padding: 15px;
   border-radius: 0px;
   display: inline;
-  border-radius: 0px 5px 5px 0px;
+  border-radius: 0px 5px 5px 0px !important;
   background: white;
-  height: 56px;
   cursor: pointer;
   color: black !important;
 }
@@ -109,6 +111,7 @@
 
 .agreement input[type="checkbox"] {
   display: inline;
+  padding: 0px;
   width: 15px;
   height: 15px;
   transform: translateY(1.2px);
@@ -162,18 +165,24 @@
   .form input[type="submit"],
   .password-input-container,
   .form input[name] {
-    width: 95%;
-  }
-  .form input[type="submit"] {
-    font-weight: 400 !important;
+    width: 100%;
   }
   .agreement {
     width: 100%;
   }
   .agreement input[type="checkbox"] {
-    transform: translateY(-0.5px);
+    transform: translateY(0px);
   }
-  .remember-me-checkbox {
+  .remember-me-checkbox,
+  .agreement input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@media (min-width: 100vh) and (max-width: 801px) {
+  .agreement input[type="checkbox"] {
+    transform: translateY(-1.4px);
     width: 16px;
     height: 16px;
   }

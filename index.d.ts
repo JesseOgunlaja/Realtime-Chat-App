@@ -21,6 +21,7 @@ declare global {
       WEBSOCKET_KEY: string;
       NEXT_PUBLIC_WEBSOCKET_URL: string;
       WEBSOCKET_URL: string;
+      FILESTACK_API_KEY: string;
     }
   }
 }

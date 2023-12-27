@@ -1,10 +1,10 @@
 import { User } from "@/utils/redis";
 import { getFormValues, getNewReference } from "@/utils/utils";
-import { UsernameSchema } from "@/utils/zod";
+import { DisplayNameSchema } from "@/utils/zod";
 import { Dispatch, FormEvent, useRef } from "react";
 import { toast } from "sonner";
 
-const UsernameSettingsComponent = ({
+const DisplayNameSettingsComponent = ({
   user,
   setUser,
   styles,
@@ -15,19 +15,19 @@ const UsernameSettingsComponent = ({
     readonly [key: string]: string;
   };
 }) => {
-  const usernameForm = useRef<HTMLFormElement>(null);
+  const displayNameForm = useRef<HTMLFormElement>(null);
 
-  async function changeUsername(e: FormEvent<HTMLFormElement>) {
+  async function changeDisplayName(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
     const formValues = getFormValues(e);
-    const newUsername = formValues["new-username"] as string;
+    const newDisplayName = formValues["new-display-name"] as string;
 
-    if (newUsername === "") {
-      return toast.error("Username required");
+    if (newDisplayName === "") {
+      return toast.error("Display name required");
     }
 
-    const schemaResult = UsernameSchema.safeParse(newUsername);
+    const schemaResult = DisplayNameSchema.safeParse(newDisplayName);
 
     if (!schemaResult.success) {
       schemaResult.error.format()._errors.forEach((error) => {
@@ -36,25 +36,25 @@ const UsernameSettingsComponent = ({
       return;
     }
 
-    if (newUsername.toUpperCase() === user.username.toUpperCase()) {
-      return toast.error("This is already your username");
+    if (newDisplayName === user.displayName) {
+      return toast.error("This is already your display name");
     }
 
     const loadingToastID = toast.loading("Loading", {
       duration: Infinity,
     });
 
-    const submitButton = usernameForm.current?.lastChild as HTMLInputElement;
+    const submitButton = displayNameForm.current?.lastChild as HTMLInputElement;
     submitButton.value = "...";
     submitButton.disabled = true;
 
-    const res = await fetch("/api/user/change/username", {
+    const res = await fetch("/api/user/change/display-name", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
       },
       body: JSON.stringify({
-        newUsername,
+        newDisplayName,
       }),
     });
     const data = await res.json();
@@ -64,21 +64,15 @@ const UsernameSettingsComponent = ({
 
     switch (data.message) {
       case "Success":
-        usernameForm.current?.reset();
+        displayNameForm.current?.reset();
         const currentUser = getNewReference(user);
-        currentUser.username = newUsername.toUpperCase();
+        currentUser.displayName = newDisplayName;
         setUser(currentUser);
-        toast.success("Username changed successfully", {
+        toast.success("Display name changed successfully", {
           id: loadingToastID,
         });
         break;
-      case "This username is already taken":
-        toast.error(data.message, {
-          id: loadingToastID,
-        });
-        setUser(user);
-        break;
-      case "This is already your username":
+      case "This is already your display name":
         toast.error(data.message, {
           id: loadingToastID,
         });
@@ -104,18 +98,18 @@ const UsernameSettingsComponent = ({
 
   return (
     <div className={styles.section}>
-      <p>Change Username</p>
+      <p>Change Display Name</p>
       <form
-        ref={usernameForm}
-        onSubmit={changeUsername}
+        ref={displayNameForm}
+        onSubmit={changeDisplayName}
         className={styles.form}
       >
-        <label htmlFor="new-username">New Username</label>
-        <input name="new-username" type="text" autoComplete="off" />
+        <label htmlFor="new-display-name">New Display Name</label>
+        <input name="new-display-name" type="text" autoComplete="off" />
         <input type="submit" />
       </form>
     </div>
   );
 };
 
-export default UsernameSettingsComponent;
+export default DisplayNameSettingsComponent;

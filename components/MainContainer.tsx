@@ -6,8 +6,6 @@ const MainContainer = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
   const navPaths = ["/", "/signup", "/login"];
 
-  console.log(pathname);
-
   if (pathname.includes("/dashboard")) return <>{children}</>;
 
   return (

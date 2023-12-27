@@ -1,50 +1,39 @@
-import { User, getUserByName, redis } from "@/utils/redis";
-import { UsernameSchema } from "@/utils/zod";
+import { User, redis } from "@/utils/redis";
+import { DisplayNameSchema } from "@/utils/zod";
 import { UUID } from "crypto";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-const jwt = require("jsonwebtoken");
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    if (!body.newUsername) {
+    if (!body.newDisplayName) {
       return NextResponse.json(
-        { message: "You need to pass a new username" },
+        { message: "You need to pass a new display name" },
         { status: 400 }
       );
     }
 
-    const newUsername = body.newUsername.toUpperCase() as string;
+    const newDisplayName = body.newDisplayName as string;
 
     const headersList = headers();
     const user = JSON.parse(headersList.get("user") as string) as User;
     const key = JSON.parse(String(headersList.get("key"))) as UUID;
 
-    if (user.username.toUpperCase() === newUsername) {
+    if (user.displayName === newDisplayName) {
       return NextResponse.json(
-        { message: "This is already your username" },
+        { message: "This is already your display name" },
         { status: 400 }
       );
     }
 
-    let result = UsernameSchema.safeParse(newUsername);
+    let result = DisplayNameSchema.safeParse(newDisplayName);
     if (!result.success)
       return NextResponse.json(
         { message: "Error", error: result.error.format()._errors },
         { status: 400 }
       );
-
-    const doesUserExist =
-      ((await getUserByName(newUsername)) as User | undefined) !== undefined;
-
-    if (doesUserExist) {
-      return NextResponse.json(
-        { message: "This username is already taken" },
-        { status: 400 }
-      );
-    }
 
     console.time("Redis get");
     const ids = (
@@ -60,14 +49,14 @@ export async function POST(request: NextRequest) {
     const redisPipeline = redis.pipeline();
 
     redisPipeline.hset(key, {
-      username: newUsername,
+      displayName: newDisplayName,
     });
     redisPipeline.lset(
       "Usernames",
       ids.indexOf(key),
       JSON.stringify({
-        name: newUsername,
-        displayName: user.displayName,
+        name: user.username,
+        displayName: newDisplayName,
         id: key,
       })
     );
@@ -75,25 +64,6 @@ export async function POST(request: NextRequest) {
     await redisPipeline.exec();
     console.timeEnd("Redis set");
 
-    const payload = {
-      iat: Date.now(),
-      exp: Math.floor((new Date().getTime() + 30 * 24 * 60 * 60 * 1000) / 1000),
-      username: newUsername,
-      key,
-      uuid: user.uuid,
-    };
-
-    const token = jwt.sign(payload, process.env.SIGNING_KEY);
-    const expirationDate = new Date();
-    expirationDate.setSeconds(expirationDate.getSeconds() + 2592000);
-    cookies().set({
-      name: "token",
-      value: token,
-      httpOnly: true,
-      secure: true,
-      sameSite: "strict",
-      expires: expirationDate,
-    });
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {
     return NextResponse.json(
