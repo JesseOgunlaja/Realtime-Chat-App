@@ -1,9 +1,9 @@
 import { User, getUserByName, redis } from "@/utils/redis";
 import { UsernameSchema } from "@/utils/zod";
 import { UUID } from "crypto";
+import jwt from "jsonwebtoken";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-const jwt = require("jsonwebtoken");
 
 export async function POST(request: NextRequest) {
   try {
@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
       (await redis.lrange("Usernames", 0, -1)) as {
         name: string;
         displayName: string;
+        profilePicture: string;
         id: UUID;
       }[]
     ).map((val) => val.id);
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
 
     const token = jwt.sign(payload, process.env.SIGNING_KEY);
     const expirationDate = new Date();
-    expirationDate.setSeconds(expirationDate.getSeconds() + 2592000);
+    expirationDate.setSeconds(expirationDate.getSeconds() + 60 * 60 * 24 * 7);
     cookies().set({
       name: "token",
       value: token,

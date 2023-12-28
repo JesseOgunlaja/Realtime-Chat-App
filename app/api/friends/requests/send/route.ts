@@ -95,8 +95,6 @@ export async function POST(request: NextRequest) {
     });
     trigger(key, "friend-request-sent", {
       newFriendRequest: {
-        from: user.username,
-        fromDisplayName: user.displayName,
         fromID: JSON.parse(String(requestHeaders.get("key"))),
       },
     });

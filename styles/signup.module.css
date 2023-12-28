@@ -3,6 +3,7 @@
   height: 80vh;
   display: flex;
   justify-content: center;
+  overflow-x: hidden !important;
 }
 
 .container {
@@ -10,10 +11,11 @@
   flex-direction: column;
   background: black;
   padding: 20px;
-  width: min(500px, 92vw);
+  width: min(500px, 94vw);
   border-radius: 20px;
   margin-bottom: 100px;
   height: fit-content;
+  overflow: hidden !important;
 }
 
 .title {
@@ -52,7 +54,6 @@
   padding: 15px;
   font-size: 22.5px;
   border-radius: 5px;
-  z-index: 20;
 }
 
 .form input[type="submit"] {

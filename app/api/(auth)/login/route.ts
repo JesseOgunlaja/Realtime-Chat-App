@@ -1,10 +1,10 @@
 import { decryptString } from "@/utils/encryption";
 import { User, getUserByName } from "@/utils/redis";
+import { compare as comparePasswords } from "bcrypt";
 import { UUID } from "crypto";
+import { sign as signJWT } from "jsonwebtoken";
 import { cookies } from "next/headers";
-const jwt = require("jsonwebtoken");
 import { NextRequest, NextResponse } from "next/server";
-const bcrypt = require("bcrypt");
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,8 +14,8 @@ export async function POST(request: NextRequest) {
       var username = decryptString(body.username, false);
       var password = decryptString(body.password, false);
     } else {
-      var username = body.username;
-      var password = body.password;
+      var username = body.username as string;
+      var password = body.password as string;
     }
 
     if (
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
     }
     const user = result.user;
     const key = result.key;
-    if (!(await bcrypt.compare(password, user.password))) {
+    if (!(await comparePasswords(password, user.password))) {
       return NextResponse.json(
         { message: "Error", error: "Invalid credentials" },
         { status: 400 }
@@ -54,9 +54,9 @@ export async function POST(request: NextRequest) {
       key,
       uuid: user?.uuid,
     };
-    const token = jwt.sign(payload, process.env.SIGNING_KEY);
+    const token = signJWT(payload, process.env.SIGNING_KEY);
     const expirationDate = new Date();
-    expirationDate.setSeconds(expirationDate.getSeconds() + 2592000);
+    expirationDate.setSeconds(expirationDate.getSeconds() + 60 * 60 * 24 * 7);
     cookies().set({
       name: "token",
       value: token,

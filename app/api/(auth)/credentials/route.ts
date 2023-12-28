@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET() {
   try {
@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const expirationDate = new Date();
-    expirationDate.setSeconds(expirationDate.getSeconds() + 2592000);
+    expirationDate.setSeconds(expirationDate.getSeconds() + 60 * 60 * 24 * 30);
     const body = await request.json();
     cookies().set({
       name: "credentials",
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE() {
   try {
-    cookies().delete({ name: "credentials" });
+    cookies().delete("credentials");
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {
     return NextResponse.json(

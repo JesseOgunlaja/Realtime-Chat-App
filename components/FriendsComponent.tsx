@@ -5,9 +5,9 @@ import { User } from "@/utils/redis";
 import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
 import { MessageSquare, MoreVertical } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Dispatch, useRef, useState } from "react";
-import Avatar from "react-avatar";
 import { toast } from "sonner";
 
 const FriendsComponent = ({
@@ -110,8 +110,20 @@ const FriendsComponent = ({
         name: string;
         displayName: string;
         id: UUID;
+        profilePicture: string;
       }[]
     ).find((usernameWithID) => usernameWithID.id === id);
+  }
+
+  function getProfilePictureFromID(id: string) {
+    return (
+      JSON.parse(decryptString(usernamesWithIDs, true)) as {
+        name: string;
+        displayName: string;
+        id: UUID;
+        profilePicture: string;
+      }[]
+    ).find((usernameWithID) => usernameWithID.id === id)?.profilePicture;
   }
 
   return (
@@ -144,11 +156,11 @@ const FriendsComponent = ({
                 ].id
               }`}
             >
-              <Avatar
-                name={getFriendDataFromID(friend.id)?.name}
-                round
-                size="40"
-                textSizeRatio={1.5}
+              <Image
+                height={35}
+                width={35}
+                src={getFriendDataFromID(friend.id)?.profilePicture as string}
+                alt="Friend profile picture"
               />
               <p>{getFriendDataFromID(friend.id)?.displayName}</p>
               <MessageSquare />

@@ -1,9 +1,14 @@
+.page {
+  overflow-x: hidden;
+}
+
 .friend,
 .friend a {
   width: 100%;
 }
 
 .friend {
+  overflow: hidden;
   display: flex;
   border-radius: 5px;
   padding: 5px;

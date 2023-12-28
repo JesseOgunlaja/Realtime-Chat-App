@@ -50,12 +50,20 @@
 
 @media (min-width: 100vh) and (min-width: 800px) {
   .page {
-    width: calc(100vw - 350px);
+    width: calc(100vw - 320px);
+  }
+  @media (width < 1000px) {
+    .recent-chats {
+      grid-template-columns: 1fr;
+    }
   }
 }
 
 @media (min-height: 100vw), (max-width: 800px) {
   .page {
     width: 99vw;
+  }
+  .recent-chats {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,21 +1,20 @@
-const CryptoJS = require("crypto-js");
+import CryptoJS from "crypto-js";
 
 const ENCRYPTION_CLIENT = process.env.NEXT_PUBLIC_ENCRYPTION_KEY;
 const ENCRYPTION_SERVER = process.env.ENCRYPTION_KEY;
 
-export function encryptString(nameGiven: String, client: Boolean) {
+export function encryptString(value: string, client: boolean) {
   const encrypted = CryptoJS.AES.encrypt(
-    JSON.stringify({ nameGiven }),
+    value,
     client ? ENCRYPTION_CLIENT : ENCRYPTION_SERVER
   ).toString();
   return encrypted;
 }
 
-export function decryptString(nameGiven: String, client: boolean) {
+export function decryptString(value: string, client: boolean) {
   const decrypted = CryptoJS.AES.decrypt(
-    nameGiven,
+    value,
     client ? ENCRYPTION_CLIENT : ENCRYPTION_SERVER
   ).toString(CryptoJS.enc.Utf8);
-  const parsed = JSON.parse(decrypted);
-  return parsed.nameGiven;
+  return decrypted;
 }

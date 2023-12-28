@@ -24,6 +24,7 @@ const DashboardComponent = ({
         name: string;
         displayName: string;
         id: UUID;
+        profilePicture: string;
       }[]
     ).find((usernameWithID) => usernameWithID.id === id)?.displayName;
   }
@@ -81,7 +82,7 @@ const DashboardComponent = ({
               <div className={styles["chat-with-user-container"]}>
                 <Image
                   src={String(getProfilePictureFromID(chat.withID))}
-                  alt="Logo"
+                  alt="Profile Picture"
                   height={35}
                   width={35}
                 />

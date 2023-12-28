@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.1",
+    "@types/crypto-js": "^4.2.1",
     "@types/jsonwebtoken": "^9.0.5",
     "@upstash/redis": "^1.24.0",
     "@vercel/analytics": "^1.1.1",
@@ -30,7 +31,6 @@
     "next-sitemap": "^4.2.3",
     "polished": "^4.2.2",
     "react": "^18.2.0",
-    "react-avatar": "^5.0.3",
     "react-dom": "^18.2.0",
     "react-wrap-balancer": "^1.1.0",
     "sharp": "^0.32.6",

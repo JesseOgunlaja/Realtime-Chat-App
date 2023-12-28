@@ -1,16 +1,15 @@
 import { decryptString } from "@/utils/encryption";
 import { getUserByName, redis } from "@/utils/redis";
 import { PasswordSchema, UsernameSchema } from "@/utils/zod";
+import { hash as hashPassword } from "bcrypt";
 import { randomUUID } from "crypto";
+import { init as initFilestack } from "filestack-js";
 import { promises as fsPromises } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import { getContrast } from "polished";
-const sharp = require("sharp");
-const bcrypt = require("bcrypt");
+import sharp from "sharp";
 
-const filestackClient = require("filestack-js").init(
-  process.env.FILESTACK_API_KEY
-);
+const filestackClient = initFilestack(process.env.FILESTACK_API_KEY);
 
 function generateRandomColor(): string {
   const randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(
@@ -30,9 +29,9 @@ export async function POST(request: NextRequest) {
       var username = displayName.toUpperCase();
       var password = decryptString(body.password, false);
     } else {
-      var displayName = body.username;
+      var displayName = body.username as string;
       var username = displayName.toUpperCase();
-      var password = body.password;
+      var password = body.password as string;
     }
 
     let result = UsernameSchema.safeParse(username);
@@ -82,7 +81,7 @@ export async function POST(request: NextRequest) {
           left: 0,
         },
       ])
-      .png() // Convert to PNG format
+      .png()
       .toBuffer();
 
     const tempFilePath = "/tmp/temp_logo.png";
@@ -97,7 +96,7 @@ export async function POST(request: NextRequest) {
     redisPipeline.hset(uuid, {
       username: username,
       displayName: displayName,
-      password: await bcrypt.hash(password, 10),
+      password: await hashPassword(password, 10),
       friends: [],
       chats: [],
       profilePicture: profilePictureURL,

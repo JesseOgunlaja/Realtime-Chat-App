@@ -3,6 +3,10 @@
   margin-bottom: 7.5px;
 }
 
+.section {
+  width: 336.7px;
+}
+
 .section > p {
   font-size: 30px;
   margin-bottom: 10px;
@@ -31,4 +35,19 @@
 
 .form input[type="submit"]:disabled {
   opacity: 0.5;
+}
+
+@media (min-width: 100vh) and (min-width: 800px) {
+  .page {
+    width: calc(100vw - 350px);
+  }
+}
+
+@media (min-height: 100vw), (max-width: 800px) {
+  .page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 99vw;
+  }
 }

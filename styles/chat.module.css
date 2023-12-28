@@ -378,7 +378,27 @@
     width: 99vw;
     height: calc(95vh - 76.5px);
   }
+  .header p:nth-child(1) {
+    font-size: 20px;
+  }
+  .header {
+    padding: 6px;
+  }
+  .messages {
+    padding-top: 15px;
+  }
   .my-message {
     margin-right: 15px;
+  }
+  .my-message,
+  .other-message {
+    padding: 7.2px;
+  }
+  .form textarea {
+    height: 100px;
+  }
+  .message-text,
+  .reply-container {
+    font-size: 15px;
   }
 }

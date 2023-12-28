@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
       (await redis.lrange("Usernames", 0, -1)) as {
         name: string;
         displayName: string;
+        profilePicture: string;
         id: UUID;
       }[]
     ).map((val) => val.id);

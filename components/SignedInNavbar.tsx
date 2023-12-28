@@ -1,4 +1,5 @@
 "use client";
+
 import styles from "@/styles/signed-in-navbar.module.css";
 import { decryptString } from "@/utils/encryption";
 import { User as UserType } from "@/utils/redis";
@@ -7,7 +8,9 @@ import { UUID } from "crypto";
 import { LogOut, Menu, UserCog, UserPlus, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Dispatch, useState } from "react";
+import { toast } from "sonner";
 
 const SignedInNavbar = ({
   user,
@@ -18,6 +21,7 @@ const SignedInNavbar = ({
   setUser: Dispatch<UserType>;
   usernamesWithIDs: string;
 }) => {
+  const router = useRouter();
   const [mobileNavbarVisibility, setMobileNavbarVisibility] =
     useState<boolean>(false);
 
@@ -45,8 +49,21 @@ const SignedInNavbar = ({
         name: string;
         displayName: string;
         id: UUID;
+        profilePicture: string;
       }[]
-    ).find((usernameWithID) => usernameWithID.id === id)?.displayName;
+    ).find((usernameWithID) => usernameWithID.id === id);
+  }
+
+  async function logout() {
+    const res = await fetch("/api/logout");
+    const data = await res.json();
+    if (data.message === "Success") {
+      router.push("/login");
+    } else {
+      toast.error(
+        "An unexpected error occured when trying to log out, please try again."
+      );
+    }
   }
 
   return (
@@ -56,12 +73,8 @@ const SignedInNavbar = ({
           overflow: ${mobileNavbarVisibility ? "hidden" : "auto"};
         }
       `}</style>
-      <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-      ></link>
       <nav className={styles.nav}>
-        <Link className={styles.random} href="/dashboard">
+        <Link className={styles["logo-container"]} href="/dashboard">
           <Image
             loading="eager"
             priority
@@ -72,25 +85,6 @@ const SignedInNavbar = ({
             alt="Website logo"
           />
         </Link>
-        <p className={styles["chats-text"]}>Chats</p>
-        <div className={styles.chats}>
-          {user?.chats
-            .filter((chat) => chat.visible)
-            .map((chat, index) => (
-              <Link
-                href={`/dashboard/chats/${chat.id}`}
-                className={styles.chat}
-                key={chat.id}
-              >
-                {chatWithFromID(chat.withID)}
-                <X
-                  onClick={(e) =>
-                    hideChat(e as unknown as MouseEvent, chat.id, index)
-                  }
-                />
-              </Link>
-            ))}
-        </div>
         <p className={styles.overview}>Overview</p>
         <div className={styles["overview-tabs"]}>
           <Link href="/dashboard/friends" className={styles["friends"]}>
@@ -135,6 +129,31 @@ const SignedInNavbar = ({
             </div>
           </Link>
         </div>
+        <p className={styles["chats-text"]}>Chats</p>
+        <div className={styles.chats}>
+          {user?.chats
+            .filter((chat) => chat.visible)
+            .map((chat, index) => (
+              <Link
+                href={`/dashboard/chats/${chat.id}`}
+                className={styles.chat}
+                key={chat.id}
+              >
+                <Image
+                  src={String(chatWithFromID(chat.withID)?.profilePicture)}
+                  alt="Pofile Picture"
+                  height={20}
+                  width={20}
+                />
+                {chatWithFromID(chat.withID)?.displayName}
+                <X
+                  onClick={(e) =>
+                    hideChat(e as unknown as MouseEvent, chat.id, index)
+                  }
+                />
+              </Link>
+            ))}
+        </div>
 
         <div className={styles["user-snippet"]}>
           <div className={styles["user-details-container"]}>
@@ -151,7 +170,7 @@ const SignedInNavbar = ({
               <p className={styles["user-name"]}>{user?.username}</p>
             </div>
           </div>
-          <LogOut />
+          <LogOut id={styles.logout} onClick={logout} />
         </div>
       </nav>
       <div className={styles["mobile-nav-container"]}>
@@ -184,21 +203,6 @@ const SignedInNavbar = ({
           }}
           className={styles.nav2}
         >
-          <p className={styles["chats-text"]}>Chats</p>
-          <div className={styles.chats}>
-            {user?.chats
-              .filter((chat) => chat.visible)
-              .map((chat) => (
-                <Link
-                  onClick={() => setMobileNavbarVisibility(false)}
-                  href={`/dashboard/chats/${chat.id}`}
-                  className={styles.chat}
-                  key={chat.id}
-                >
-                  {chatWithFromID(chat.withID)}
-                </Link>
-              ))}
-          </div>
           <p className={styles.overview}>Overview</p>
           <div className={styles["overview-tabs"]}>
             <Link
@@ -256,9 +260,43 @@ const SignedInNavbar = ({
               </div>
             </Link>
           </div>
+          <p className={styles["chats-text"]}>Chats</p>
+          <div className={styles.chats}>
+            {user?.chats
+              .filter((chat) => chat.visible)
+              .map((chat) => (
+                <Link
+                  onClick={() => setMobileNavbarVisibility(false)}
+                  href={`/dashboard/chats/${chat.id}`}
+                  className={styles.chat}
+                  key={chat.id}
+                >
+                  <Image
+                    src={String(chatWithFromID(chat.withID)?.profilePicture)}
+                    alt="Pofile Picture"
+                    height={20}
+                    width={20}
+                  />
+                  {chatWithFromID(chat.withID)?.displayName}
+                </Link>
+              ))}
+          </div>
           <div className={styles["user-snippet"]}>
-            <p className={styles["display-name"]}>{user?.username}</p>
-            <LogOut />
+            <div className={styles["user-details-container"]}>
+              <Image
+                loading="eager"
+                priority
+                src={user.profilePicture}
+                alt="Profile Picture"
+                height={40}
+                width={40}
+              />
+              <div className={styles["user-details-names"]}>
+                <p className={styles["display-name"]}>{user?.displayName}</p>
+                <p className={styles["user-name"]}>{user?.username}</p>
+              </div>
+            </div>
+            <LogOut onClick={logout} />
           </div>
         </nav>
       </div>

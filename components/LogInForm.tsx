@@ -4,20 +4,18 @@ import styles from "@/styles/signup.module.css";
 import { decodeJWT, signJWT } from "@/utils/auth";
 import { decryptString, encryptString } from "@/utils/encryption";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
 
 const SignUpForm = () => {
-  const router = useRouter();
   const rememberMeCheckbox = useRef<HTMLInputElement>(null);
   const [passwordVisibile, setPasswordVisibile] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   useEffect(() => {
-    async function getCredentials() {
+    (async function () {
       const res = await fetch("/api/credentials");
       const data = await res.json();
       const credentials = data.credentials;
@@ -29,11 +27,9 @@ const SignUpForm = () => {
       const payload = decoded.payload;
       if (!payload || !payload.username || !payload.password) return;
       setUsername(decryptString(String(payload.username), true));
-      rememberMeCheckbox.current!.checked = true;
       setPassword(decryptString(String(payload.password), true));
-    }
-    getCredentials();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      rememberMeCheckbox.current!.checked = true;
+    })();
   }, []);
 
   function checkValues() {

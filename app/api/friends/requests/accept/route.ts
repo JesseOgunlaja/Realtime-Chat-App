@@ -52,12 +52,7 @@ export async function POST(request: NextRequest) {
     });
 
     otherUser.outgoingFriendRequests = otherUser.outgoingFriendRequests.filter(
-      (val) =>
-        !compareObjects(val, {
-          to: user.username,
-          toID: JSON.parse(requestHeaders.get("key") as string),
-          toDisplayName: user.displayName,
-        })
+      (val) => val.toID !== JSON.parse(requestHeaders.get("key") as string)
     );
     otherUser.chats.push({
       id: chatID,
