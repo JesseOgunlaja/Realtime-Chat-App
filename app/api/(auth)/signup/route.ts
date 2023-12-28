@@ -69,14 +69,14 @@ export async function POST(request: NextRequest) {
       .composite([
         {
           input: Buffer.from(
-            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="${generateRandomColor}"/></svg>`
+            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="${generateRandomColor()}"/></svg>`
           ),
           top: 0,
           left: 0,
         },
         {
           input: Buffer.from(
-            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="65" font-family="Arial" font-size="45" fill="black" text-anchor="middle" dominant-baseline="middle">${username[0]}</text></svg>`
+            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="65" font-family="Arial" font-size="45" fill="white" text-anchor="middle" dominant-baseline="middle">${username[0]}</text></svg>`
           ),
           top: 0,
           left: 0,
@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     const tempFilePath = "temp_logo.png";
     await fsPromises.writeFile(tempFilePath, imageBuffer);
 
-    const profilePictureURL = await filestackClient.upload(tempFilePath).url;
+    const profilePictureURL = (await filestackClient.upload(tempFilePath)).url;
 
     await fsPromises.unlink(tempFilePath);
 
