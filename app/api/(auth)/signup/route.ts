@@ -2,23 +2,15 @@ import { decryptString } from "@/utils/encryption";
 import { getUserByName, redis } from "@/utils/redis";
 import { PasswordSchema, UsernameSchema } from "@/utils/zod";
 import { randomUUID } from "crypto";
+import { promises as fsPromises } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 import { getContrast } from "polished";
-const { createCanvas } = require("canvas");
+const sharp = require("sharp");
 const bcrypt = require("bcrypt");
 
-async function uploadImage(image: string) {
-  const blob = await fetch(image).then((res) => res.blob());
-  const res = await fetch(
-    `https://www.filestackapi.com/api/store/S3?key=${process.env.FILESTACK_API_KEY}`,
-    {
-      method: "POST",
-      body: blob,
-    }
-  );
-  const data = await res.json();
-  return data.url;
-}
+const filestackClient = require("filestack-js").init(
+  process.env.FILESTACK_API_KEY
+);
 
 function generateRandomColor(): string {
   const randomColor = `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(
@@ -66,34 +58,39 @@ export async function POST(request: NextRequest) {
     const uuid = randomUUID();
     const uuid2 = randomUUID();
 
-    const canvas = createCanvas(200, 200);
-    if (!canvas) return;
+    const imageBuffer = await sharp({
+      create: {
+        width: 100,
+        height: 100,
+        channels: 4,
+        background: { r: 255, g: 255, b: 255, alpha: 0 },
+      },
+    })
+      .composite([
+        {
+          input: Buffer.from(
+            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="50" fill="${generateRandomColor}"/></svg>`
+          ),
+          top: 0,
+          left: 0,
+        },
+        {
+          input: Buffer.from(
+            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="65" font-family="Arial" font-size="45" fill="black" text-anchor="middle" dominant-baseline="middle">${username[0]}</text></svg>`
+          ),
+          top: 0,
+          left: 0,
+        },
+      ])
+      .png() // Convert to PNG format
+      .toBuffer();
 
-    const ctx = canvas.getContext("2d");
+    const tempFilePath = "temp_logo.png";
+    await fsPromises.writeFile(tempFilePath, imageBuffer);
 
-    if (!ctx) return;
+    const profilePictureURL = await filestackClient.upload(tempFilePath).url;
 
-    ctx.beginPath();
-    ctx.arc(
-      canvas.width / 2,
-      canvas.height / 2,
-      Math.min(canvas.width, canvas.height) / 2,
-      0,
-      2 * Math.PI
-    );
-    ctx.fillStyle = generateRandomColor();
-    ctx.fill();
-    ctx.closePath();
-
-    ctx.fillStyle = "white";
-    ctx.font = "100px Arial";
-    const text = username[0];
-    const textWidth = ctx.measureText(text).width;
-    ctx.textAlign = "left"; // Set text alignment to 'left'
-    ctx.textBaseline = "middle";
-    ctx.fillText(text, (canvas.width - textWidth) / 2, 105);
-    const dataURL = canvas.toDataURL("image/png");
-    const profilePictureURL = await uploadImage(dataURL);
+    await fsPromises.unlink(tempFilePath);
 
     const redisPipeline = redis.pipeline();
 
