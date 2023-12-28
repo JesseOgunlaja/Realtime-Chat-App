@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
       .png() // Convert to PNG format
       .toBuffer();
 
-    const tempFilePath = "temp_logo.png";
+    const tempFilePath = "/tmp/temp_logo.png";
     await fsPromises.writeFile(tempFilePath, imageBuffer);
 
     const profilePictureURL = (await filestackClient.upload(tempFilePath)).url;
