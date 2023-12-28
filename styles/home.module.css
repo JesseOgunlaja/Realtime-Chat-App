@@ -3,7 +3,7 @@
   align-items: center;
   flex-direction: column;
   margin-bottom: 110px;
-  width: 95vw;
+  width: 100vw;
 }
 
 .catchphrase {
@@ -126,6 +126,9 @@
 }
 
 @media (min-height: 100vw), (max-width: 800px) {
+  .page {
+    width: 95vw;
+  }
   .catchphrase {
     width: 100%;
     font-size: 55px;
