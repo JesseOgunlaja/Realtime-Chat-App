@@ -1,23 +1,18 @@
 "use client";
 
 import styles from "@/styles/dashboard.module.css";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
 import { decryptString } from "@/utils/encryption";
-import { User } from "@/utils/redis";
 import { renderChatMessage } from "@/utils/utils";
 import { UUID } from "crypto";
 import Image from "next/image";
 import Link from "next/link";
-import { Dispatch } from "react";
 
 const DashboardComponent = ({
   user,
   setUser,
   usernamesWithIDs,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-  usernamesWithIDs: string;
-}) => {
+}: DashboardPageComponentPropsType) => {
   function getDisplayNameFromID(id: string) {
     return (
       JSON.parse(decryptString(usernamesWithIDs, true)) as {

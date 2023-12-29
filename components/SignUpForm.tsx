@@ -11,8 +11,8 @@ import { toast } from "sonner";
 
 const SignUpForm = () => {
   const router = useRouter();
-  const [passwordVisibile, setPasswordVisibile] = useState<boolean>(false);
-  const [repeatedPasswordVisibile, setRepeatedPasswordVisibile] =
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
+  const [repeatedPasswordVisible, setRepeatedPasswordVisible] =
     useState<boolean>(false);
   const AgreementCheckbox = useRef<HTMLInputElement>(null);
   const [username, setUsername] = useState<string>("");
@@ -98,7 +98,7 @@ const SignUpForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          type={passwordVisibile ? "text" : "password"}
+          type={passwordVisible ? "text" : "password"}
           name="password"
           className={styles["password-input"]}
         />
@@ -106,9 +106,9 @@ const SignUpForm = () => {
           className={styles["show-password-button"]}
           type="button"
           tabIndex={-1}
-          onClick={() => setPasswordVisibile((currentVal) => !currentVal)}
+          onClick={() => setPasswordVisible((currentVal) => !currentVal)}
         >
-          {passwordVisibile ? "Hide" : "Show"}
+          {passwordVisible ? "Hide" : "Show"}
         </button>
       </div>
       <div className={styles["password-input-container"]}>
@@ -116,7 +116,7 @@ const SignUpForm = () => {
           value={repeatedPassword}
           onChange={(e) => setRepeatedPassword(e.target.value)}
           placeholder="Repeat password"
-          type={repeatedPasswordVisibile ? "text" : "password"}
+          type={repeatedPasswordVisible ? "text" : "password"}
           name="repeated-password"
           className={styles["password-input"]}
         />
@@ -125,10 +125,10 @@ const SignUpForm = () => {
           type="button"
           tabIndex={-1}
           onClick={() =>
-            setRepeatedPasswordVisibile((currentVal) => !currentVal)
+            setRepeatedPasswordVisible((currentVal) => !currentVal)
           }
         >
-          {repeatedPasswordVisibile ? "Hide" : "Show"}
+          {repeatedPasswordVisible ? "Hide" : "Show"}
         </button>
       </div>
       <Balancer preferNative={false} className={styles.agreement}>

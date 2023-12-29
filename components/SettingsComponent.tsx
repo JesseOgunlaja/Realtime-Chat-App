@@ -1,18 +1,15 @@
 "use client";
 
 import styles from "@/styles/settings.module.css";
-import { User } from "@/utils/redis";
-import { Dispatch } from "react";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
 import DisplayNameSettingsComponent from "./DisplayNameSettingsComponent";
+import PasswordSettingsComponent from "./PasswordSettingsComponent";
 import UsernameSettingsComponent from "./UsernameSettingsComponent";
 
 const SettingsComponent = ({
   user,
   setUser,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-}) => {
+}: Omit<DashboardPageComponentPropsType, "usernamesWithIDs">) => {
   return (
     <div className={styles.page}>
       <h1>Settings</h1>
@@ -23,6 +20,12 @@ const SettingsComponent = ({
       />
       <br />
       <DisplayNameSettingsComponent
+        user={user}
+        setUser={setUser}
+        styles={styles}
+      />
+      <br />
+      <PasswordSettingsComponent
         user={user}
         setUser={setUser}
         styles={styles}

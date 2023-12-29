@@ -1,4 +1,5 @@
-import { User, redis } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     const headersList = headers();
-    const user = JSON.parse(headersList.get("user") as string) as User;
+    const user = JSON.parse(headersList.get("user") as string) as UserType;
 
     let chatIndex: any;
 

@@ -1,32 +1,28 @@
 "use client";
 
 import styles from "@/styles/friend-requests.module.css";
-import { decryptString } from "@/utils/encryption";
 import {
+  DashboardPageComponentPropsType,
   IncomingFriendRequest,
   OutgoingFriendRequest,
-  User,
-} from "@/utils/redis";
+  UserType,
+} from "@/types/UserTypes";
+import { decryptString } from "@/utils/encryption";
 import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
 import { Check, X } from "lucide-react";
-import { Dispatch } from "react";
 import { toast } from "sonner";
 
 const FriendRequestsComponent = ({
   user,
   setUser,
   usernamesWithIDs,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-  usernamesWithIDs: string;
-}) => {
+}: DashboardPageComponentPropsType) => {
   async function declineFriendRequest(
     friendRequestBeingDeclined: IncomingFriendRequest,
     index: number
   ) {
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
     currentUser.incomingFriendRequests.splice(index, 1);
     setUser(currentUser);
     const loadingToastID = toast.loading("Loading", { duration: Infinity });
@@ -57,7 +53,7 @@ const FriendRequestsComponent = ({
     friendRequestBeingDeleted: OutgoingFriendRequest,
     index: number
   ) {
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
     currentUser.outgoingFriendRequests.splice(index, 1);
     setUser(currentUser);
     const loadingToastID = toast.loading("Loading", { duration: Infinity });
@@ -90,7 +86,7 @@ const FriendRequestsComponent = ({
     friendRequestBeingAccepted: IncomingFriendRequest,
     index: number
   ) {
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
     currentUser.incomingFriendRequests.splice(index, 1);
     setUser(currentUser);
     const loadingToastID = toast.loading("Loading", { duration: Infinity });

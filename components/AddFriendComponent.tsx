@@ -1,19 +1,15 @@
 "use client";
 import styles from "@/styles/add-friend.module.css";
-import { User } from "@/utils/redis";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
 import { getNewReference } from "@/utils/utils";
-import { Dispatch, FormEvent, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const AddFriendComponent = ({
   user,
   setUser,
   usernamesWithIDs,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-  usernamesWithIDs: string;
-}) => {
+}: DashboardPageComponentPropsType) => {
   const [friendBeingAdded, setFriendBeingAdded] = useState<string>("");
   const submitButtonRef = useRef<HTMLInputElement>(null);
 
@@ -118,6 +114,7 @@ const AddFriendComponent = ({
             value="Add"
             readOnly
           />
+          <p>Hint: My username is &quot;Jesse&quot;</p>
         </div>
       </form>
     </div>

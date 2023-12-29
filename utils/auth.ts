@@ -1,8 +1,9 @@
+import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { SignJWT, jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
-import { User, redis } from "./redis";
+import { redis } from "./redis";
 import { containsEmoji } from "./utils";
 import { UserJWTSchema } from "./zod";
 
@@ -20,6 +21,17 @@ export async function decodeJWT(jwt: string, client?: boolean) {
   }
 }
 
+export async function signJWT(
+  payload: Record<string, unknown>,
+  duration: string | number
+) {
+  return await new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setIssuedAt()
+    .setExpirationTime(duration)
+    .sign(new TextEncoder().encode(process.env.NEXT_PUBLIC_SIGNING_KEY));
+}
+
 function customStringify(obj: any) {
   return JSON.stringify(obj, function (key, value) {
     if (key === "message" && typeof value === "string") {
@@ -34,24 +46,13 @@ function customStringify(obj: any) {
   });
 }
 
-export async function signJWT(
-  payload: Record<string, unknown>,
-  duration: string
-) {
-  return await new SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
-    .setIssuedAt()
-    .setExpirationTime(duration)
-    .sign(new TextEncoder().encode(process.env.NEXT_PUBLIC_SIGNING_KEY));
-}
-
 export async function checkSignedIn(
   requestOrToken: NextRequest | string,
   isApiEndpoint: boolean,
   plainToken?: boolean
 ): Promise<
   | boolean
-  | { isSignedIn: boolean; user: User; key: UUID }
+  | { isSignedIn: boolean; user: UserType; key: UUID }
   | { isSignedIn: boolean }
 > {
   const token = plainToken
@@ -71,7 +72,7 @@ export async function checkSignedIn(
     if (isApiEndpoint) return { isSignedIn: false };
     return false;
   }
-  const user = (await redis.hgetall(decodedPayload.key)) as User;
+  const user = (await redis.hgetall(decodedPayload.key)) as UserType;
   if (user == undefined) {
     if (isApiEndpoint) return { isSignedIn: false };
     return false;
@@ -89,7 +90,7 @@ export async function protectedRouteForwarder(request: NextRequest) {
   try {
     const result = (await checkSignedIn(request, true)) as {
       isSignedIn: boolean;
-      user: User;
+      user: UserType;
       key: UUID;
     };
     if (!result.isSignedIn)

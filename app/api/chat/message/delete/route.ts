@@ -1,4 +1,5 @@
-import { User, redis } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -9,7 +10,7 @@ export async function POST(request: NextRequest) {
 
     const headersList = headers();
 
-    const user = JSON.parse(headersList.get("user") as string) as User;
+    const user = JSON.parse(headersList.get("user") as string) as UserType;
 
     const chatIndex = user.chats.findIndex((chat) => chat.id === body.chatID);
 
@@ -46,7 +47,7 @@ export async function POST(request: NextRequest) {
 
     const otherUser = (await redis.hgetall(
       user.chats[chatIndex].withID
-    )) as User;
+    )) as UserType;
 
     const otherUserChatIndex = otherUser.chats.findIndex(
       (chat) => chat.id === body.chatID

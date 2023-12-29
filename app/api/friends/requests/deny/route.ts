@@ -1,9 +1,9 @@
 import {
   IncomingFriendRequest,
   OutgoingFriendRequest,
-  User,
-  redis,
-} from "@/utils/redis";
+  UserType,
+} from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
 import { trigger } from "@/utils/websocketsServer";
 import { headers } from "next/headers";
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestHeaders = headers();
-    let user = JSON.parse(String(requestHeaders.get("user"))) as User;
+    let user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
 
     if (
       user.incomingFriendRequests.every(

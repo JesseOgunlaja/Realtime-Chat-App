@@ -1,8 +1,9 @@
 "use client";
 import { usePreviousValue } from "@/hooks/usePreviousValue";
 import styles from "@/styles/chat.module.css";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
+import { UserType } from "@/types/UserTypes";
 import { decryptString } from "@/utils/encryption";
-import { User } from "@/utils/redis";
 import {
   getFormValues,
   getNewReference,
@@ -12,23 +13,19 @@ import {
 import { UUID } from "crypto";
 import { format } from "date-fns";
 import { Pencil, Reply, SendHorizontal, Trash2, X } from "lucide-react";
-import { Dispatch, FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const ChatComponent = ({
   user,
   setUser,
-  uuid,
   chatID,
   chatIndex,
   usernamesWithIDs,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
+}: DashboardPageComponentPropsType & {
   uuid: UUID;
   chatID: UUID;
   chatIndex: number;
-  usernamesWithIDs: string;
 }) => {
   const prevUser = usePreviousValue(user);
   const chatWith = (
@@ -98,7 +95,7 @@ const ChatComponent = ({
 
     if (message === "") return;
 
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
     const timestamp = Date.now();
     currentUser.chats[chatIndex as number].messages.push(
       removeUndefinedFromObject({
@@ -182,7 +179,7 @@ const ChatComponent = ({
 
     if (formValues["new-message"] === "") return;
 
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
 
     currentUser.chats[chatIndex].messages[
       user.chats[chatIndex].messages.findIndex(
@@ -228,7 +225,7 @@ const ChatComponent = ({
   }
 
   async function deleteMessage() {
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
     const messageBeingDeletedIndex = user.chats[chatIndex].messages.findIndex(
       (message) => message.id == messageBeingDeletedID.current
     );

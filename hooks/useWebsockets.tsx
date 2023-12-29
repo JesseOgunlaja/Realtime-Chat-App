@@ -1,26 +1,27 @@
 "use client";
 
-import { decryptString } from "@/utils/encryption";
 import {
   Chat,
+  DispatchUserType,
   Friend,
   IncomingFriendRequest,
   Message,
   OutgoingFriendRequest,
-  User,
-} from "@/utils/redis";
+  UserType,
+} from "@/types/UserTypes";
+import { decryptString } from "@/utils/encryption";
 import { getNewReference } from "@/utils/utils";
 import { websocketChannel } from "@/utils/websockets";
 import { UUID } from "crypto";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Dispatch, useEffect } from "react";
+import { useEffect } from "react";
 import { toast } from "sonner";
 
 export function useWebsockets(
   uuid: UUID,
-  user: User,
-  setUser: Dispatch<User>,
+  user: UserType,
+  setUser: DispatchUserType,
   usernamesWithIDs: string
 ) {
   const pathname = usePathname();
@@ -41,7 +42,7 @@ export function useWebsockets(
         receiveFunction: function (data: {
           outgoingFriendRequests: OutgoingFriendRequest[];
         }) {
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           currentUser.outgoingFriendRequests = data.outgoingFriendRequests;
           const indexDeleted = user?.outgoingFriendRequests.findIndex(
             (request) => {
@@ -73,7 +74,7 @@ export function useWebsockets(
         receiveFunction: function (data: {
           newFriendRequest: IncomingFriendRequest;
         }) {
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           currentUser.incomingFriendRequests.push(data.newFriendRequest);
           setUser(currentUser);
           toast.info("New friend request", {
@@ -91,7 +92,7 @@ export function useWebsockets(
         receiveFunction: function (data: {
           incomingFriendRequests: IncomingFriendRequest[];
         }) {
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           currentUser.incomingFriendRequests = data.incomingFriendRequests;
           const indexDeleted = user?.incomingFriendRequests.findIndex(
             (request) => {
@@ -125,7 +126,7 @@ export function useWebsockets(
           friends: Friend[];
           chats: Chat[];
         }) {
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           currentUser.outgoingFriendRequests = data.outgoingFriendRequests;
           currentUser.friends = data.friends;
           currentUser.chats = data.chats;
@@ -195,7 +196,7 @@ export function useWebsockets(
               }
             );
           }
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           currentUser.chats[chatIndex].visible = true;
           currentUser.chats[chatIndex].messages.push(data.message);
           setUser(currentUser);
@@ -212,7 +213,7 @@ export function useWebsockets(
               (message) => message.id === data.message.id || message.id === null
             ) === -1
           ) {
-            const currentUser = getNewReference(user) as User;
+            const currentUser = getNewReference(user) as UserType;
             currentUser.chats[chatIndex].visible = true;
             currentUser.chats[chatIndex].messages.push(data.message);
             setUser(currentUser);
@@ -222,7 +223,7 @@ export function useWebsockets(
       {
         event: "friend-removed",
         receiveFunction: function (data: {
-          newUser: User;
+          newUser: UserType;
           friendDeletedID: UUID;
         }) {
           setUser(data.newUser);
@@ -264,7 +265,7 @@ export function useWebsockets(
       {
         event: "deleted-message",
         receiveFunction: function (data: { chatID: UUID; messageID: UUID }) {
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
@@ -280,11 +281,11 @@ export function useWebsockets(
       {
         event: "message-deleted",
         receiveFunction: function (data: {
-          newUser: User;
+          newUser: UserType;
           chatID: UUID;
           messageID: UUID;
         }) {
-          const currentUser = getNewReference(user) as User;
+          const currentUser = getNewReference(user) as UserType;
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );

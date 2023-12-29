@@ -1,8 +1,9 @@
 "use client";
 
+import { LayoutPropsType } from "@/types/ComponentTypes";
 import { usePathname } from "next/navigation";
 
-const MainContainer = ({ children }: { children: React.ReactNode }) => {
+const MainContainer = ({ children }: LayoutPropsType) => {
   const pathname = usePathname();
   const navPaths = ["/", "/signup", "/login"];
 

@@ -1,20 +1,14 @@
-import { User } from "@/utils/redis";
+import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { DisplayNameSchema } from "@/utils/zod";
-import { Dispatch, FormEvent, useRef } from "react";
+import { FormEvent, useRef } from "react";
 import { toast } from "sonner";
 
 const DisplayNameSettingsComponent = ({
   user,
   setUser,
   styles,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-  styles: {
-    readonly [key: string]: string;
-  };
-}) => {
+}: SettingsPageComponentPropsType) => {
   const displayNameForm = useRef<HTMLFormElement>(null);
 
   async function changeDisplayName(e: FormEvent<HTMLFormElement>) {

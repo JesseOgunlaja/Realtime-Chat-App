@@ -1,24 +1,21 @@
 "use client";
 import styles from "@/styles/friends.module.css";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
+import { UserType } from "@/types/UserTypes";
 import { decryptString } from "@/utils/encryption";
-import { User } from "@/utils/redis";
 import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
 import { MessageSquare, MoreVertical } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Dispatch, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 
 const FriendsComponent = ({
   user,
   setUser,
   usernamesWithIDs,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-  usernamesWithIDs: string;
-}) => {
+}: DashboardPageComponentPropsType) => {
   const [popupVisibility, setPopupVisibility] = useState(
     user?.friends.map(() => false)
   );
@@ -58,7 +55,7 @@ const FriendsComponent = ({
 
   async function removeFriend() {
     hideModal();
-    const currentUser = getNewReference(user) as User;
+    const currentUser = getNewReference(user) as UserType;
     currentUser.chats.splice(
       user.chats.findIndex(
         (chat) => chat.withID === friendBeingDeletedID.current

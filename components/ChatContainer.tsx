@@ -1,20 +1,20 @@
 "use client";
 
 import { useWebsockets } from "@/hooks/useWebsockets";
-import { User } from "@/utils/redis";
+import { DashboardPageContainerPropsType } from "@/types/ComponentTypes";
+import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { useState } from "react";
 import ChatComponent from "./ChatComponent";
 import SignedInNavbar from "./SignedInNavbar";
 
-const ChatContainer = (props: {
-  user: User;
-  uuid: UUID;
-  chatID: UUID;
-  chatIndex: number;
-  usernamesWithIDs: string;
-}) => {
-  const [user, setUser] = useState<User>(props.user);
+const ChatContainer = (
+  props: DashboardPageContainerPropsType & {
+    chatID: UUID;
+    chatIndex: number;
+  }
+) => {
+  const [user, setUser] = useState<UserType>(props.user);
 
   useWebsockets(
     props.uuid,

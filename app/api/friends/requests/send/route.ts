@@ -1,4 +1,5 @@
-import { User, getUserByName, redis } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
+import { getUserByName, redis } from "@/utils/redis";
 import { trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
@@ -25,7 +26,7 @@ export async function POST(request: NextRequest) {
     const friendBeingAddedResult = (await getUserByName(
       friendBeingAddedUsername,
       true
-    )) as { user: User; key: UUID };
+    )) as { user: UserType; key: UUID };
     if (!friendBeingAddedResult) {
       return NextResponse.json(
         { message: "User doesn't exist" },
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestHeaders = headers();
-    const user = JSON.parse(String(requestHeaders.get("user"))) as User;
+    const user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
 
     if (user.username === friendBeingAddedUsername.toUpperCase()) {
       return NextResponse.json(

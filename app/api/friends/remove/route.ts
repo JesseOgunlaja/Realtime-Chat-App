@@ -1,4 +1,5 @@
-import { User, redis } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
@@ -17,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     const requestHeaders = headers();
 
-    const user = JSON.parse(String(requestHeaders.get("user"))) as User;
+    const user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
     const key = JSON.parse(String(requestHeaders.get("key"))) as UUID;
 
     if (!user.friends.find((friend) => friend.id === friendID)) {
@@ -35,7 +36,7 @@ export async function POST(request: NextRequest) {
       1
     );
 
-    const otherUser = (await redis.hgetall(friendID)) as User;
+    const otherUser = (await redis.hgetall(friendID)) as UserType;
 
     otherUser.friends.splice(
       otherUser.friends.findIndex((friend) => friend.id === key),

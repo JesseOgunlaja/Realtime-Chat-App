@@ -1,5 +1,5 @@
 import ChatContainer from "@/components/ChatContainer";
-import { User } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
@@ -15,7 +15,7 @@ const Page = async ({ params }: { params: { chatID: string } }) => {
     },
   });
   const data = await res.json();
-  const user: User = data.user;
+  const user: UserType = data.user;
   const key: UUID = data.key;
   let chatIndex: any;
 

@@ -1,5 +1,5 @@
 import { Redis } from "@upstash/redis";
-import { UUID } from "crypto";
+import { UserType } from "../types/UserTypes";
 
 export const redis = new Redis({
   url: String(process.env.REDIS_URL),
@@ -9,7 +9,7 @@ export const redis = new Redis({
 export async function getUserByName(
   name: string,
   getKey?: boolean
-): Promise<User | { user: User; key: string } | undefined> {
+): Promise<UserType | { user: UserType; key: string } | undefined> {
   const users = (await redis.lrange("Usernames", 0, -1)) as unknown as Record<
     string,
     any
@@ -21,49 +21,10 @@ export async function getUserByName(
     const key = users[names.indexOf(name.toUpperCase())].id;
     const user = await redis.hgetall(key);
     if (getKey === true) {
-      return { user: user as User, key };
+      return { user: user as UserType, key };
     }
-    return user as User;
+    return user as UserType;
   } else {
     return undefined;
   }
 }
-
-export type Message = {
-  message: string;
-  fromYou: boolean;
-  timestamp: number;
-  id: UUID;
-  replyID?: UUID;
-};
-
-export type Chat = {
-  id: UUID;
-  messages: Message[];
-  withID: UUID;
-  visible: boolean;
-};
-
-export type IncomingFriendRequest = {
-  fromID: UUID;
-};
-
-export type OutgoingFriendRequest = {
-  toID: UUID;
-};
-
-export type Friend = {
-  id: UUID;
-};
-
-export type User = {
-  profilePicture: string;
-  username: string;
-  displayName: string;
-  password: string;
-  incomingFriendRequests: IncomingFriendRequest[];
-  outgoingFriendRequests: OutgoingFriendRequest[];
-  friends: Friend[];
-  chats: Chat[];
-  uuid: UUID;
-};

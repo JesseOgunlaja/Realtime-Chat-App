@@ -51,3 +51,12 @@ export const UserJWTSchema = z
     uuid: z.string(),
   })
   .strict();
+
+export const CredentialsJWTSchema = z
+  .object({
+    iat: z.number(),
+    exp: z.number(),
+    username: z.string(),
+    password: z.string(),
+  })
+  .strict();

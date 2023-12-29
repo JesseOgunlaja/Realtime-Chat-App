@@ -1,4 +1,5 @@
-import { IncomingFriendRequest, User, redis } from "@/utils/redis";
+import { IncomingFriendRequest, UserType } from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { compareObjects } from "@/utils/utils";
 import { trigger } from "@/utils/websocketsServer";
 import { UUID, randomUUID } from "crypto";
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestHeaders = headers();
-    let user = JSON.parse(requestHeaders.get("user") as string) as User;
+    let user = JSON.parse(requestHeaders.get("user") as string) as UserType;
 
     if (
       user.incomingFriendRequests.every(
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     const otherUser = (await redis.hgetall(
       friendRequestBeingAccepted.fromID
-    )) as User;
+    )) as UserType;
 
     const chatID = randomUUID();
 

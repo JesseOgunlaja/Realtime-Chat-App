@@ -1,5 +1,6 @@
 import MainContainer from "@/components/MainContainer";
 import Navbar from "@/components/Navbar";
+import { LayoutPropsType } from "@/types/ComponentTypes";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
@@ -22,11 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: LayoutPropsType) {
   return (
     <html lang="en">
       <link rel="icon" href="/favicon.ico"></link>

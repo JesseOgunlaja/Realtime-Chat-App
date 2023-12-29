@@ -13,6 +13,11 @@
   font-size: 18px;
 }
 
+.form p {
+  font-style: italic;
+  opacity: 0.7;
+}
+
 .add-friend-container {
   display: flex;
   flex-direction: column;

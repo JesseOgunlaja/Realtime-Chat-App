@@ -1,9 +1,9 @@
 import AddFriendContainer from "@/components/AddFriendContainer";
-import { User } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { cookies } from "next/headers";
 
-const Page = async (props: any) => {
+const Page = async () => {
   const token = cookies().get("token")?.value;
   const res = await fetch(`${process.env.URL}/api/user`, {
     next: {
@@ -14,7 +14,7 @@ const Page = async (props: any) => {
     },
   });
   const data = await res.json();
-  const user: User = data.user;
+  const user: UserType = data.user;
   const key: UUID = data.key;
 
   return (

@@ -1,8 +1,9 @@
+import { UserType } from "@/types/UserTypes";
+import { signJWT } from "@/utils/auth";
 import { decryptString } from "@/utils/encryption";
-import { User, getUserByName } from "@/utils/redis";
+import { getUserByName } from "@/utils/redis";
 import { compare as comparePasswords } from "bcrypt";
 import { UUID } from "crypto";
-import { sign as signJWT } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,13 +11,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    if (body.encrypted) {
-      var username = decryptString(body.username, false);
-      var password = decryptString(body.password, false);
-    } else {
-      var username = body.username as string;
-      var password = body.password as string;
-    }
+    const username = body.encrypted
+      ? decryptString(body.username, false)
+      : body.username;
+    const password = body.encrypted
+      ? decryptString(body.password, false)
+      : body.password;
 
     if (
       username === "" &&
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
     const result = (await getUserByName(username, true)) as {
-      user: User;
+      user: UserType;
       key: UUID;
     };
     if (result == undefined) {
@@ -48,13 +48,11 @@ export async function POST(request: NextRequest) {
       );
     }
     const payload = {
-      iat: Date.now(),
-      exp: Math.floor((new Date().getTime() + 30 * 24 * 60 * 60 * 1000) / 1000),
       username: user?.username,
       key,
       uuid: user?.uuid,
     };
-    const token = signJWT(payload, process.env.SIGNING_KEY);
+    const token = await signJWT(payload, "7d");
     const expirationDate = new Date();
     expirationDate.setSeconds(expirationDate.getSeconds() + 60 * 60 * 24 * 7);
     cookies().set({

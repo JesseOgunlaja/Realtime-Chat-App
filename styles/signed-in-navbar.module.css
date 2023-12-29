@@ -6,8 +6,9 @@
   display: flex;
   flex-direction: column;
   padding: 10px;
-  height: 100vh;
+  min-height: 100vh;
   border-right: 1px solid black;
+  overflow-y: scroll;
 }
 
 .logo-container {
@@ -207,7 +208,7 @@
 
 @media (min-height: 100vw), (max-width: 800px) {
   .chat svg {
-    display: block;
+    display: block !important;
   }
   .nav {
     display: none;

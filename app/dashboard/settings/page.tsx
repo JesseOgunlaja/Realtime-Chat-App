@@ -1,5 +1,5 @@
 import SettingsContainer from "@/components/SettingsContainer";
-import { User } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { cookies } from "next/headers";
 
@@ -14,7 +14,7 @@ const Page = async (props: any) => {
     },
   });
   const data = await res.json();
-  const user: User = data.user;
+  const user: UserType = data.user;
   const key: UUID = data.key;
 
   return (

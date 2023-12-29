@@ -1,26 +1,23 @@
 "use client";
 
 import styles from "@/styles/signed-in-navbar.module.css";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
+import { UserType } from "@/types/UserTypes";
 import { decryptString } from "@/utils/encryption";
-import { User as UserType } from "@/utils/redis";
 import { getNewReference } from "@/utils/utils";
 import { UUID } from "crypto";
 import { LogOut, Menu, UserCog, UserPlus, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Dispatch, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 const SignedInNavbar = ({
   user,
   setUser,
   usernamesWithIDs,
-}: {
-  user: UserType;
-  setUser: Dispatch<UserType>;
-  usernamesWithIDs: string;
-}) => {
+}: DashboardPageComponentPropsType) => {
   const router = useRouter();
   const [mobileNavbarVisibility, setMobileNavbarVisibility] =
     useState<boolean>(false);
@@ -264,7 +261,7 @@ const SignedInNavbar = ({
           <div className={styles.chats}>
             {user?.chats
               .filter((chat) => chat.visible)
-              .map((chat) => (
+              .map((chat, index) => (
                 <Link
                   onClick={() => setMobileNavbarVisibility(false)}
                   href={`/dashboard/chats/${chat.id}`}
@@ -278,6 +275,11 @@ const SignedInNavbar = ({
                     width={20}
                   />
                   {chatWithFromID(chat.withID)?.displayName}
+                  <X
+                    onClick={(e) =>
+                      hideChat(e as unknown as MouseEvent, chat.id, index)
+                    }
+                  />
                 </Link>
               ))}
           </div>

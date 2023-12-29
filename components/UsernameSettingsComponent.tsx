@@ -1,20 +1,14 @@
-import { User } from "@/utils/redis";
+import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { UsernameSchema } from "@/utils/zod";
-import { Dispatch, FormEvent, useRef } from "react";
+import { FormEvent, useRef } from "react";
 import { toast } from "sonner";
 
 const UsernameSettingsComponent = ({
   user,
   setUser,
   styles,
-}: {
-  user: User;
-  setUser: Dispatch<User>;
-  styles: {
-    readonly [key: string]: string;
-  };
-}) => {
+}: SettingsPageComponentPropsType) => {
   const usernameForm = useRef<HTMLFormElement>(null);
 
   async function changeUsername(e: FormEvent<HTMLFormElement>) {

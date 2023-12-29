@@ -1,4 +1,5 @@
-import { User, redis } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { removeUndefinedFromObject } from "@/utils/utils";
 import { trigger } from "@/utils/websocketsServer";
 import { randomUUID } from "crypto";
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now();
 
     const headersList = headers();
-    const user = JSON.parse(headersList.get("user") as string) as User;
+    const user = JSON.parse(headersList.get("user") as string) as UserType;
 
     let chatIndex: number | undefined = undefined;
 
@@ -83,7 +84,7 @@ export async function POST(request: NextRequest) {
 
     const otherUser = (await redis.hgetall(
       user.chats[chatIndex].withID
-    )) as User;
+    )) as UserType;
     const redisPipeline = redis.pipeline();
     redisPipeline.hset(JSON.parse(headersList.get("key") as string), {
       chats: user.chats,

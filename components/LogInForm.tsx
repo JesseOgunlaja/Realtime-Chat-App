@@ -10,7 +10,7 @@ import { toast } from "sonner";
 
 const SignUpForm = () => {
   const rememberMeCheckbox = useRef<HTMLInputElement>(null);
-  const [passwordVisibile, setPasswordVisibile] = useState<boolean>(false);
+  const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
@@ -67,7 +67,7 @@ const SignUpForm = () => {
             username: encryptString(String(username), true),
             password: encryptString(String(password), true),
           };
-          const userCredentials = signJWT(payload, "30d");
+          const userCredentials = await signJWT(payload, "30d");
 
           await fetch("/api/credentials", {
             method: "POST",
@@ -124,7 +124,7 @@ const SignUpForm = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
-          type={passwordVisibile ? "text" : "password"}
+          type={passwordVisible ? "text" : "password"}
           name="password"
           className={styles["password-input"]}
         />
@@ -132,9 +132,9 @@ const SignUpForm = () => {
           className={styles["show-password-button"]}
           type="button"
           tabIndex={-1}
-          onClick={() => setPasswordVisibile((currentVal) => !currentVal)}
+          onClick={() => setPasswordVisible((currentVal) => !currentVal)}
         >
-          {passwordVisibile ? "Hide" : "Show"}
+          {passwordVisible ? "Hide" : "Show"}
         </button>
       </div>
       <div className={styles["remember-me-container"]}>

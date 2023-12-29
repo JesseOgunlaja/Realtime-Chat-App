@@ -1,4 +1,5 @@
-import { User, redis } from "@/utils/redis";
+import { UserType } from "@/types/UserTypes";
+import { redis } from "@/utils/redis";
 import { DisplayNameSchema } from "@/utils/zod";
 import { UUID } from "crypto";
 import { headers } from "next/headers";
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
     const newDisplayName = body.newDisplayName as string;
 
     const headersList = headers();
-    const user = JSON.parse(headersList.get("user") as string) as User;
+    const user = JSON.parse(headersList.get("user") as string) as UserType;
     const key = JSON.parse(String(headersList.get("key"))) as UUID;
 
     if (user.displayName === newDisplayName) {
@@ -35,7 +36,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
 
-    console.time("Redis get");
     const ids = (
       (await redis.lrange("Usernames", 0, -1)) as {
         name: string;
@@ -44,9 +44,7 @@ export async function POST(request: NextRequest) {
         id: UUID;
       }[]
     ).map((val) => val.id);
-    console.timeEnd("Redis get");
 
-    console.time("Redis set");
     const redisPipeline = redis.pipeline();
 
     redisPipeline.hset(key, {
@@ -63,7 +61,6 @@ export async function POST(request: NextRequest) {
     );
 
     await redisPipeline.exec();
-    console.timeEnd("Redis set");
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {

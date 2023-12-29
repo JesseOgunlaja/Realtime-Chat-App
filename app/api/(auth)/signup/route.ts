@@ -24,15 +24,13 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    if (body.encrypted) {
-      var displayName = decryptString(body.username, false);
-      var username = displayName.toUpperCase();
-      var password = decryptString(body.password, false);
-    } else {
-      var displayName = body.username as string;
-      var username = displayName.toUpperCase();
-      var password = body.password as string;
-    }
+    const displayName: string = body.encrypted
+      ? decryptString(body.username, false)
+      : body.username;
+    const username = displayName.toUpperCase();
+    const password: string = body.encrypted
+      ? decryptString(body.password, false)
+      : body.password;
 
     let result = UsernameSchema.safeParse(username);
     if (!result.success)
@@ -114,7 +112,7 @@ export async function POST(request: NextRequest) {
 
     await redisPipeline.exec();
 
-    return NextResponse.json({ message: "Success" }, { status: 200 });
+    return NextResponse.json({ message: "Success" }, { status: 201 });
   } catch (err) {
     return NextResponse.json(
       { message: "Error", error: `${err}` },
