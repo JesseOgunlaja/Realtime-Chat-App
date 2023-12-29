@@ -1,8 +1,8 @@
 "use client";
 
 import styles from "@/styles/friend-requests.module.css";
+import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
 import {
-  DashboardPageComponentPropsType,
   IncomingFriendRequest,
   OutgoingFriendRequest,
   UserType,
