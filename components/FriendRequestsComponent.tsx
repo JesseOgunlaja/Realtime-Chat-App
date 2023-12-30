@@ -117,14 +117,11 @@ const FriendRequestsComponent = ({
   return (
     <div className={styles.page}>
       <h1 className={styles["title"]}>Friend requests</h1>
-      {user &&
-        user?.incomingFriendRequests.length +
-          user?.outgoingFriendRequests.length ===
-          0 && (
-          <p className={styles["no-friend-requests"]}>No friend requests</p>
-        )}
+      {user.incomingFriendRequests.length +
+        user.outgoingFriendRequests.length ===
+        0 && <p className={styles["no-friend-requests"]}>No friend requests</p>}
       <div className={styles["all-requests"]}>
-        {user?.incomingFriendRequests.map((friendRequest, index: number) => (
+        {user.incomingFriendRequests.map((friendRequest, index: number) => (
           <div
             key={friendRequest.fromID}
             className={styles["incoming-friend-request"]}
@@ -146,7 +143,7 @@ const FriendRequestsComponent = ({
             <X onClick={() => declineFriendRequest(friendRequest, index)} />
           </div>
         ))}
-        {user?.outgoingFriendRequests.map((friendRequest, index: number) => (
+        {user.outgoingFriendRequests.map((friendRequest, index: number) => (
           <div
             key={friendRequest.toID}
             className={styles["outgoing-friend-request"]}

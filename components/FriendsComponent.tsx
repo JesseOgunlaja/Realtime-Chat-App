@@ -1,4 +1,5 @@
 "use client";
+
 import styles from "@/styles/friends.module.css";
 import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
 import { UserType } from "@/types/UserTypes";
@@ -17,22 +18,24 @@ const FriendsComponent = ({
   usernamesWithIDs,
 }: DashboardPageComponentPropsType) => {
   const [popupVisibility, setPopupVisibility] = useState(
-    user?.friends.map(() => false)
+    user.friends.map(() => false)
   );
   const friendBeingDeletedID = useRef<UUID>();
   const dialog = useRef<HTMLDialogElement>(null);
 
   window.onclick = (e) => {
-    const clickedElement = e.target as any;
+    const clickedElement = e.target as HTMLElement;
+    const clickedElementClassname = clickedElement.className as
+      | string
+      | {
+          baseVal: string;
+        };
 
-    if (!clickedElement?.className) {
-      const newVisibility = [...popupVisibility];
-      newVisibility.fill(false);
-      setPopupVisibility(newVisibility);
-      return;
-    }
-
-    if (clickedElement?.className?.baseVal !== "lucide lucide-more-vertical") {
+    if (
+      !clickedElementClassname ||
+      (typeof clickedElementClassname !== "string" &&
+        clickedElementClassname.baseVal !== "lucide lucide-more-vertical")
+    ) {
       const newVisibility = [...popupVisibility];
       newVisibility.fill(false);
       setPopupVisibility(newVisibility);
@@ -112,17 +115,6 @@ const FriendsComponent = ({
     ).find((usernameWithID) => usernameWithID.id === id);
   }
 
-  function getProfilePictureFromID(id: string) {
-    return (
-      JSON.parse(decryptString(usernamesWithIDs, true)) as {
-        name: string;
-        displayName: string;
-        id: UUID;
-        profilePicture: string;
-      }[]
-    ).find((usernameWithID) => usernameWithID.id === id)?.profilePicture;
-  }
-
   return (
     <div className={styles.page}>
       <dialog ref={dialog} className={styles.dialog}>
@@ -144,7 +136,7 @@ const FriendsComponent = ({
         {user.friends.length === 0 ? (
           <p className={styles["no-friends"]}>No friends...</p>
         ) : null}
-        {user?.friends.map((friend, index) => (
+        {user.friends.map((friend, index) => (
           <div key={friend.id} className={styles.friend}>
             <Link
               href={`/dashboard/chats/${

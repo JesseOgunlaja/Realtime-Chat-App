@@ -3,12 +3,15 @@
 import styles from "@/styles/signup.module.css";
 import { decodeJWT, signJWT } from "@/utils/auth";
 import { decryptString, encryptString } from "@/utils/encryption";
+import { CredentialsJWTSchema } from "@/utils/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
 
 const SignUpForm = () => {
+  const router = useRouter();
   const rememberMeCheckbox = useRef<HTMLInputElement>(null);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
@@ -25,7 +28,7 @@ const SignUpForm = () => {
       const decoded = await decodeJWT(String(credentials));
       if (!decoded) return;
       const payload = decoded.payload;
-      if (!payload || !payload.username || !payload.password) return;
+      if (CredentialsJWTSchema.safeParse(payload).success) return;
       setUsername(decryptString(String(payload.username), true));
       setPassword(decryptString(String(payload.password), true));
       rememberMeCheckbox.current!.checked = true;
@@ -33,7 +36,7 @@ const SignUpForm = () => {
   }, []);
 
   function checkValues() {
-    let results: boolean[] = [];
+    const results: boolean[] = [];
     results.push(username !== "");
     if (username == "") toast.error("Username required");
     results.push(password !== "");
@@ -62,6 +65,10 @@ const SignUpForm = () => {
         toast.success("Valid credentials", {
           id: loadingToastID,
         });
+        setTimeout(() => {
+          toast.dismiss(loadingToastID);
+          router.push("/login");
+        }, 1000);
         if (rememberMeCheckbox.current?.checked) {
           const payload = {
             username: encryptString(String(username), true),
@@ -83,10 +90,6 @@ const SignUpForm = () => {
             method: "DELETE",
           });
         }
-        setTimeout(async () => {
-          toast.dismiss(loadingToastID);
-          window.location.reload();
-        }, 2000);
       }
       if (data.message === "Error") {
         if (data.error === "User not found") {

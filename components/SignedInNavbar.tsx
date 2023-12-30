@@ -108,9 +108,9 @@ const SignedInNavbar = ({
             <div className={styles["friend-request-text"]}>
               <span>Friend requests</span>
               {"  "}
-              {user && user?.incomingFriendRequests.length !== 0 && (
+              {user.incomingFriendRequests.length !== 0 && (
                 <span className={styles["pending-friend-requests"]}>
-                  {user?.incomingFriendRequests.length}
+                  {user.incomingFriendRequests.length}
                 </span>
               )}
             </div>
@@ -128,7 +128,7 @@ const SignedInNavbar = ({
         </div>
         <p className={styles["chats-text"]}>Chats</p>
         <div className={styles.chats}>
-          {user?.chats
+          {user.chats
             .filter((chat) => chat.visible)
             .map((chat, index) => (
               <Link
@@ -163,8 +163,8 @@ const SignedInNavbar = ({
               width={40}
             />
             <div className={styles["user-details-names"]}>
-              <p className={styles["display-name"]}>{user?.displayName}</p>
-              <p className={styles["user-name"]}>{user?.username}</p>
+              <p className={styles["display-name"]}>{user.displayName}</p>
+              <p className={styles["user-name"]}>{user.username}</p>
             </div>
           </div>
           <LogOut id={styles.logout} onClick={logout} />
@@ -236,9 +236,9 @@ const SignedInNavbar = ({
               <div className={styles["friend-request-text"]}>
                 <span>Friend requests</span>
                 {"  "}
-                {user?.incomingFriendRequests.length !== 0 && (
+                {user.incomingFriendRequests.length !== 0 && (
                   <span className={styles["pending-friend-requests"]}>
-                    {user?.incomingFriendRequests.length}
+                    {user.incomingFriendRequests.length}
                   </span>
                 )}
               </div>
@@ -259,7 +259,7 @@ const SignedInNavbar = ({
           </div>
           <p className={styles["chats-text"]}>Chats</p>
           <div className={styles.chats}>
-            {user?.chats
+            {user.chats
               .filter((chat) => chat.visible)
               .map((chat, index) => (
                 <Link
@@ -294,8 +294,8 @@ const SignedInNavbar = ({
                 width={40}
               />
               <div className={styles["user-details-names"]}>
-                <p className={styles["display-name"]}>{user?.displayName}</p>
-                <p className={styles["user-name"]}>{user?.username}</p>
+                <p className={styles["display-name"]}>{user.displayName}</p>
+                <p className={styles["user-name"]}>{user.username}</p>
               </div>
             </div>
             <LogOut onClick={logout} />

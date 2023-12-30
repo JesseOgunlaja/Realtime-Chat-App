@@ -16,22 +16,17 @@ const ChatContainer = (
 ) => {
   const [user, setUser] = useState<UserType>(props.user);
 
-  useWebsockets(
-    props.uuid,
-    user || props.user,
-    setUser,
-    props.usernamesWithIDs
-  );
+  useWebsockets(props.uuid, user, setUser, props.usernamesWithIDs);
 
   return (
     <>
       <SignedInNavbar
         usernamesWithIDs={props.usernamesWithIDs}
-        user={user || props.user}
+        user={user}
         setUser={setUser}
       />
       <ChatComponent
-        user={user || props.user}
+        user={user}
         setUser={setUser}
         usernamesWithIDs={props.usernamesWithIDs}
         uuid={props.uuid}

@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let result = UsernameSchema.safeParse(newUsername);
+    const result = UsernameSchema.safeParse(newUsername);
     if (!result.success)
       return NextResponse.json(
         { message: "Error", error: result.error.format()._errors },

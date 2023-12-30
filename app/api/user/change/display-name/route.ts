@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    let result = DisplayNameSchema.safeParse(newDisplayName);
+    const result = DisplayNameSchema.safeParse(newDisplayName);
     if (!result.success)
       return NextResponse.json(
         { message: "Error", error: result.error.format()._errors },

@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestHeaders = headers();
-    let user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
+    const user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
 
     if (
       user.outgoingFriendRequests.every(
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       (val) => !compareObjects(val, friendRequestBeingDeleted)
     );
 
-    let otherUser = (await redis.hgetall(
+    const otherUser = (await redis.hgetall(
       friendRequestBeingDeleted.toID
     )) as UserType;
     let incomingRequestsFromOtherUser =

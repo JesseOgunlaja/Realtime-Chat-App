@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestHeaders = headers();
-    let user = JSON.parse(requestHeaders.get("user") as string) as UserType;
+    const user = JSON.parse(requestHeaders.get("user") as string) as UserType;
 
     if (
       user.incomingFriendRequests.every(
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       id: chatID,
       messages: [],
       withID: friendRequestBeingAccepted.fromID,
-      visible: true,
+      visible: false,
     });
     user.friends.push({
       id: friendRequestBeingAccepted.fromID,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       id: chatID,
       messages: [],
       withID: JSON.parse(requestHeaders.get("key") as string) as UUID,
-      visible: true,
+      visible: false,
     });
     otherUser.friends.push({
       id: JSON.parse(requestHeaders.get("key") as string),

@@ -22,18 +22,9 @@ export async function POST(request: NextRequest) {
     const headersList = headers();
     const user = JSON.parse(headersList.get("user") as string) as UserType;
 
-    let chatIndex: number | undefined = undefined;
+    const chatIndex = user.chats.findIndex((chat) => chat.id === body.chatID);
 
-    if (
-      !user.chats.some((val, index) => {
-        if (val.id === body.chatID) {
-          chatIndex = index;
-          return true;
-        }
-        return false;
-      }) ||
-      chatIndex == undefined
-    ) {
+    if (chatIndex == -1) {
       return NextResponse.json({ message: "Chat not found" }, { status: 400 });
     }
 

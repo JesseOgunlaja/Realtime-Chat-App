@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     const requestHeaders = headers();
-    let user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
+    const user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
 
     if (
       user.incomingFriendRequests.every(

@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     const friendBeingAddedResult = (await getUserByName(
       friendBeingAddedUsername,
       true
-    )) as { user: UserType; key: UUID };
+    )) as { user: UserType; key: UUID } | undefined;
     if (!friendBeingAddedResult) {
       return NextResponse.json(
         { message: "User doesn't exist" },

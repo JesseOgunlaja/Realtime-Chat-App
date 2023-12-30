@@ -1,6 +1,33 @@
 {
-  "extends": "next/core-web-vitals",
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint", "react", "import", "react-hooks"],
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@next/next/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:react-hooks/recommended"
+  ],
   "rules": {
-    "react-hooks/exhaustive-deps": "off"
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "no-case-declarations": "off",
+    "import/no-unresolved": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/no-unknown-property": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react-hooks/rules-of-hooks": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unnecessary-condition": "error"
   }
 }

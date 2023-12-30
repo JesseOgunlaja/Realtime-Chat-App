@@ -29,10 +29,12 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const result = (await getUserByName(username, true)) as {
-      user: UserType;
-      key: UUID;
-    };
+    const result = (await getUserByName(username, true)) as
+      | {
+          user: UserType;
+          key: UUID;
+        }
+      | undefined;
     if (result == undefined) {
       return NextResponse.json(
         { message: "Error", error: "User not found" },
@@ -48,9 +50,9 @@ export async function POST(request: NextRequest) {
       );
     }
     const payload = {
-      username: user?.username,
+      username: user.username,
       key,
-      uuid: user?.uuid,
+      uuid: user.uuid,
     };
     const token = await signJWT(payload, "7d");
     const expirationDate = new Date();

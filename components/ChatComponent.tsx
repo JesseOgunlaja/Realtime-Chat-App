@@ -70,7 +70,7 @@ const ChatComponent = ({
   window.onclick = (e) => {
     const container = messagesContainer.current;
     if (container) {
-      const elementClicked = e.target as any;
+      const elementClicked = e.target as HTMLElement;
       const children = Array.from(container.children as HTMLCollection);
 
       if (
@@ -284,7 +284,7 @@ const ChatComponent = ({
               key={messageBeingEditedID.current}
               name="new-message"
               defaultValue={
-                user?.chats[chatIndex]?.messages[
+                user.chats[chatIndex]?.messages[
                   user.chats[chatIndex].messages.findIndex(
                     (message) => message.id === messageBeingEditedID.current
                   )
@@ -317,10 +317,8 @@ const ChatComponent = ({
         <p>{}</p>
       </div>
       <div className={styles.messages} ref={messagesContainer}>
-        {chatIndex != undefined &&
-          user != undefined &&
-          user?.chats[chatIndex].messages.length !== 0 &&
-          user?.chats[chatIndex].messages.map((message, index) => (
+        {user.chats[chatIndex].messages.length !== 0 &&
+          user.chats[chatIndex].messages.map((message, index) => (
             <div
               style={{
                 background:
@@ -456,11 +454,7 @@ const ChatComponent = ({
             }
           }}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder={
-            chatIndex != undefined
-              ? `Message ${chatWithDisplayName}`
-              : "Loading..."
-          }
+          placeholder={`Message ${chatWithDisplayName}`}
         />
         <SendHorizontal onClick={() => sendMessage(undefined)} />
       </form>

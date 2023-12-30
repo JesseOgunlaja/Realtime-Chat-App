@@ -3,7 +3,7 @@ import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { cookies } from "next/headers";
 
-const Page = async (props: any) => {
+const Page = async () => {
   const token = cookies().get("token")?.value;
   const res = await fetch(`${process.env.URL}/api/user`, {
     next: {

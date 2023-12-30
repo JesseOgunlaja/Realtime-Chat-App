@@ -11,6 +11,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 5px;
+  position: relative;
 }
 
 .recent-chat {
@@ -61,9 +62,18 @@
 
 @media (min-height: 100vw), (max-width: 800px) {
   .page {
-    width: 99vw;
+    width: 100vw;
   }
   .recent-chats {
     grid-template-columns: 1fr;
+    position: relative;
+  }
+  .recent-chat {
+    width: calc(100% - 20px);
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .chat-with-user-container {
+    font-size: 20px;
   }
 }

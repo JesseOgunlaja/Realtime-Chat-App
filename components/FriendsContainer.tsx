@@ -10,23 +10,18 @@ import SignedInNavbar from "./SignedInNavbar";
 const FriendsContainer = (props: DashboardPageContainerPropsType) => {
   const [user, setUser] = useState<UserType>(props.user);
 
-  useWebsockets(
-    props.uuid,
-    user || props.user,
-    setUser,
-    props.usernamesWithIDs
-  );
+  useWebsockets(props.uuid, user, setUser, props.usernamesWithIDs);
 
   return (
     <>
       <SignedInNavbar
         usernamesWithIDs={props.usernamesWithIDs}
-        user={user || props.user}
+        user={user}
         setUser={setUser}
       />
       <FriendsComponent
         usernamesWithIDs={props.usernamesWithIDs}
-        user={user || props.user}
+        user={user}
         setUser={setUser}
       />
     </>

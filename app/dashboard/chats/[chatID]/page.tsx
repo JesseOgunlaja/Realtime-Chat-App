@@ -17,17 +17,9 @@ const Page = async ({ params }: { params: { chatID: string } }) => {
   const data = await res.json();
   const user: UserType = data.user;
   const key: UUID = data.key;
-  let chatIndex: any;
+  const chatIndex = user.chats.findIndex((chat) => chat.id === params.chatID);
 
-  if (
-    !user.chats.some((chat, index) => {
-      if (chat.id === params.chatID) {
-        chatIndex = index;
-        return true;
-      }
-      return false;
-    })
-  ) {
+  if (chatIndex === -1) {
     notFound();
   }
 

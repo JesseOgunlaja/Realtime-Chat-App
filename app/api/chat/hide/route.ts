@@ -17,18 +17,10 @@ export async function POST(request: NextRequest) {
     const headersList = headers();
     const user = JSON.parse(headersList.get("user") as string) as UserType;
 
-    let chatIndex: any;
+    const chatIndex = user.chats.findIndex((chat) => chat.id === body.chatID);
 
-    if (
-      !user.chats.some((chat, index) => {
-        if (chat.id === body.chatID) {
-          chatIndex = index;
-          return true;
-        }
-        return false;
-      })
-    ) {
-      return NextResponse.json({ message: "Chat not foubnd" }, { status: 404 });
+    if (chatIndex === -1) {
+      return NextResponse.json({ message: "Chat not found" }, { status: 404 });
     }
 
     user.chats[chatIndex].visible = false;

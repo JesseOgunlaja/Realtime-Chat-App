@@ -20,7 +20,7 @@ const SignUpForm = () => {
   const [repeatedPassword, setRepeatedPassword] = useState<string>("");
 
   function checkValues() {
-    let results: boolean[] = [];
+    const results: boolean[] = [];
     let result = UsernameSchema.safeParse(username);
     results.push(result.success);
     if (!result.success) toast.error(result.error.format()._errors[0]);

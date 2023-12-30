@@ -8,7 +8,6 @@ import { toast } from "sonner";
 const AddFriendComponent = ({
   user,
   setUser,
-  usernamesWithIDs,
 }: DashboardPageComponentPropsType) => {
   const [friendBeingAdded, setFriendBeingAdded] = useState<string>("");
   const submitButtonRef = useRef<HTMLInputElement>(null);
@@ -24,7 +23,7 @@ const AddFriendComponent = ({
 
       return toast.error("Invalid username submitted");
     }
-    if (friendBeingAdded.toUpperCase() === user?.username) {
+    if (friendBeingAdded.toUpperCase() === user.username) {
       submitButtonRef.current!.disabled = false;
       submitButtonRef.current!.value = "Add";
 
