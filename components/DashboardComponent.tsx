@@ -64,13 +64,16 @@ const DashboardComponent = ({
     <>
       <div className={styles.page}>
         <h1 className={styles.title}>Recent chats</h1>
-        {user.chats.filter((chat) => chat.messages.at(-1)).length === 0 && (
+        {user.chats
+          .filter((chat) => chat.visible)
+          .filter((chat) => chat.messages.at(-1)).length === 0 && (
           <p className={styles["no-recent-chats"]}>Nothing to show here...</p>
         )}
         <div className={styles["recent-chats"]}>
           {user.chats.map(
             (chat) =>
-              chat.messages.at(-1) != undefined && (
+              chat.messages.at(-1) &&
+              chat.visible && (
                 <Link
                   href={`/dashboard/chats/${chat.id}`}
                   key={chat.id}

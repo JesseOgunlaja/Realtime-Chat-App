@@ -4,16 +4,16 @@ import { checkSignedIn, protectedRouteForwarder } from "./utils/auth";
 export async function middleware(request: NextRequest) {
   const pathname = String(request.nextUrl.pathname);
   if (
-    pathname.includes("/dashboard") &&
-    (await checkSignedIn(request, false)) === false
-  ) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-  if (
     (pathname.includes("/login") || pathname.includes("/signup")) &&
     (await checkSignedIn(request, false))
   ) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+  if (
+    pathname.includes("/dashboard") &&
+    (await checkSignedIn(request, false)) === false
+  ) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
   if (
     pathname.includes("/api/user") ||

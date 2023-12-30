@@ -55,7 +55,7 @@ const SignedInNavbar = ({
     const res = await fetch("/api/logout");
     const data = await res.json();
     if (data.message === "Success") {
-      router.push("/login");
+      router.refresh();
     } else {
       toast.error(
         "An unexpected error occured when trying to log out, please try again."

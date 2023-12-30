@@ -67,7 +67,7 @@ const SignUpForm = () => {
         });
         setTimeout(() => {
           toast.dismiss(loadingToastID);
-          router.push("/login");
+          router.refresh();
         }, 1000);
         if (rememberMeCheckbox.current?.checked) {
           const payload = {

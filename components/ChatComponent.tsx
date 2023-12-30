@@ -314,7 +314,6 @@ const ChatComponent = ({
       <div className={styles.header}>
         <p>{chatWithDisplayName}</p>
         <p>{chatWithUsername}</p>
-        <p>{}</p>
       </div>
       <div className={styles.messages} ref={messagesContainer}>
         {user.chats[chatIndex].messages.length !== 0 &&

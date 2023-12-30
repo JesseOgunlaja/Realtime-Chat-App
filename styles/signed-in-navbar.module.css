@@ -221,7 +221,7 @@
     left: 0;
     width: 100vw;
     z-index: 2;
-    overflow-y: visible;
+    padding-bottom: 50px;
   }
 
   .top-bar {
