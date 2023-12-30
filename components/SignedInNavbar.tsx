@@ -9,7 +9,6 @@ import { UUID } from "crypto";
 import { LogOut, Menu, UserCog, UserPlus, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -18,7 +17,6 @@ const SignedInNavbar = ({
   setUser,
   usernamesWithIDs,
 }: DashboardPageComponentPropsType) => {
-  const router = useRouter();
   const [mobileNavbarVisibility, setMobileNavbarVisibility] =
     useState<boolean>(false);
 
@@ -55,7 +53,7 @@ const SignedInNavbar = ({
     const res = await fetch("/api/logout");
     const data = await res.json();
     if (data.message === "Success") {
-      router.refresh();
+      window.location.reload();
     } else {
       toast.error(
         "An unexpected error occured when trying to log out, please try again."

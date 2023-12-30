@@ -5,13 +5,11 @@ import { decodeJWT, signJWT } from "@/utils/auth";
 import { decryptString, encryptString } from "@/utils/encryption";
 import { CredentialsJWTSchema } from "@/utils/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useEffect, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
 
 const SignUpForm = () => {
-  const router = useRouter();
   const rememberMeCheckbox = useRef<HTMLInputElement>(null);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
@@ -67,7 +65,7 @@ const SignUpForm = () => {
         });
         setTimeout(() => {
           toast.dismiss(loadingToastID);
-          router.refresh();
+          window.location.reload();
         }, 1000);
         if (rememberMeCheckbox.current?.checked) {
           const payload = {
