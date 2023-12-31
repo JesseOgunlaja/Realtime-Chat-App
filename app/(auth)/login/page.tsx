@@ -5,15 +5,14 @@ import Link from "next/link";
 const Page = () => {
   return (
     <div className={styles.page}>
-      <div className={styles.container}>
+      <div style={{ paddingBottom: "70px" }} className={styles.container}>
         <h1 className={styles.title}>
           Log in to <span>WhisperNet</span>
         </h1>
         <LogInForm />
         <div className={styles["no-account-container"]}>
-          <p className={styles["no-account"]}>Don&apos;t have an account?</p>
-          <p className={styles["sign-up-now"]}>
-            <Link href="/signup"> Sign up here</Link>
+          <p className={styles["no-account"]}>
+            Don&apos;t have an account? <Link href="/signup"> Sign up</Link>
           </p>
         </div>
       </div>

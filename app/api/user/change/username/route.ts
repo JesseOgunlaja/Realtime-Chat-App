@@ -1,12 +1,7 @@
 import { UserType } from "@/types/UserTypes";
 import { decodeJWT, signJWT } from "@/utils/auth";
-import { encryptString } from "@/utils/encryption";
 import { getUserByName, redis } from "@/utils/redis";
-import {
-  CredentialsJWTSchema,
-  UserJWTSchema,
-  UsernameSchema,
-} from "@/utils/zod";
+import { UserJWTSchema, UsernameSchema } from "@/utils/zod";
 import { UUID } from "crypto";
 import { cookies, headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -80,67 +75,26 @@ export async function POST(request: NextRequest) {
 
     await redisPipeline.exec();
 
-    const oldCredentialsCookie = cookies().get("credentials")?.value;
+    const payload = {
+      username: newUsername,
+      key,
+      uuid: user.uuid,
+    };
 
-    if (oldCredentialsCookie) {
-      try {
-        const oldCredentials = await decodeJWT(oldCredentialsCookie);
+    const expirationDate = (
+      (await decodeJWT(cookies().get("token")?.value as string))
+        ?.payload as z.infer<typeof UserJWTSchema>
+    ).exp;
 
-        const schemaResult = CredentialsJWTSchema.safeParse(
-          oldCredentials?.payload
-        );
-
-        if (!schemaResult.success) {
-          return NextResponse.json({ message: "Success" }, { status: 200 });
-        }
-
-        const payload = {
-          username: encryptString(newUsername, false),
-          password: encryptString(user.password, false),
-        };
-
-        const credentialsJwtExpirationDate = (
-          oldCredentials?.payload as z.infer<typeof CredentialsJWTSchema>
-        ).exp;
-
-        const credentialsJWT = await signJWT(
-          payload,
-          credentialsJwtExpirationDate
-        );
-
-        cookies().set({
-          name: "credentials",
-          value: credentialsJWT,
-          httpOnly: true,
-          sameSite: true,
-          secure: true,
-          expires: new Date(credentialsJwtExpirationDate * 1000),
-        });
-
-        const payload2 = {
-          username: newUsername,
-          key,
-          uuid: user.uuid,
-        };
-
-        const tokenExpirationDate = (
-          (await decodeJWT(cookies().get("token")?.value as string))
-            ?.payload as z.infer<typeof UserJWTSchema>
-        ).exp;
-
-        const token = await signJWT(payload2, tokenExpirationDate);
-        cookies().set({
-          name: "token",
-          value: token,
-          httpOnly: true,
-          secure: true,
-          sameSite: "strict",
-          expires: new Date(tokenExpirationDate * 1000),
-        });
-      } catch {
-        return NextResponse.json({ message: "Success" }, { status: 200 });
-      }
-    }
+    const token = await signJWT(payload, expirationDate);
+    cookies().set({
+      name: "token",
+      value: token,
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      expires: new Date(expirationDate * 1000),
+    });
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {

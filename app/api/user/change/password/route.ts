@@ -1,12 +1,10 @@
 import { UserType } from "@/types/UserTypes";
-import { decodeJWT, signJWT } from "@/utils/auth";
-import { decryptString, encryptString } from "@/utils/encryption";
+import { decryptString } from "@/utils/encryption";
 import { redis } from "@/utils/redis";
-import { CredentialsJWTSchema, PasswordSchema } from "@/utils/zod";
+import { PasswordSchema } from "@/utils/zod";
 import { compare as comparePasswords, hash as hashPassword } from "bcrypt";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 export async function POST(request: NextRequest) {
   try {
@@ -54,47 +52,6 @@ export async function POST(request: NextRequest) {
     await redis.hset(JSON.parse(headersList.get("key") as string), {
       password: hashedPassword,
     });
-
-    const oldCredentialsCookie = cookies().get("credentials")?.value;
-
-    if (oldCredentialsCookie) {
-      try {
-        const oldCredentials = await decodeJWT(oldCredentialsCookie);
-
-        const schemaResult = CredentialsJWTSchema.safeParse(
-          oldCredentials?.payload
-        );
-
-        if (!schemaResult.success) {
-          return NextResponse.json({ message: "Success" }, { status: 200 });
-        }
-
-        const payload = {
-          username: encryptString(user.username, false),
-          password: encryptString(newPassword, false),
-        };
-
-        const credentialsJwtExpirationDate = (
-          oldCredentials?.payload as z.infer<typeof CredentialsJWTSchema>
-        ).exp;
-
-        const credentialsJWT = await signJWT(
-          payload,
-          credentialsJwtExpirationDate
-        );
-
-        cookies().set({
-          name: "credentials",
-          value: credentialsJWT,
-          httpOnly: true,
-          sameSite: true,
-          secure: true,
-          expires: new Date(credentialsJwtExpirationDate * 1000),
-        });
-      } catch {
-        return NextResponse.json({ message: "Success" }, { status: 200 });
-      }
-    }
 
     return NextResponse.json(
       { message: "Success", hashedPassword },

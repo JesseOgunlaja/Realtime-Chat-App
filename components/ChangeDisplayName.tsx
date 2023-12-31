@@ -99,7 +99,12 @@ const DisplayNameSettingsComponent = ({
         className={styles.form}
       >
         <label htmlFor="new-display-name">New Display Name</label>
-        <input name="new-display-name" type="text" autoComplete="off" />
+        <input
+          name="new-display-name"
+          id="new-display-name"
+          type="text"
+          autoComplete="off"
+        />
         <input type="submit" />
       </form>
     </div>

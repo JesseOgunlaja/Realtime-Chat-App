@@ -14,7 +14,7 @@ export default async function Home() {
       </Balancer>
       <br />
       <Link href="/signup" className={styles["start-now"]}>
-        Get started now
+        Get started for free
       </Link>
       <div className={styles["selling-points"]}>
         <div className={styles["selling-point"]}>

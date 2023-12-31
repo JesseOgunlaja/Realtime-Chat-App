@@ -1,39 +1,18 @@
 "use client";
 
 import styles from "@/styles/signup.module.css";
-import { decodeJWT, signJWT } from "@/utils/auth";
-import { decryptString, encryptString } from "@/utils/encryption";
-import { CredentialsJWTSchema } from "@/utils/zod";
+import { encryptString } from "@/utils/encryption";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useState } from "react";
 import Balancer from "react-wrap-balancer";
 import { toast } from "sonner";
 
 const SignUpForm = () => {
   const router = useRouter();
-  const rememberMeCheckbox = useRef<HTMLInputElement>(null);
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-
-  useEffect(() => {
-    (async function () {
-      const res = await fetch("/api/credentials");
-      const data = await res.json();
-      const credentials = data.credentials;
-      if (!credentials) {
-        return;
-      }
-      const decoded = await decodeJWT(String(credentials));
-      if (!decoded) return;
-      const payload = decoded.payload;
-      if (!CredentialsJWTSchema.safeParse(payload).success) return;
-      setUsername(decryptString(String(payload.username), true));
-      setPassword(decryptString(String(payload.password), true));
-      rememberMeCheckbox.current!.checked = true;
-    })();
-  }, []);
 
   function checkValues() {
     const results: boolean[] = [];
@@ -69,27 +48,6 @@ const SignUpForm = () => {
           toast.dismiss(loadingToastID);
           router.push("/dashboard");
         }, 1000);
-        if (rememberMeCheckbox.current?.checked) {
-          const payload = {
-            username: encryptString(String(username), true),
-            password: encryptString(String(password), true),
-          };
-          const userCredentials = await signJWT(payload, "30d");
-
-          await fetch("/api/credentials", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              credentials: userCredentials,
-            }),
-          });
-        } else {
-          await fetch("/api/credentials", {
-            method: "DELETE",
-          });
-        }
       }
       if (data.message === "Error") {
         if (data.error === "User not found") {
@@ -114,6 +72,7 @@ const SignUpForm = () => {
 
   return (
     <form onSubmit={addUser} className={styles.form}>
+      <label htmlFor="username">Username</label>
       <input
         placeholder="Username"
         value={username}
@@ -122,13 +81,15 @@ const SignUpForm = () => {
         name="username"
         id="username"
       />
+      <label htmlFor="password">Password</label>
       <div className={styles["password-input-container"]}>
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="•••••••••"
           type={passwordVisible ? "text" : "password"}
           name="password"
+          id="password"
           className={styles["password-input"]}
         />
         <button
@@ -139,14 +100,6 @@ const SignUpForm = () => {
         >
           {passwordVisible ? "Hide" : "Show"}
         </button>
-      </div>
-      <div className={styles["remember-me-container"]}>
-        <p className={styles["remember-me-text"]}>Remember me</p>
-        <input
-          ref={rememberMeCheckbox}
-          className={styles["remember-me-checkbox"]}
-          type="checkbox"
-        />
       </div>
       <Balancer className={styles.agreement}>
         By clicking Log In, you agree to our{" "}

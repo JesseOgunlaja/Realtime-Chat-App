@@ -9,7 +9,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 const poppins = Poppins({
-  weight: ["400", "500", "600"],
+  weight: ["300", "400", "500", "600"],
   subsets: ["latin"],
   display: "swap",
 });

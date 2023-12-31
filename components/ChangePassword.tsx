@@ -116,10 +116,11 @@ const PasswordSettingsComponent = ({
         <label htmlFor="current-password">Current Password</label>
         <div className={styles["password-input-container"]}>
           <input
+            id="current-password"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}
             type={currentPasswordVisible ? "text" : "password"}
-            name="password"
+            name="current-password"
             className={styles["password-input"]}
           />
           <button
@@ -142,6 +143,7 @@ const PasswordSettingsComponent = ({
             onChange={(e) => setNewPassword(e.target.value)}
             type={newPasswordVisible ? "text" : "password"}
             name="new-password"
+            id="new-password"
             className={styles["password-input"]}
           />
           <button
@@ -161,6 +163,7 @@ const PasswordSettingsComponent = ({
             onChange={(e) => setConfirmNewPassword(e.target.value)}
             type={confirmNewPasswordVisible ? "text" : "password"}
             name="new-password"
+            id="confirm-new-password"
             className={styles["password-input"]}
           />
           <button

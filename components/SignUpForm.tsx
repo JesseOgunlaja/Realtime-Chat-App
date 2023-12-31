@@ -85,6 +85,7 @@ const SignUpForm = () => {
 
   return (
     <form onSubmit={addUser} className={styles.form}>
+      <label htmlFor="username">Username</label>
       <input
         placeholder="Username"
         value={username}
@@ -93,13 +94,15 @@ const SignUpForm = () => {
         name="username"
         id="username"
       />
+      <label htmlFor="password">Password</label>
       <div className={styles["password-input-container"]}>
         <input
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
+          placeholder="•••••••••"
           type={passwordVisible ? "text" : "password"}
           name="password"
+          id="password"
           className={styles["password-input"]}
         />
         <button
@@ -111,13 +114,15 @@ const SignUpForm = () => {
           {passwordVisible ? "Hide" : "Show"}
         </button>
       </div>
+      <label htmlFor="repeated-password">Confirm Password</label>
       <div className={styles["password-input-container"]}>
         <input
           value={repeatedPassword}
           onChange={(e) => setRepeatedPassword(e.target.value)}
-          placeholder="Repeat password"
+          placeholder="•••••••••"
           type={repeatedPasswordVisible ? "text" : "password"}
           name="repeated-password"
+          id="repeated-password"
           className={styles["password-input"]}
         />
         <button

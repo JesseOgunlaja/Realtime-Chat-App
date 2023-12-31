@@ -2,9 +2,9 @@
 
 import styles from "@/styles/settings.module.css";
 import { DashboardPageComponentPropsType } from "@/types/ComponentTypes";
-import DisplayNameSettingsComponent from "./DisplayNameSettingsComponent";
-import PasswordSettingsComponent from "./PasswordSettingsComponent";
-import UsernameSettingsComponent from "./UsernameSettingsComponent";
+import DisplayNameSettingsComponent from "./ChangeDisplayName";
+import PasswordSettingsComponent from "./ChangePassword";
+import UsernameSettingsComponent from "./ChangeUsername";
 
 const SettingsComponent = ({
   user,
@@ -30,6 +30,7 @@ const SettingsComponent = ({
         setUser={setUser}
         styles={styles}
       />
+      <br />
     </div>
   );
 };

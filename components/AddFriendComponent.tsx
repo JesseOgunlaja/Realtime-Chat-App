@@ -104,6 +104,7 @@ const AddFriendComponent = ({
             className={styles["text-input"]}
             type="text"
             name="add-friend"
+            id="add-friend"
             placeholder="Jesse677"
           />
           <input

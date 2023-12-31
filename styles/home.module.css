@@ -16,7 +16,7 @@
   font-weight: 600;
   text-align: center;
   margin-bottom: 2.5px;
-  background: linear-gradient(70deg, #2e3192, #1bffff, #2e3192);
+  background: linear-gradient(70deg, #4549c4, #1bffff, #4549c4);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -41,25 +41,24 @@
 }
 
 .start-now {
-  background: darkblue;
-  padding: 12.5px;
-  border-radius: 7.5px;
+  background: rgb(0, 105, 191);
+  padding: 12.5px 20px;
+  border-radius: 10px;
   text-decoration: none;
   color: white;
   font-size: 25px;
-  width: 250px;
   text-align: center;
   transition: transform 500ms;
 }
 
 .start-now:hover {
-  transform: scale(1.04);
+  transform: scale(1.03);
 }
 
 .selling-points {
   display: grid;
   gap: 20px;
-  padding: 20px;
+  padding: 30px 45px;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr;
 }
@@ -88,7 +87,7 @@
   inset: 0;
   border-radius: 20px;
   padding: 3px;
-  background: linear-gradient(70deg, #2e3192, #1bffff, #2e3192);
+  background: linear-gradient(70deg, #4549c4, #1bffff, #4549c4);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;

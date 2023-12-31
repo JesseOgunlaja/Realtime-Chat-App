@@ -61,7 +61,15 @@
 }
 
 .nav ul li:nth-child(3) {
-  background: linear-gradient(70deg, #2e3192, #1bffff);
+  background: rgb(0, 105, 191);
+}
+
+.nav ul li:nth-child(2) a,
+.nav ul li:nth-child(3) a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .nav ul li:nth-child(2) a::after {
@@ -70,7 +78,7 @@
   inset: 0;
   border-radius: 5px;
   padding: 3px;
-  background: linear-gradient(70deg, #2e3192, #1bffff);
+  background: linear-gradient(70deg, #4549c4, #1bffff);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -118,7 +126,7 @@
     width: 100vw;
     left: 0;
     top: 100px;
-    z-index: 2;
+    z-index: 200;
     text-align: center;
     transition-property: opacity, visibility;
     transition-duration: 250ms;
@@ -151,7 +159,7 @@
   }
 
   .mobile-navbar ul li:nth-child(2) {
-    background: linear-gradient(70deg, #2e3192, #1bffff);
+    background: linear-gradient(70deg, #4549c4, #1bffff);
   }
 
   .mobile-navbar ul li:nth-child(2) a {
@@ -165,7 +173,7 @@
     inset: 0;
     border-radius: 5px;
     padding: 3px;
-    background: linear-gradient(70deg, #2e3192, #1bffff);
+    background: linear-gradient(70deg, #4549c4, #1bffff);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask: linear-gradient(#fff 0 0) content-box,
       linear-gradient(#fff 0 0);

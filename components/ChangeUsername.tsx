@@ -105,7 +105,12 @@ const UsernameSettingsComponent = ({
         className={styles.form}
       >
         <label htmlFor="new-username">New Username</label>
-        <input name="new-username" type="text" autoComplete="off" />
+        <input
+          name="new-username"
+          id="new-username"
+          type="text"
+          autoComplete="off"
+        />
         <input type="submit" />
       </form>
     </div>
