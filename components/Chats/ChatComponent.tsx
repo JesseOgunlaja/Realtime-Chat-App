@@ -235,12 +235,11 @@ const ChatComponent = ({
         <Image
           src={chatWith.profilePicture}
           alt={`${chatWith.displayName}'s profile picture`}
-          height={55}
-          width={55}
+          height={40}
+          width={40}
         />
         <div>
           <p>{chatWith.displayName}</p>
-          <p>{chatWith.name}</p>
         </div>
       </div>
       <div className={styles.messages} ref={messagesContainer}>

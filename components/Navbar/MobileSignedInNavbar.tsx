@@ -139,10 +139,7 @@ const MobileSignedInNavbar = ({
               height={40}
               width={40}
             />
-            <div className={styles["user-details-names"]}>
-              <p className={styles["display-name"]}>{user.displayName}</p>
-              <p className={styles["user-name"]}>{user.username}</p>
-            </div>
+            <p className={styles["display-name"]}>{user.displayName}</p>
           </div>
           <LogOut onClick={logout} />
         </div>

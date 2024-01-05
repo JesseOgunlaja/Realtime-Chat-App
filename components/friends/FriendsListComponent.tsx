@@ -21,25 +21,6 @@ const FriendsListComponent = ({
   const friendBeingDeletedID = useRef<UUID>();
   const dialog = useRef<HTMLDialogElement>(null);
 
-  // window.onclick = (e) => {
-  //   const clickedElement = e.target as HTMLElement;
-  //   const clickedElementClassname = clickedElement.className as
-  //     | string
-  //     | {
-  //         baseVal: string;
-  //       };
-
-  //   if (
-  //     !clickedElementClassname ||
-  //     (typeof clickedElementClassname !== "string" &&
-  //       clickedElementClassname.baseVal !== "lucide lucide-more-vertical")
-  //   ) {
-  //     const newVisibility = [...popupVisibility];
-  //     newVisibility.fill(false);
-  //     setPopupVisibility(newVisibility);
-  //   }
-  // };
-
   function togglePopupVisibility(e: MouseEvent, index: number) {
     e.preventDefault();
 
