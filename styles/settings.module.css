@@ -93,4 +93,7 @@
     align-items: center;
     width: 99vw;
   }
+  .sections {
+    grid-template-columns: auto;
+  }
 }

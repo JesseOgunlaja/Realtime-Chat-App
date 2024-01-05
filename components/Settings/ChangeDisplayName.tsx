@@ -1,3 +1,4 @@
+import { setDisplayname } from "@/actions/settingsActions";
 import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { DisplayNameSchema } from "@/utils/zod";
@@ -6,8 +7,11 @@ import { toast } from "sonner";
 
 const ChangeDisplayName = ({
   user,
-  setUser,
   styles,
+  userKey,
+  setUser,
+  userDetailsList,
+  setUserDetailsList,
 }: SettingsPageComponentPropsType) => {
   const displayNameForm = useRef<HTMLFormElement>(null);
 
@@ -42,49 +46,24 @@ const ChangeDisplayName = ({
     submitButton.value = "...";
     submitButton.disabled = true;
 
-    const res = await fetch("/api/user/change/display-name", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-      },
-      body: JSON.stringify({
-        newDisplayName,
-      }),
-    });
-    const data = await res.json();
+    const result = await setDisplayname(
+      userKey,
+      userDetailsList,
+      newDisplayName
+    );
+
+    setUserDetailsList(result.newUsernamesList);
 
     submitButton.disabled = false;
     submitButton.value = "Submit";
 
-    switch (data.message) {
-      case "Success":
-        displayNameForm.current?.reset();
-        const currentUser = getNewReference(user);
-        currentUser.displayName = newDisplayName;
-        setUser(currentUser);
-        toast.success("Display name changed successfully", {
-          id: loadingToastID,
-        });
-        break;
-      case "This is already your display name":
-        toast.error(data.message, {
-          id: loadingToastID,
-        });
-        setUser(user);
-        break;
-      case "Error":
-        toast.error("An unexpected error occurred, please try again", {
-          id: loadingToastID,
-        });
-        setUser(user);
-        break;
-      default:
-        toast.error("An unexpected error occurred, please try again", {
-          id: loadingToastID,
-        });
-        setUser(user);
-        break;
-    }
+    displayNameForm.current?.reset();
+    const currentUser = getNewReference(user);
+    currentUser.displayName = newDisplayName;
+    setUser(currentUser);
+    toast.success("Display name changed successfully", {
+      id: loadingToastID,
+    });
     setTimeout(() => {
       toast.dismiss(loadingToastID);
     }, 2000);

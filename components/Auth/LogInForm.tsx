@@ -10,6 +10,7 @@ import { toast } from "sonner";
 
 const SignUpForm = () => {
   const router = useRouter();
+
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
