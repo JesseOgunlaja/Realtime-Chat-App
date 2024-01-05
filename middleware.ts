@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkSignedIn, protectedRouteForwarder } from "./utils/auth";
+import { isProtectedRoute } from "./utils/utils";
 
 export async function middleware(request: NextRequest) {
   const pathname = String(request.nextUrl.pathname);
@@ -7,10 +8,10 @@ export async function middleware(request: NextRequest) {
     (pathname.includes("/login") || pathname.includes("/signup")) &&
     (await checkSignedIn(request, false))
   ) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/chats", request.url));
   }
   if (
-    pathname.includes("/dashboard") &&
+    isProtectedRoute(pathname) &&
     (await checkSignedIn(request, false)) === false
   ) {
     return NextResponse.redirect(new URL("/login", request.url));

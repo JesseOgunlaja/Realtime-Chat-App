@@ -1,13 +1,14 @@
 "use client";
 
 import { LayoutPropsType } from "@/types/ComponentTypes";
+import { isProtectedRoute } from "@/utils/utils";
 import { usePathname } from "next/navigation";
 
 const MainContainer = ({ children }: LayoutPropsType) => {
   const pathname = usePathname();
   const navPaths = ["/", "/signup", "/login"];
 
-  if (pathname.includes("/dashboard")) return <>{children}</>;
+  if (isProtectedRoute(pathname)) return <>{children}</>;
 
   return (
     <main style={{ marginTop: navPaths.includes(pathname) ? "110px" : "auto" }}>

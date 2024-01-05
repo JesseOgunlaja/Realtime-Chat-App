@@ -1,26 +1,36 @@
 import { UUID } from "crypto";
-import { DispatchUserType, UserType } from "./UserTypes";
+import {
+  DispatchUserType,
+  DispatchUsernamesList,
+  UserDetailsList,
+  UserType,
+} from "./UserTypes";
 
 export type StylesType = {
   readonly [key: string]: string;
 };
 
-export type DashboardPageContainerPropsType = {
+export type ProtectedPageContainerPropsType = {
   user: UserType;
-  uuid: UUID;
-  usernamesWithIDs: string;
+  userKey: UUID;
+  usernamesList: UserDetailsList;
 };
 
-export type DashboardPageComponentPropsType = {
+export type ProtectedPageComponentPropsType = {
   user: UserType;
+  userKey: UUID;
   setUser: DispatchUserType;
-  usernamesWithIDs: string;
+  setUsernamesList: DispatchUsernamesList;
+  usernamesList: UserDetailsList;
 };
 
 export type SettingsPageComponentPropsType = {
   user: UserType;
+  userKey: UUID;
   setUser: DispatchUserType;
+  setUsernamesList: DispatchUsernamesList;
   styles: StylesType;
+  usernamesList: UserDetailsList;
 };
 
 export type LayoutPropsType = {

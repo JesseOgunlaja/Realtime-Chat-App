@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Chat,
   DispatchUserType,
@@ -7,9 +5,9 @@ import {
   IncomingFriendRequest,
   Message,
   OutgoingFriendRequest,
+  UserDetailsList,
   UserType,
 } from "@/types/UserTypes";
-import { decryptString } from "@/utils/encryption";
 import { getNewReference } from "@/utils/utils";
 import { websocketChannel } from "@/utils/websockets";
 import { UUID } from "crypto";
@@ -22,17 +20,9 @@ export function useWebsockets(
   uuid: UUID,
   user: UserType,
   setUser: DispatchUserType,
-  usernamesWithIDs: string
+  usernamesList: UserDetailsList
 ) {
   const pathname = usePathname();
-
-  const decryptedUsernamesWithIDs = JSON.parse(
-    decryptString(usernamesWithIDs, true)
-  ) as {
-    name: string;
-    displayName: string;
-    id: UUID;
-  }[];
 
   useEffect(() => {
     const channel = websocketChannel(uuid);
@@ -44,11 +34,11 @@ export function useWebsockets(
         }) {
           const currentUser = getNewReference(user) as UserType;
           currentUser.outgoingFriendRequests = data.outgoingFriendRequests;
-          const indexDeleted = user?.outgoingFriendRequests.findIndex(
+          const indexDeleted = user.outgoingFriendRequests.findIndex(
             (request) => {
               return (
                 request.toID ===
-                user?.outgoingFriendRequests.filter(
+                user.outgoingFriendRequests.filter(
                   (val) =>
                     data.outgoingFriendRequests.findIndex(
                       (val2) => val.toID === val2.toID
@@ -59,10 +49,10 @@ export function useWebsockets(
           );
           toast.info("Friend request declined", {
             description: `${
-              decryptedUsernamesWithIDs.find(
+              usernamesList.find(
                 (decryptedUsernameWithID) =>
                   decryptedUsernameWithID.id ===
-                  user?.outgoingFriendRequests[indexDeleted as number].toID
+                  user.outgoingFriendRequests[indexDeleted as number].toID
               )?.displayName
             } has declined your friend request`,
           });
@@ -79,7 +69,7 @@ export function useWebsockets(
           setUser(currentUser);
           toast.info("New friend request", {
             description: `${
-              decryptedUsernamesWithIDs.find(
+              usernamesList.find(
                 (decryptedUsernameWithID) =>
                   decryptedUsernameWithID.id === data.newFriendRequest.fromID
               )?.displayName
@@ -94,11 +84,11 @@ export function useWebsockets(
         }) {
           const currentUser = getNewReference(user) as UserType;
           currentUser.incomingFriendRequests = data.incomingFriendRequests;
-          const indexDeleted = user?.incomingFriendRequests.findIndex(
+          const indexDeleted = user.incomingFriendRequests.findIndex(
             (request) => {
               return (
                 request.fromID ===
-                user?.incomingFriendRequests.filter(
+                user.incomingFriendRequests.filter(
                   (val) =>
                     data.incomingFriendRequests.findIndex(
                       (val2) => val.fromID === val2.fromID
@@ -109,10 +99,10 @@ export function useWebsockets(
           );
           toast.info("Friend request declined", {
             description: `${
-              decryptedUsernamesWithIDs.find(
+              usernamesList.find(
                 (decryptedUsernameWithID) =>
                   decryptedUsernameWithID.id ===
-                  user?.incomingFriendRequests[indexDeleted as number].fromID
+                  user.incomingFriendRequests[indexDeleted as number].fromID
               )?.displayName
             } has cancelled the friend request they sent you`,
           });
@@ -131,10 +121,10 @@ export function useWebsockets(
           currentUser.friends = data.friends;
           currentUser.chats = data.chats;
 
-          const newIndex = data?.friends.findIndex((friend) => {
+          const newIndex = data.friends.findIndex((friend) => {
             return (
               friend.id ===
-              data?.friends.filter(
+              data.friends.filter(
                 (val) =>
                   user.friends.findIndex((val2) => val.id === val2.id) === -1
               )[0].id
@@ -143,7 +133,7 @@ export function useWebsockets(
 
           toast.info("Accepted friend request", {
             description: `${
-              decryptedUsernamesWithIDs.find(
+              usernamesList.find(
                 (decryptedUsernameWithID) =>
                   decryptedUsernameWithID.id ===
                   data.friends[newIndex as number].id
@@ -164,7 +154,7 @@ export function useWebsockets(
               <Link
                 prefetch={false}
                 style={{ width: "100%", color: "white" }}
-                href={`/dashboard/chats/${data.chatID}`}
+                href={`/chats/${data.chatID}`}
                 ref={(node) => {
                   if (node) {
                     node.style.setProperty(
@@ -182,7 +172,7 @@ export function useWebsockets(
                   }}
                 >
                   {
-                    decryptedUsernamesWithIDs.find(
+                    usernamesList.find(
                       (decryptedUsernameWithID) =>
                         decryptedUsernameWithID.id ===
                         user.chats[chatIndex].withID
@@ -210,6 +200,7 @@ export function useWebsockets(
           );
           if (
             user.chats[chatIndex].messages.findIndex(
+              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
               (message) => message.id === data.message.id || message.id === null
             ) === -1
           ) {
@@ -229,7 +220,7 @@ export function useWebsockets(
           setUser(data.newUser);
           toast.info("Removed friend", {
             description: `${
-              decryptedUsernamesWithIDs.find(
+              usernamesList.find(
                 (decryptedUsernameWithID) =>
                   decryptedUsernameWithID.id === data.friendDeletedID
               )?.displayName

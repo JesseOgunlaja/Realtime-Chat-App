@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 declare global {
   namespace NodeJS {
     interface ProcessEnv {
@@ -22,6 +23,7 @@ declare global {
       NEXT_PUBLIC_WEBSOCKET_URL: string;
       WEBSOCKET_URL: string;
       FILESTACK_API_KEY: string;
+      NEXT_PUBLIC_FILESTACK_API_KEY: string;
     }
   }
 }

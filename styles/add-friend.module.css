@@ -1,3 +1,7 @@
+.page {
+  padding-left: 15px;
+}
+
 .title {
   font-size: 35px;
   margin-bottom: 10px;
@@ -46,11 +50,8 @@
 @media (min-height: 100vw), (max-width: 800px) {
   .page {
     width: 100vw;
-    display: flex;
-    align-items: center;
-    flex-direction: column;
   }
-  .form label {
-    text-align: center;
+  .form {
+    width: min-content;
   }
 }

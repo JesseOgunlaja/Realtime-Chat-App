@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
       id: chatID,
       messages: [],
       withID: friendRequestBeingAccepted.fromID,
-      visible: false,
+      visible: true,
     });
     user.friends.push({
       id: friendRequestBeingAccepted.fromID,
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
       id: chatID,
       messages: [],
       withID: JSON.parse(requestHeaders.get("key") as string) as UUID,
-      visible: false,
+      visible: true,
     });
     otherUser.friends.push({
       id: JSON.parse(requestHeaders.get("key") as string),

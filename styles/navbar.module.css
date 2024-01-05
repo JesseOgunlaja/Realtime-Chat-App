@@ -3,7 +3,7 @@
   top: 0;
   background: #222;
   width: 100vw;
-  z-index: 200;
+  z-index: 22;
   padding: 15px;
 }
 
@@ -11,7 +11,7 @@
   display: flex;
   list-style: none;
   align-items: center;
-  z-index: 200;
+  z-index: 22;
 }
 
 .nav ul li {
@@ -19,7 +19,7 @@
   float: left;
   font-style: none;
   padding: 10px;
-  z-index: 2;
+  z-index: 22;
 }
 
 .nav ul li a {
@@ -126,7 +126,7 @@
     width: 100vw;
     left: 0;
     top: 100px;
-    z-index: 200;
+    z-index: 22;
     text-align: center;
     transition-property: opacity, visibility;
     transition-duration: 250ms;

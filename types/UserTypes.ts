@@ -2,6 +2,7 @@ import { UUID } from "crypto";
 import { Dispatch, SetStateAction } from "react";
 
 export type DispatchUserType = Dispatch<SetStateAction<UserType>>;
+export type DispatchUsernamesList = Dispatch<SetStateAction<UserDetailsList>>;
 
 export type Message = {
   message: string;
@@ -41,3 +42,10 @@ export type UserType = {
   chats: Chat[];
   uuid: UUID;
 };
+
+export type UserDetailsList = {
+  name: string;
+  displayName: string;
+  profilePicture: string;
+  id: UUID;
+}[];

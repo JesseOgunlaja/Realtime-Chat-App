@@ -1,141 +1,69 @@
-.page {
-  overflow-x: hidden;
-}
-
-.friend,
-.friend a {
-  width: 100%;
-}
-
-.friend {
-  overflow: hidden;
-  display: flex;
-  border-radius: 5px;
-  padding: 5px;
-  cursor: pointer;
-}
-
-.friend a {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  text-decoration: none;
-  color: white;
-}
-
-.friend a p {
-  font-size: 22px;
-  margin-right: auto;
-}
-
-.friend:hover {
-  background: rgba(128, 128, 128, 0.1);
-}
-
-.friend a svg {
-  border-radius: 50%;
-  background: rgba(28, 28, 28, 0.6);
-  padding: 10px;
-  box-sizing: content-box;
-  cursor: pointer;
-}
-
-.friend:hover > svg {
-  background: #1a1a1a;
-}
-
-.friend a svg:hover {
-  color: rgb(0, 140, 255);
-}
-
-.popup {
-  position: absolute;
-  background: black;
-  padding: 10px;
-  border-radius: 5px;
-  display: flex;
-  flex-direction: column;
-  width: 170px;
-}
-
-.popup > :nth-child(2) {
-  border-top: 2px solid gray;
-  color: red;
-}
-
-.dialog {
-  display: none;
+.nav {
   position: fixed;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 10;
-  left: 0;
   top: 0;
+  background: #1a1a1a;
   width: 100vw;
-  height: 100vh;
-  background: rgba(51, 51, 51, 0.5);
-  overflow-y: scroll;
-  overflow-x: hidden;
+  z-index: 2;
+  padding: 15px;
+  transform: translateX(-10px);
 }
 
-.dialog div {
-  width: min(500px, 96vw);
-  background: black;
+.nav ul {
+  padding: 0px 10px;
+  padding-left: 12px;
+  display: flex;
+  list-style: none;
+  align-items: center;
+  gap: 25px;
+  z-index: 2;
+}
+
+.nav ul li {
   text-align: center;
-  border-radius: 10px;
-  color: white;
-}
-
-.dialog div p:nth-child(1) {
-  padding: 10px;
-  padding-bottom: 0px;
-  font-size: 25px;
-}
-
-.dialog div p:nth-child(2) {
-  color: red;
-  margin-bottom: 4px;
-}
-
-.bottomButton > * {
-  width: min(250px, 48vw);
-  padding: 15px 30px;
-  font-size: 25px;
-  color: black;
+  font-size: 20px;
+  z-index: 22;
+  padding: 5px 15px;
+  border-radius: 3.5px;
+  font-weight: 500;
   cursor: pointer;
 }
 
-.back {
-  border-radius: 0px 0px 0px 10px;
-  background: white;
-}
-
-.delete {
-  border-radius: 0px 0px 10px 0px;
-  background: red;
-}
-
-.no-friends {
-  opacity: 0.8;
-  font-size: 20px;
+.nav ul li a {
+  color: white;
   text-decoration: none;
+}
+
+.active-page,
+.nav ul li:hover {
+  background: rgba(128, 128, 128, 0.1);
 }
 
 @media (min-width: 100vh) and (min-width: 800px) {
   .page {
-    width: calc(100vw - 350px);
+    padding: 10px;
+    padding-top: 60px;
   }
-  .popup {
-    transform: translate(calc(100vw - 500px), 60px);
+  .nav ul li a svg {
+    display: none;
   }
 }
 
 @media (min-height: 100vw), (max-width: 800px) {
-  .page {
-    width: 99vw;
+  .nav {
+    top: calc(100vh - 56px);
+    width: 100vw;
+    padding: 10px;
   }
-  .popup {
-    transform: translate(calc(100vw - 200px), 60px);
+  .nav ul {
+    justify-content: center;
+  }
+  .nav ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33%;
+  }
+  .nav ul li a p {
+    display: none;
   }
 }

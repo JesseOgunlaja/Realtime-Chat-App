@@ -1,0 +1,154 @@
+import { StylesType } from "@/types/ComponentTypes";
+import { UserDetailsList, UserType } from "@/types/UserTypes";
+import { UUID } from "crypto";
+import { LogOut, Menu, MessagesSquare, Settings, Users, X } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+
+type PropsType = {
+  styles: StylesType;
+  logout: () => Promise<void>;
+  user: UserType;
+  // eslint-disable-next-line no-unused-vars
+  chatWithFromID: (id: UUID) => UserDetailsList[0] | undefined;
+  // eslint-disable-next-line no-unused-vars
+  hideChat(e: MouseEvent, chatID: UUID, index: number): Promise<void>;
+};
+
+const MobileSignedInNavbar = ({
+  styles,
+  logout,
+  user,
+  chatWithFromID,
+  hideChat,
+}: PropsType) => {
+  const [mobileNavbarVisibility, setMobileNavbarVisibility] =
+    useState<boolean>(false);
+
+  return (
+    <div
+      style={{
+        minHeight: mobileNavbarVisibility ? "150vh" : "0vh",
+        overflowY: mobileNavbarVisibility ? "scroll" : "hidden",
+      }}
+      className={styles["mobile-nav-container"]}
+    >
+      <div className={styles["top-bar"]}>
+        <Link href="/chats" onClick={() => setMobileNavbarVisibility(false)}>
+          <Image
+            loading="eager"
+            priority
+            className={styles.logo2}
+            src="/favicon.ico"
+            height={50}
+            width={50}
+            alt="Website logo"
+          />
+        </Link>
+        {mobileNavbarVisibility ? (
+          <X onClick={() => setMobileNavbarVisibility(false)} />
+        ) : (
+          <Menu onClick={() => setMobileNavbarVisibility(true)} />
+        )}
+      </div>
+      <nav
+        style={{
+          opacity: mobileNavbarVisibility ? "1" : "0",
+          visibility: mobileNavbarVisibility ? "visible" : "hidden",
+        }}
+        className={styles.nav2}
+      >
+        <p className={styles.overview}>Overview</p>
+        <div className={styles["overview-tabs"]}>
+          <Link
+            href="/chats"
+            onClick={() => setMobileNavbarVisibility(false)}
+            className={styles["friends"]}
+          >
+            <span className={styles["overview-logo"]}>
+              <MessagesSquare />
+            </span>
+            <div className={styles["overview-text"]}>Chats</div>
+          </Link>
+
+          <Link
+            href="/friends"
+            onClick={() => setMobileNavbarVisibility(false)}
+            className={styles["friends"]}
+          >
+            <span className={styles["overview-logo"]}>
+              <Users />
+            </span>
+            <div className={styles["overview-text"]}>Friends {"  "}</div>
+            {user.incomingFriendRequests.length !== 0 && (
+              <span className={styles["pending-friend-requests"]}>
+                {user.incomingFriendRequests.length}
+              </span>
+            )}
+          </Link>
+
+          <Link
+            href="/settings"
+            onClick={() => setMobileNavbarVisibility(false)}
+            className={styles["settings"]}
+          >
+            <span className={styles["overview-logo"]}>
+              <Settings />
+            </span>
+            {"  "}
+            <div className={styles["overview-text"]}>
+              <span>Settings</span>
+            </div>
+          </Link>
+        </div>
+
+        <p className={styles["chats-text"]}>Chats</p>
+        <div className={styles.chats}>
+          {user.chats
+            .filter((chat) => chat.visible)
+            .map((chat, index) => (
+              <Link
+                onClick={() => setMobileNavbarVisibility(false)}
+                href={`/chats/${chat.id}`}
+                className={styles.chat}
+                key={chat.id}
+              >
+                <Image
+                  src={String(chatWithFromID(chat.withID)?.profilePicture)}
+                  alt="Profile Picture"
+                  height={22.5}
+                  width={22.5}
+                />
+                {chatWithFromID(chat.withID)?.displayName}
+                <X
+                  onClick={(e) =>
+                    hideChat(e as unknown as MouseEvent, chat.id, index)
+                  }
+                />
+              </Link>
+            ))}
+        </div>
+        <div className={styles["user-snippet"]}>
+          <div className={styles["user-details-container"]}>
+            <Image
+              loading="eager"
+              priority
+              src={user.profilePicture}
+              alt="Profile Picture"
+              height={40}
+              width={40}
+            />
+            <div className={styles["user-details-names"]}>
+              <p className={styles["display-name"]}>{user.displayName}</p>
+              <p className={styles["user-name"]}>{user.username}</p>
+            </div>
+          </div>
+          <LogOut onClick={logout} />
+        </div>
+      </nav>
+    </div>
+  );
+};
+
+export default MobileSignedInNavbar;

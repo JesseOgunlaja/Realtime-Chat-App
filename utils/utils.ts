@@ -5,7 +5,7 @@ export const compareObjects = (
   y: Record<string, unknown>
 ) => {
   const srt = (obj: Record<string, unknown>) =>
-    JSON.stringify(obj)?.split("").sort().join("");
+    JSON.stringify(obj).split("").sort().join("");
   return srt(x) === srt(y);
 };
 
@@ -21,7 +21,7 @@ export function getNewReference<T>(val: T): T {
 export function removeUndefinedFromObject<T>(obj: T): T {
   return Object.fromEntries(
     Object.entries(obj as Record<string, unknown>).filter(
-      ([key, value]) => value !== undefined
+      ([, value]) => value !== undefined
     )
   ) as T;
 }
@@ -39,4 +39,12 @@ export function renderChatMessage(message: string) {
     });
   }
   return message;
+}
+
+export function isProtectedRoute(pathname: string) {
+  const protectedRoutes = ["/chat", "/settings", "/friends"];
+
+  return !protectedRoutes.every(
+    (protectedRoute) => !pathname.includes(protectedRoute)
+  );
 }

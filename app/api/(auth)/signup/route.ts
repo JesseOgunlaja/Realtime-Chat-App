@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     const displayName: string = body.encrypted
       ? decryptString(body.username, false)
       : body.username;
-    const username = displayName.toUpperCase();
+    const username = displayName.toLowerCase();
     const password: string = body.encrypted
       ? decryptString(body.password, false)
       : body.password;
@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
         },
         {
           input: Buffer.from(
-            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="65" font-family="Arial" font-size="45" fill="white" text-anchor="middle" dominant-baseline="middle">${username[0]}</text></svg>`
+            `<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="65" font-family="Arial" font-size="45" fill="white" text-anchor="middle" dominant-baseline="middle">${username[0].toUpperCase()}</text></svg>`
           ),
           top: 0,
           left: 0,
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
       uuid: uuid2,
     });
 
-    redisPipeline.rpush("Usernames", {
+    redisPipeline.rpush("User details", {
       name: username,
       displayName,
       id: uuid,

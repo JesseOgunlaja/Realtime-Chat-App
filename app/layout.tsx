@@ -1,5 +1,5 @@
 import MainContainer from "@/components/MainContainer";
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar/Navbar";
 import { LayoutPropsType } from "@/types/ComponentTypes";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";

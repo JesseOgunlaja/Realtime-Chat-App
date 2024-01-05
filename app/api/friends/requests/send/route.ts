@@ -1,4 +1,4 @@
-import { UserType } from "@/types/UserTypes";
+import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { getUserByName, redis } from "@/utils/redis";
 import { trigger } from "@/utils/websocketsServer";
 import { UUID } from "crypto";
@@ -10,11 +10,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const friendBeingAddedUsername = body.usernameBeingBefriended;
 
-    const usernamesWithIDs = (await redis.lrange("Usernames", 0, -1)) as {
-      name: string;
-      displayName: string;
-      id: UUID;
-    }[];
+    const usernamesList = (await redis.lrange(
+      "User details",
+      0,
+      -1
+    )) as UserDetailsList;
 
     if (!friendBeingAddedUsername) {
       return NextResponse.json(
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     const requestHeaders = headers();
     const user = JSON.parse(String(requestHeaders.get("user"))) as UserType;
 
-    if (user.username === friendBeingAddedUsername.toUpperCase()) {
+    if (user.username === friendBeingAddedUsername.toLowerCase()) {
       return NextResponse.json(
         { message: "You can't friend yourself" },
         { status: 400 }
@@ -56,10 +56,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const friendBeingAddedID = usernamesWithIDs.find(
+    const friendBeingAddedID = usernamesList.find(
       (usernameWIthID) =>
-        usernameWIthID.name.toUpperCase() ===
-        friendBeingAddedUsername.toUpperCase()
+        usernameWIthID.name.toLowerCase() ===
+        friendBeingAddedUsername.toLowerCase()
     )?.id;
 
     if (

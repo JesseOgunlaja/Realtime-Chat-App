@@ -10,15 +10,17 @@
   border-bottom: 2px solid black;
   padding: 10px;
   background: #222;
-  margin-bottom: 10px;
-  margin-bottom: auto;
+  display: flex;
+  gap: 10px;
+  /* margin-bottom: auto; */
+  align-items: center;
 }
 
-.header p:nth-child(1) {
+.header div p:nth-child(1) {
   font-size: 25px;
 }
 
-.header p:nth-child(2) {
+.header div p:nth-child(2) {
   letter-spacing: 0.3px;
   font-size: 15px;
   opacity: 0.8;
@@ -44,6 +46,12 @@
   padding: 10px;
   font-size: 19px;
   display: block;
+  background: #555;
+  color: rgba(255, 255, 255, 0.79);
+}
+
+.form textarea:focus-visible {
+  outline: none !important;
 }
 
 .form > svg {
@@ -72,97 +80,72 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  overflow: auto;
+  overflow-y: auto;
+  margin-top: auto;
   overflow-x: hidden;
+  height: max-content;
 }
 
-.my-message,
-.other-message {
+.my-message .message-box,
+.other-message .message-box {
   display: flex;
   width: fit-content;
-  max-width: 80%;
   flex-direction: column;
-  padding: 10px;
+  max-width: 60%;
+  padding: 8px 16px;
   color: white;
+  white-space: pre-line;
   gap: 2.5px;
-  align-items: flex-end;
   cursor: pointer;
   position: relative;
+  min-width: 100px;
 }
 
-.my-message .reply-container {
-  background: #003c34;
+.other-message .message-being-scrolled-to {
+  animation: highlightOtherMessage 1.25s;
 }
 
-.other-message .reply-container {
-  background: #28282a;
+.my-message .message-being-scrolled-to {
+  animation: highlightMyMessage 1.25s;
 }
 
-.other-message.message-being-scrolled-to {
-  animation: highlightOtherMessage 1s;
-}
-
-.my-message.message-being-scrolled-to {
-  animation: highlightMyMessage 1s;
-}
-
-@keyframes highlightMyMessage {
-  0%,
-  100% {
-    background: #215046;
-  }
-  50% {
-    background: #102823;
-  }
-}
-
-@keyframes highlightOtherMessage {
-  0%,
-  100% {
-    background: #363638;
-  }
-  50% {
-    background: #1b1b1c;
-  }
-}
-
-.reply-container {
-  padding: 7.5px;
-  width: 100%;
-  border-radius: 3px;
-  display: flex;
-  flex-direction: column;
-}
-
-.reply-to {
-  font-weight: bold;
-}
-
-.my-message {
+.my-message .message-box {
   margin-right: 6.5px;
   margin-left: auto;
-  background: #215046;
-  border-radius: 10px 10px 0px 10px;
-  white-space: pre-line;
+  background: #363638;
+  border-radius: 6px 6px 0px 6px;
 }
 
-.other-message {
-  border-radius: 10px 10px 10px 0px;
-  background: #363638;
+.my-message .message-timestamp {
+  margin-right: 6.5px;
+  margin-left: auto;
+}
+
+.other-message .message-timestamp {
+  margin-left: 5px;
+}
+
+.other-message .message-box {
+  border-radius: 6px 6px 6px 0px;
+  background: #0063ff;
+}
+
+.reply-text {
+  color: rgba(255, 255, 255, 0.8);
+  font-style: italic;
+  font-size: 14px;
+  display: block;
 }
 
 .message-text {
-  font-size: 18px;
-}
-
-.my-message .message-text,
-.other-message .message-text {
-  text-align: left;
-  width: 100%;
+  font-size: 16px;
 }
 
 .message-timestamp {
   font-size: 12px;
+  width: fit-content;
+  opacity: 0.8;
+  margin-top: 7px;
 }
 
 .messages::-webkit-scrollbar {
@@ -251,7 +234,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  z-index: 10;
+  z-index: 222;
   left: 0;
   top: 0;
   width: 100vw;
@@ -277,32 +260,74 @@
   border-radius: 10px 10px 0px 0px;
 }
 
-.dialog div p {
+.edit-message-top-bar {
   font-size: 20px;
   padding-top: 5px;
   margin-bottom: 10px;
+  width: 100%;
+  padding: 5px;
+  background: #333;
+  border-radius: 10px 10px 0px 0px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 }
 
-.dialog div form {
+.edit-message-top-bar p {
+  transform: translateX(-6px);
+  margin: auto;
+}
+
+.edit-message-top-bar svg {
+  cursor: pointer;
+}
+
+.edit-message-form-container {
   display: flex;
   flex-direction: column;
   gap: 20px;
   align-items: center;
-  justify-content: center;
 }
 
-.dialog div form input {
-  width: 350px;
+.edit-message-form-container div {
+  text-align: left;
+  width: 375px;
   border-radius: 5px;
   padding: 15px;
   font-size: 20px;
+  max-height: 130px;
+  background: #434343;
+  color: black;
+  white-space: pre-line;
+  overflow: auto;
+  color: rgba(255, 255, 255, 0.92);
 }
 
-.dialog div form input[type="submit"] {
-  background: darkblue;
+.edit-message-form-container div::-webkit-scrollbar {
+  background: transparent !important;
+  width: 0.5rem !important;
+  height: 0.8rem !important;
+}
+
+.edit-message-form-container div::-webkit-scrollbar-thumb {
+  background-color: #666 !important;
+  border-radius: 10px;
+}
+
+.edit-message-form-container div::-webkit-scrollbar-thumb:hover {
+  background: #777 !important;
+}
+
+.dialog div button {
+  background: #434343;
   color: white;
   margin-bottom: 40px;
   cursor: pointer;
+  width: 375px;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 20px;
 }
 
 .dialog:nth-child(2) > :nth-child(2) > * {
@@ -319,12 +344,13 @@
 
 .dialog:nth-child(1) .bottomButton {
   border-radius: 0px 0px 10px 10px;
-  background: white !important;
+  background: white;
   width: inherit;
   padding: 15px 20px;
   font-size: 25px;
   color: black !important;
   cursor: pointer;
+  margin-bottom: 0px;
 }
 
 .dialog:nth-child(2) .bottomButton {
@@ -338,6 +364,7 @@
   font-size: 25px;
   color: black;
   cursor: pointer;
+  margin-bottom: 0px;
 }
 
 .dialog:nth-child(2) .bottomButton > :nth-child(1) {
@@ -399,8 +426,24 @@
   .form textarea {
     height: 100px;
   }
-  .message-text,
-  .reply-container {
-    font-size: 15px;
+}
+
+@keyframes highlightMyMessage {
+  0%,
+  100% {
+    background: #363638;
+  }
+  50% {
+    background: #1b1b1c;
+  }
+}
+
+@keyframes highlightOtherMessage {
+  0%,
+  100% {
+    background: #0063ff;
+  }
+  50% {
+    background: #0040c5;
   }
 }
