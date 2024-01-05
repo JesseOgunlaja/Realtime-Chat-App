@@ -18,12 +18,16 @@ const Page = async () => {
   const user: UserType = data.user;
   const key: UUID = data.key;
 
-  const usernamesList = JSON.parse(
-    decryptString(data.usernamesList, false)
+  const userDetailsList = JSON.parse(
+    decryptString(data.userDetailsList, false)
   ) as UserDetailsList;
 
   return (
-    <ChatsContainer usernamesList={usernamesList} userKey={key} user={user} />
+    <ChatsContainer
+      userDetailsList={userDetailsList}
+      userKey={key}
+      user={user}
+    />
   );
 };
 

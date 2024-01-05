@@ -9,7 +9,7 @@ const ChangeProfilePicture = ({
   setUser,
   styles,
   userKey,
-  usernamesList,
+  userDetailsList,
 }: SettingsPageComponentPropsType) => {
   const [pickerShown, setPickerShown] = useState<boolean>(false);
 
@@ -47,7 +47,7 @@ const ChangeProfilePicture = ({
 
               await setProfilePicture(
                 userKey,
-                usernamesList,
+                userDetailsList,
                 profilePictureURL
               );
             },

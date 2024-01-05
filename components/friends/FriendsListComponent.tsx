@@ -13,7 +13,7 @@ import { toast } from "sonner";
 const FriendsListComponent = ({
   user,
   setUser,
-  usernamesList,
+  userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   const [popupVisibility, setPopupVisibility] = useState(
     user.friends.map(() => false)
@@ -102,7 +102,7 @@ const FriendsListComponent = ({
   }
 
   function getFriendDataFromID(id: UUID) {
-    return usernamesList.find((usernameWithID) => usernameWithID.id === id);
+    return userDetailsList.find((userDetails) => userDetails.id === id);
   }
 
   return (

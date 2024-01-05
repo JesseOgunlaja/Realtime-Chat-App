@@ -9,27 +9,27 @@ import SettingsComponent from "./SettingsComponent";
 
 const SettingsContainer = (props: ProtectedPageContainerPropsType) => {
   const [user, setUser] = useState<UserType>(props.user);
-  const [usernamesList, setUsernamesList] = useState<UserDetailsList>(
-    props.usernamesList
+  const [userDetailsList, setUserDetailsList] = useState<UserDetailsList>(
+    props.userDetailsList
   );
 
-  useWebsockets(props.userKey, user, setUser, usernamesList);
+  useWebsockets(props.userKey, user, setUser, userDetailsList);
 
   return (
     <>
       <SignedInNavbar
-        usernamesList={usernamesList}
+        userDetailsList={userDetailsList}
         user={user}
         userKey={props.userKey}
         setUser={setUser}
-        setUsernamesList={setUsernamesList}
+        setUserDetailsList={setUserDetailsList}
       />
       <SettingsComponent
         userKey={props.userKey}
-        usernamesList={usernamesList}
+        userDetailsList={userDetailsList}
         user={user}
         setUser={setUser}
-        setUsernamesList={setUsernamesList}
+        setUserDetailsList={setUserDetailsList}
       />
     </>
   );

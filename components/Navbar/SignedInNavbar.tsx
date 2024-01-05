@@ -13,7 +13,7 @@ import MobileSignedInNavbar from "./MobileSignedInNavbar";
 const SignedInNavbar = ({
   user,
   setUser,
-  usernamesList,
+  userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   const pathname = usePathname();
 
@@ -36,7 +36,7 @@ const SignedInNavbar = ({
   }
 
   function chatWithFromID(id: UUID) {
-    return usernamesList.find((usernameWithID) => usernameWithID.id === id);
+    return userDetailsList.find((userDetails) => userDetails.id === id);
   }
 
   async function logout() {

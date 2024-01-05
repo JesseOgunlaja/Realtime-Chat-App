@@ -20,7 +20,7 @@ export function useWebsockets(
   uuid: UUID,
   user: UserType,
   setUser: DispatchUserType,
-  usernamesList: UserDetailsList
+  userDetailsList: UserDetailsList
 ) {
   const pathname = usePathname();
 
@@ -49,9 +49,9 @@ export function useWebsockets(
           );
           toast.info("Friend request declined", {
             description: `${
-              usernamesList.find(
-                (decryptedUsernameWithID) =>
-                  decryptedUsernameWithID.id ===
+              userDetailsList.find(
+                (decryptedUserDetails) =>
+                  decryptedUserDetails.id ===
                   user.outgoingFriendRequests[indexDeleted as number].toID
               )?.displayName
             } has declined your friend request`,
@@ -69,9 +69,9 @@ export function useWebsockets(
           setUser(currentUser);
           toast.info("New friend request", {
             description: `${
-              usernamesList.find(
-                (decryptedUsernameWithID) =>
-                  decryptedUsernameWithID.id === data.newFriendRequest.fromID
+              userDetailsList.find(
+                (decryptedUserDetails) =>
+                  decryptedUserDetails.id === data.newFriendRequest.fromID
               )?.displayName
             } has sent you a friend request`,
           });
@@ -99,9 +99,9 @@ export function useWebsockets(
           );
           toast.info("Friend request declined", {
             description: `${
-              usernamesList.find(
-                (decryptedUsernameWithID) =>
-                  decryptedUsernameWithID.id ===
+              userDetailsList.find(
+                (decryptedUserDetails) =>
+                  decryptedUserDetails.id ===
                   user.incomingFriendRequests[indexDeleted as number].fromID
               )?.displayName
             } has cancelled the friend request they sent you`,
@@ -133,9 +133,9 @@ export function useWebsockets(
 
           toast.info("Accepted friend request", {
             description: `${
-              usernamesList.find(
-                (decryptedUsernameWithID) =>
-                  decryptedUsernameWithID.id ===
+              userDetailsList.find(
+                (decryptedUserDetails) =>
+                  decryptedUserDetails.id ===
                   data.friends[newIndex as number].id
               )?.displayName
             } accepted the friend request you sent them`,
@@ -172,10 +172,9 @@ export function useWebsockets(
                   }}
                 >
                   {
-                    usernamesList.find(
-                      (decryptedUsernameWithID) =>
-                        decryptedUsernameWithID.id ===
-                        user.chats[chatIndex].withID
+                    userDetailsList.find(
+                      (decryptedUserDetails) =>
+                        decryptedUserDetails.id === user.chats[chatIndex].withID
                     )?.displayName
                   }
                 </p>
@@ -220,9 +219,9 @@ export function useWebsockets(
           setUser(data.newUser);
           toast.info("Removed friend", {
             description: `${
-              usernamesList.find(
-                (decryptedUsernameWithID) =>
-                  decryptedUsernameWithID.id === data.friendDeletedID
+              userDetailsList.find(
+                (decryptedUserDetails) =>
+                  decryptedUserDetails.id === data.friendDeletedID
               )?.displayName
             } has removed you as a friend`,
           });

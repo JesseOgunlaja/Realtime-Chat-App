@@ -7,15 +7,15 @@ import Link from "next/link";
 
 const ChatsComponent = ({
   user,
-  usernamesList,
+  userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   function getDisplayNameFromID(id: string) {
-    return usernamesList.find((usernameWithID) => usernameWithID.id === id)
+    return userDetailsList.find((userDetails) => userDetails.id === id)
       ?.displayName;
   }
 
   function getProfilePictureFromID(id: string) {
-    return usernamesList.find((usernameWithID) => usernameWithID.id === id)
+    return userDetailsList.find((userDetails) => userDetails.id === id)
       ?.profilePicture;
   }
 

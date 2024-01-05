@@ -9,18 +9,18 @@ export async function GET() {
     const requestHeaders = headers();
     const user = JSON.parse(String(requestHeaders.get("user")));
     const key = JSON.parse(String(requestHeaders.get("key")));
-    const usernamesList = (await redis.lrange(
+    const userDetailsList = (await redis.lrange(
       "User details",
       0,
       -1
     )) as UserDetailsList;
     const encryptedVersion = encryptString(
-      JSON.stringify(usernamesList),
+      JSON.stringify(userDetailsList),
       false
     );
 
     return NextResponse.json(
-      { message: "Success", user, key, usernamesList: encryptedVersion },
+      { message: "Success", user, key, userDetailsList: encryptedVersion },
       { status: 200 }
     );
   } catch (err) {

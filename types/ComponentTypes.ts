@@ -13,24 +13,24 @@ export type StylesType = {
 export type ProtectedPageContainerPropsType = {
   user: UserType;
   userKey: UUID;
-  usernamesList: UserDetailsList;
+  userDetailsList: UserDetailsList;
 };
 
 export type ProtectedPageComponentPropsType = {
   user: UserType;
   userKey: UUID;
   setUser: DispatchUserType;
-  setUsernamesList: DispatchUsernamesList;
-  usernamesList: UserDetailsList;
+  setUserDetailsList: DispatchUsernamesList;
+  userDetailsList: UserDetailsList;
 };
 
 export type SettingsPageComponentPropsType = {
   user: UserType;
   userKey: UUID;
   setUser: DispatchUserType;
-  setUsernamesList: DispatchUsernamesList;
+  setUserDetailsList: DispatchUsernamesList;
   styles: StylesType;
-  usernamesList: UserDetailsList;
+  userDetailsList: UserDetailsList;
 };
 
 export type LayoutPropsType = {

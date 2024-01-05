@@ -19,8 +19,8 @@ const Page = async ({ params }: { params: { chatID: string } }) => {
   const user: UserType = data.user;
   const key: UUID = data.key;
 
-  const usernamesList = JSON.parse(
-    decryptString(data.usernamesList, false)
+  const userDetailsList = JSON.parse(
+    decryptString(data.userDetailsList, false)
   ) as UserDetailsList;
 
   const chatIndex = user.chats.findIndex((chat) => chat.id === params.chatID);
@@ -32,7 +32,7 @@ const Page = async ({ params }: { params: { chatID: string } }) => {
   return (
     <ChatContainer
       user={user}
-      usernamesList={usernamesList}
+      userDetailsList={userDetailsList}
       userKey={key as UUID}
       chatIndex={chatIndex}
       chatID={params.chatID as UUID}

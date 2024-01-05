@@ -10,8 +10,8 @@ const ChangeUsername = ({
   styles,
   setUser,
   userKey,
-  usernamesList,
-  setUsernamesList,
+  userDetailsList,
+  setUserDetailsList,
 }: SettingsPageComponentPropsType) => {
   const usernameForm = useRef<HTMLFormElement>(null);
 
@@ -38,7 +38,7 @@ const ChangeUsername = ({
       return toast.error("This is already your username");
     }
 
-    if (usernamesList.findIndex((val) => val.name === newUsername) !== -1) {
+    if (userDetailsList.findIndex((val) => val.name === newUsername) !== -1) {
       return toast.error("Username taken");
     }
 
@@ -50,7 +50,7 @@ const ChangeUsername = ({
     submitButton.value = "...";
     submitButton.disabled = true;
 
-    const result = await setUsername(userKey, usernamesList, newUsername);
+    const result = await setUsername(userKey, userDetailsList, newUsername);
 
     submitButton.disabled = false;
     submitButton.value = "Submit";
@@ -59,7 +59,7 @@ const ChangeUsername = ({
     const currentUser = getNewReference(user);
     currentUser.username = newUsername.toLowerCase();
     setUser(currentUser);
-    setUsernamesList(result.newUsernamesList);
+    setUserDetailsList(result.newUsernamesList);
     toast.success("Username changed successfully", {
       id: loadingToastID,
     });

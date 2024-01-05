@@ -12,7 +12,7 @@ import { toast } from "sonner";
 const FriendRequestsComponent = ({
   user,
   setUser,
-  usernamesList,
+  userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   async function declineFriendRequest(
     friendRequestBeingDeclined: IncomingFriendRequest,
@@ -124,8 +124,8 @@ const FriendRequestsComponent = ({
           >
             <p>
               {
-                usernamesList.find(
-                  (usernameWithID) => usernameWithID.id === friendRequest.fromID
+                userDetailsList.find(
+                  (userDetails) => userDetails.id === friendRequest.fromID
                 )?.displayName
               }
             </p>
@@ -140,7 +140,7 @@ const FriendRequestsComponent = ({
           >
             <p>
               {
-                usernamesList.find((val) => val.id === friendRequest.toID)
+                userDetailsList.find((val) => val.id === friendRequest.toID)
                   ?.displayName
               }
             </p>

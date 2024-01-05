@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const friendBeingAddedUsername = body.usernameBeingBefriended;
 
-    const usernamesList = (await redis.lrange(
+    const userDetailsList = (await redis.lrange(
       "User details",
       0,
       -1
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const friendBeingAddedID = usernamesList.find(
+    const friendBeingAddedID = userDetailsList.find(
       (usernameWIthID) =>
         usernameWIthID.name.toLowerCase() ===
         friendBeingAddedUsername.toLowerCase()

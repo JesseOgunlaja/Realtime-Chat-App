@@ -18,14 +18,14 @@ const ChatComponent = ({
   setUser,
   chatID,
   chatIndex,
-  usernamesList,
+  userDetailsList,
 }: ProtectedPageComponentPropsType & {
   chatID: UUID;
   chatIndex: number;
 }) => {
   const prevUser = usePreviousValue(user);
-  const chatWith = usernamesList.find(
-    (usernameWithID) => usernameWithID.id === user.chats[chatIndex].withID
+  const chatWith = userDetailsList.find(
+    (userDetails) => userDetails.id === user.chats[chatIndex].withID
   ) as UserDetailsList[0];
   const [popupVisibility, setPopupVisibility] = useState<boolean[]>(
     user.chats[chatIndex].messages.map(() => false)

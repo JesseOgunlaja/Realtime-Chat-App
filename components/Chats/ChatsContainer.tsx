@@ -9,17 +9,17 @@ import ChatsComponent from "./ChatsComponent";
 
 const ChatsContainer = (props: ProtectedPageContainerPropsType) => {
   const [user, setUser] = useState<UserType>(props.user);
-  const [usernamesList, setUsernamesList] = useState<UserDetailsList>(
-    props.usernamesList
+  const [userDetailsList, setUserDetailsList] = useState<UserDetailsList>(
+    props.userDetailsList
   );
 
-  useWebsockets(props.userKey, user, setUser, usernamesList);
+  useWebsockets(props.userKey, user, setUser, userDetailsList);
 
   const propsBeingPassed = {
-    usernamesList,
+    userDetailsList,
     user,
     setUser,
-    setUsernamesList,
+    setUserDetailsList,
     userKey: props.userKey,
   };
 

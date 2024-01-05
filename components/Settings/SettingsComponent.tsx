@@ -9,8 +9,8 @@ const SettingsComponent = ({
   user,
   setUser,
   userKey,
-  usernamesList,
-  setUsernamesList,
+  userDetailsList,
+  setUserDetailsList,
 }: ProtectedPageComponentPropsType) => {
   return (
     <div className={styles.page}>
@@ -21,32 +21,32 @@ const SettingsComponent = ({
           user={user}
           setUser={setUser}
           styles={styles}
-          usernamesList={usernamesList}
-          setUsernamesList={setUsernamesList}
+          userDetailsList={userDetailsList}
+          setUserDetailsList={setUserDetailsList}
         />
         <ChangeDisplayName
           userKey={userKey}
           user={user}
           setUser={setUser}
           styles={styles}
-          usernamesList={usernamesList}
-          setUsernamesList={setUsernamesList}
+          userDetailsList={userDetailsList}
+          setUserDetailsList={setUserDetailsList}
         />
         <ChangePassword
           userKey={userKey}
           user={user}
           setUser={setUser}
           styles={styles}
-          usernamesList={usernamesList}
-          setUsernamesList={setUsernamesList}
+          userDetailsList={userDetailsList}
+          setUserDetailsList={setUserDetailsList}
         />
         <ChangeProfilePicture
           userKey={userKey}
           user={user}
           setUser={setUser}
           styles={styles}
-          usernamesList={usernamesList}
-          setUsernamesList={setUsernamesList}
+          userDetailsList={userDetailsList}
+          setUserDetailsList={setUserDetailsList}
         />
       </div>
     </div>

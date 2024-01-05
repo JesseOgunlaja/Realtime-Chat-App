@@ -7,16 +7,16 @@ import { redis } from "../utils/redis";
 
 export async function setProfilePicture(
   key: UUID,
-  usernamesList: UserDetailsList,
+  userDetailsList: UserDetailsList,
   profilePictureURL: string
 ) {
   const redisPipeline = redis.pipeline();
 
   redisPipeline.hset(key, { profilePicture: profilePictureURL });
 
-  const usernameListIndex = usernamesList.findIndex((val) => val.id === key);
-  redisPipeline.lset("User details", usernameListIndex, {
-    ...usernamesList[usernameListIndex],
+  const userDetailsIndex = userDetailsList.findIndex((val) => val.id === key);
+  redisPipeline.lset("User details", userDetailsIndex, {
+    ...userDetailsList[userDetailsIndex],
     profilePicture: profilePictureURL,
   });
 
@@ -25,24 +25,24 @@ export async function setProfilePicture(
 
 export async function setUsername(
   key: UUID,
-  usernamesList: UserDetailsList,
+  userDetailsList: UserDetailsList,
   username: string
 ) {
   const redisPipeline = redis.pipeline();
 
   redisPipeline.hset(key, { username });
 
-  const usernameListIndex = usernamesList.findIndex((val) => val.id === key);
-  const newUsernamesList = [...usernamesList];
-  newUsernamesList[usernameListIndex] = {
-    ...usernamesList[usernameListIndex],
+  const userDetailsIndex = userDetailsList.findIndex((val) => val.id === key);
+  const newUsernamesList = [...userDetailsList];
+  newUsernamesList[userDetailsIndex] = {
+    ...userDetailsList[userDetailsIndex],
     name: username,
   };
 
   redisPipeline.lset(
     "User details",
-    usernameListIndex,
-    newUsernamesList[usernameListIndex]
+    userDetailsIndex,
+    newUsernamesList[userDetailsIndex]
   );
 
   await redisPipeline.exec();

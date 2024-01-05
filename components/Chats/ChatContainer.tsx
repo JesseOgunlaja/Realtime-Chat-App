@@ -15,15 +15,15 @@ const ChatContainer = (
   }
 ) => {
   const [user, setUser] = useState<UserType>(props.user);
-  const [usernamesList, setUsernamesList] = useState<UserDetailsList>(
-    props.usernamesList
+  const [userDetailsList, setUserDetailsList] = useState<UserDetailsList>(
+    props.userDetailsList
   );
 
-  useWebsockets(props.userKey, user, setUser, props.usernamesList);
+  useWebsockets(props.userKey, user, setUser, props.userDetailsList);
 
   const propsBeingPassed = {
-    usernamesList,
-    setUsernamesList,
+    userDetailsList,
+    setUserDetailsList,
     userKey: props.userKey,
     user,
     setUser,
