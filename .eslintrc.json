@@ -4,6 +4,7 @@
   "parserOptions": {
     "project": "./tsconfig.json"
   },
+  "ignorePatterns": ["next.config.js"],
   "plugins": ["@typescript-eslint", "react", "import", "react-hooks"],
   "extends": [
     "next/core-web-vitals",

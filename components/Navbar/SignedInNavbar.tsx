@@ -1,7 +1,11 @@
 import styles from "@/styles/signed-in-navbar.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
 import { UserType } from "@/types/UserTypes";
-import { getNewReference } from "@/utils/utils";
+import {
+  getDisplayNameFromID,
+  getNewReference,
+  getProfilePictureFromID,
+} from "@/utils/utils";
 import { UUID } from "crypto";
 import { LogOut, MessagesSquare, Settings, Users, X } from "lucide-react";
 import Image from "next/image";
@@ -33,10 +37,6 @@ const SignedInNavbar = ({
     });
     const data = await res.json();
     if (data.message !== "Success") setUser(user);
-  }
-
-  function chatWithFromID(id: UUID) {
-    return userDetailsList.find((userDetails) => userDetails.id === id);
   }
 
   async function logout() {
@@ -122,12 +122,14 @@ const SignedInNavbar = ({
                 key={chat.id}
               >
                 <Image
-                  src={String(chatWithFromID(chat.withID)?.profilePicture)}
+                  src={String(
+                    getProfilePictureFromID(userDetailsList, chat.withID)
+                  )}
                   alt="Profile Picture"
                   height={22.5}
                   width={22.5}
                 />
-                {chatWithFromID(chat.withID)?.displayName}
+                {getDisplayNameFromID(userDetailsList, chat.withID)}
                 <X
                   onClick={(e) =>
                     hideChat(e as unknown as MouseEvent, chat.id, index)
@@ -157,7 +159,7 @@ const SignedInNavbar = ({
         hideChat={hideChat}
         styles={styles}
         logout={logout}
-        chatWithFromID={chatWithFromID}
+        userDetailsList={userDetailsList}
       />
     </>
   );

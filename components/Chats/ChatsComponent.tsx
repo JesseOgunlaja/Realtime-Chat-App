@@ -1,7 +1,11 @@
 import styles from "@/styles/chats.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
 import { Message } from "@/types/UserTypes";
-import { renderChatMessage } from "@/utils/utils";
+import {
+  getDisplayNameFromID,
+  getProfilePictureFromID,
+  renderChatMessage,
+} from "@/utils/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -9,16 +13,6 @@ const ChatsComponent = ({
   user,
   userDetailsList,
 }: ProtectedPageComponentPropsType) => {
-  function getDisplayNameFromID(id: string) {
-    return userDetailsList.find((userDetails) => userDetails.id === id)
-      ?.displayName;
-  }
-
-  function getProfilePictureFromID(id: string) {
-    return userDetailsList.find((userDetails) => userDetails.id === id)
-      ?.profilePicture;
-  }
-
   function shortenMessage(message: string) {
     const maxLength = 45;
     if (message.length > maxLength) {
@@ -64,13 +58,15 @@ const ChatsComponent = ({
                   className={styles["recent-chat"]}
                 >
                   <Image
-                    src={String(getProfilePictureFromID(chat.withID))}
+                    src={String(
+                      getProfilePictureFromID(userDetailsList, chat.withID)
+                    )}
                     alt="Profile Picture"
                     height={47.5}
                     width={47.5}
                   />
                   <div className={styles["message-and-username"]}>
-                    <p>{getDisplayNameFromID(chat.withID)}</p>
+                    <p>{getDisplayNameFromID(userDetailsList, chat.withID)}</p>
                     <p className={styles["most-recent-message"]}>
                       <span style={{ fontWeight: 400 }}>
                         {chat.messages.at(-1)?.fromYou && "You: "}

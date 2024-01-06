@@ -1,8 +1,12 @@
 import { usePreviousValue } from "@/hooks/usePreviousValue";
 import styles from "@/styles/chat.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
-import { UserDetailsList, UserType } from "@/types/UserTypes";
-import { getNewReference, renderChatMessage } from "@/utils/utils";
+import { UserType } from "@/types/UserTypes";
+import {
+  getNewReference,
+  getUserDetailsFromID,
+  renderChatMessage,
+} from "@/utils/utils";
 import { UUID } from "crypto";
 import { format } from "date-fns";
 import { Pencil, Reply, Trash2, X } from "lucide-react";
@@ -24,9 +28,11 @@ const ChatComponent = ({
   chatIndex: number;
 }) => {
   const prevUser = usePreviousValue(user);
-  const chatWith = userDetailsList.find(
-    (userDetails) => userDetails.id === user.chats[chatIndex].withID
-  ) as UserDetailsList[0];
+  const chatWith = getUserDetailsFromID(
+    userDetailsList,
+    user.chats[chatIndex].withID
+  );
+
   const [popupVisibility, setPopupVisibility] = useState<boolean[]>(
     user.chats[chatIndex].messages.map(() => false)
   );

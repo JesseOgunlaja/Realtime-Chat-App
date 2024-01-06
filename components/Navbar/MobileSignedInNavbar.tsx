@@ -1,5 +1,6 @@
 import { StylesType } from "@/types/ComponentTypes";
 import { UserDetailsList, UserType } from "@/types/UserTypes";
+import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
 import { UUID } from "crypto";
 import { LogOut, Menu, MessagesSquare, Settings, Users, X } from "lucide-react";
 import Image from "next/image";
@@ -11,17 +12,16 @@ type PropsType = {
   logout: () => Promise<void>;
   user: UserType;
   // eslint-disable-next-line no-unused-vars
-  chatWithFromID: (id: UUID) => UserDetailsList[0] | undefined;
-  // eslint-disable-next-line no-unused-vars
   hideChat(e: MouseEvent, chatID: UUID, index: number): Promise<void>;
+  userDetailsList: UserDetailsList;
 };
 
 const MobileSignedInNavbar = ({
   styles,
   logout,
   user,
-  chatWithFromID,
   hideChat,
+  userDetailsList,
 }: PropsType) => {
   const [mobileNavbarVisibility, setMobileNavbarVisibility] =
     useState<boolean>(false);
@@ -115,12 +115,14 @@ const MobileSignedInNavbar = ({
                 key={chat.id}
               >
                 <Image
-                  src={String(chatWithFromID(chat.withID)?.profilePicture)}
+                  src={String(
+                    getProfilePictureFromID(userDetailsList, chat.withID)
+                  )}
                   alt="Profile Picture"
                   height={22.5}
                   width={22.5}
                 />
-                {chatWithFromID(chat.withID)?.displayName}
+                {getDisplayNameFromID(userDetailsList, chat.withID)}
                 <X
                   onClick={(e) =>
                     hideChat(e as unknown as MouseEvent, chat.id, index)

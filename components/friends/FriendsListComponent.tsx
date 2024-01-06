@@ -1,7 +1,11 @@
 import styles from "@/styles/friends-list.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
 import { UserType } from "@/types/UserTypes";
-import { getNewReference } from "@/utils/utils";
+import {
+  getDisplayNameFromID,
+  getNewReference,
+  getProfilePictureFromID,
+} from "@/utils/utils";
 import { UUID } from "crypto";
 import { MessageSquare, MoreVertical } from "lucide-react";
 import Image from "next/image";
@@ -82,10 +86,6 @@ const FriendsListComponent = ({
     dialog.current!.style.display = "none";
   }
 
-  function getFriendDataFromID(id: UUID) {
-    return userDetailsList.find((userDetails) => userDetails.id === id);
-  }
-
   return (
     <div className={styles.page}>
       <dialog ref={dialog} className={styles.dialog}>
@@ -102,7 +102,7 @@ const FriendsListComponent = ({
           </div>
         </div>
       </dialog>
-      <h1 className={styles.title}>Friends</h1>
+      <h1 className={styles.title}>All Friends</h1>
       <div className={styles.friends}>
         {user.friends.length === 0 ? (
           <p className={styles["no-friends"]}>No friends...</p>
@@ -128,10 +128,10 @@ const FriendsListComponent = ({
                 <Image
                   height={35}
                   width={35}
-                  src={getFriendDataFromID(friend.id)?.profilePicture as string}
+                  src={getProfilePictureFromID(userDetailsList, friend.id)}
                   alt="Friend profile picture"
                 />
-                <p>{getFriendDataFromID(friend.id)?.displayName}</p>
+                <p>{getDisplayNameFromID(userDetailsList, friend.id)}</p>
                 <MessageSquare />
                 <MoreVertical
                   onClick={(e) =>

@@ -1,3 +1,4 @@
+import { UserDetailsList } from "@/types/UserTypes";
 import { FormEvent } from "react";
 
 export const compareObjects = (
@@ -47,4 +48,29 @@ export function isProtectedRoute(pathname: string) {
   return !protectedRoutes.every(
     (protectedRoute) => !pathname.includes(protectedRoute)
   );
+}
+
+export function getUserDetailsFromID(
+  userDetailsList: UserDetailsList,
+  id: string
+) {
+  return userDetailsList.find(
+    (userDetailsList) => userDetailsList.id === id
+  ) as UserDetailsList[0];
+}
+
+export function getDisplayNameFromID(
+  userDetailsList: UserDetailsList,
+  id: string
+) {
+  return userDetailsList.find((userDetails) => userDetails.id === id)
+    ?.displayName as string;
+}
+
+export function getProfilePictureFromID(
+  userDetailsList: UserDetailsList,
+  id: string
+) {
+  return userDetailsList.find((userDetails) => userDetails.id === id)
+    ?.profilePicture as string;
 }

@@ -1,10 +1,12 @@
 .page {
+  padding-top: 20px;
   overflow-x: hidden;
 }
 
 .page h1 {
-  font-size: 35px;
-  padding-left: 10px;
+  margin-bottom: 10px;
+  padding-left: 7.5px;
+  font-size: 27.5px;
 }
 
 .friend,
@@ -17,6 +19,7 @@
   display: flex;
   border-radius: 5px;
   padding: 5px;
+  margin-left: 5px;
   cursor: pointer;
 }
 

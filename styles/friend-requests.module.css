@@ -1,20 +1,37 @@
 .page {
-  padding-left: 15px;
+  padding-top: 20px;
+  padding-left: 10px;
 }
 
 .title {
-  font-size: 35px;
-  margin-bottom: 10px;
+  padding-left: 3.5px;
+  font-size: 27.5px;
+  margin-bottom: 3px;
 }
 
 .all-requests {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  gap: 5px;
+}
+
+.incoming-friend-request:hover,
+.outgoing-friend-request:hover {
+  background: rgba(128, 128, 128, 0.1);
+}
+
+.incoming-friend-request:hover > svg,
+.outgoing-friend-request:hover > svg {
+  background: #1a1a1a;
 }
 
 .incoming-friend-request,
 .outgoing-friend-request {
   display: flex;
+  padding: 10px;
+  width: 95%;
+  border-radius: 5px;
   gap: 10px;
   align-items: center;
 }
@@ -22,28 +39,43 @@
 .incoming-friend-request p,
 .outgoing-friend-request p {
   font-size: 20px;
-}
-
-.incoming-friend-request > :nth-child(2) {
-  background: rgb(0, 110, 255);
-  border-radius: 5px;
-  height: 30px;
-  width: 30px;
-  padding: 2.5px;
-  cursor: pointer;
+  margin-right: auto;
 }
 
 .incoming-friend-request > :nth-child(3),
-.outgoing-friend-request > :nth-child(2) {
-  background: red;
+.incoming-friend-request > :nth-child(4),
+.outgoing-friend-request > :nth-child(3) {
+  background: #1d1d1d;
   border-radius: 5px;
-  height: 30px;
-  width: 30px;
-  padding: 2.5px;
+  height: 35px;
+  width: 35px;
+  padding: 6px;
   cursor: pointer;
+  border-radius: 50%;
+}
+
+.incoming-friend-request > :nth-child(3):hover {
+  color: rgb(0, 200, 0);
+}
+
+.incoming-friend-request > :nth-child(4):hover,
+.outgoing-friend-request > :nth-child(3):hover {
+  color: rgb(255, 0, 0);
 }
 
 .no-friend-requests {
   font-size: 20px;
   opacity: 0.8;
+}
+
+@media (min-width: 100vh) and (min-width: 800px) {
+  .page {
+    width: calc(100vw - 350px);
+  }
+}
+
+@media (min-height: 100vw), (max-width: 800px) {
+  .page {
+    width: 99vw;
+  }
 }

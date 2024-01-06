@@ -8,7 +8,7 @@ import {
   UserDetailsList,
   UserType,
 } from "@/types/UserTypes";
-import { getNewReference } from "@/utils/utils";
+import { getDisplayNameFromID, getNewReference } from "@/utils/utils";
 import { websocketChannel } from "@/utils/websockets";
 import { UUID } from "crypto";
 import Link from "next/link";
@@ -48,13 +48,10 @@ export function useWebsockets(
             }
           );
           toast.info("Friend request declined", {
-            description: `${
-              userDetailsList.find(
-                (decryptedUserDetails) =>
-                  decryptedUserDetails.id ===
-                  user.outgoingFriendRequests[indexDeleted as number].toID
-              )?.displayName
-            } has declined your friend request`,
+            description: `${getDisplayNameFromID(
+              userDetailsList,
+              user.outgoingFriendRequests[indexDeleted].toID
+            )} has declined your friend request`,
           });
           setUser(currentUser);
         },
@@ -68,12 +65,10 @@ export function useWebsockets(
           currentUser.incomingFriendRequests.push(data.newFriendRequest);
           setUser(currentUser);
           toast.info("New friend request", {
-            description: `${
-              userDetailsList.find(
-                (decryptedUserDetails) =>
-                  decryptedUserDetails.id === data.newFriendRequest.fromID
-              )?.displayName
-            } has sent you a friend request`,
+            description: `${getDisplayNameFromID(
+              userDetailsList,
+              data.newFriendRequest.fromID
+            )} has sent you a friend request`,
           });
         },
       },
@@ -98,13 +93,10 @@ export function useWebsockets(
             }
           );
           toast.info("Friend request declined", {
-            description: `${
-              userDetailsList.find(
-                (decryptedUserDetails) =>
-                  decryptedUserDetails.id ===
-                  user.incomingFriendRequests[indexDeleted as number].fromID
-              )?.displayName
-            } has cancelled the friend request they sent you`,
+            description: `${getDisplayNameFromID(
+              userDetailsList,
+              user.incomingFriendRequests[indexDeleted].fromID
+            )} has cancelled the friend request they sent you`,
           });
           setUser(currentUser);
         },
@@ -132,13 +124,10 @@ export function useWebsockets(
           });
 
           toast.info("Accepted friend request", {
-            description: `${
-              userDetailsList.find(
-                (decryptedUserDetails) =>
-                  decryptedUserDetails.id ===
-                  data.friends[newIndex as number].id
-              )?.displayName
-            } accepted the friend request you sent them`,
+            description: `${getDisplayNameFromID(
+              userDetailsList,
+              data.friends[newIndex].id
+            )} accepted the friend request you sent them`,
           });
           setUser(currentUser);
         },
@@ -171,12 +160,10 @@ export function useWebsockets(
                     fontWeight: "bold",
                   }}
                 >
-                  {
-                    userDetailsList.find(
-                      (decryptedUserDetails) =>
-                        decryptedUserDetails.id === user.chats[chatIndex].withID
-                    )?.displayName
-                  }
+                  {getDisplayNameFromID(
+                    userDetailsList,
+                    user.chats[chatIndex].withID
+                  )}
                 </p>
                 <p>{data.message.message}</p>
               </Link>,
@@ -218,12 +205,10 @@ export function useWebsockets(
         }) {
           setUser(data.newUser);
           toast.info("Removed friend", {
-            description: `${
-              userDetailsList.find(
-                (decryptedUserDetails) =>
-                  decryptedUserDetails.id === data.friendDeletedID
-              )?.displayName
-            } has removed you as a friend`,
+            description: `${getDisplayNameFromID(
+              userDetailsList,
+              data.friendDeletedID
+            )} has removed you as a friend`,
           });
         },
       },

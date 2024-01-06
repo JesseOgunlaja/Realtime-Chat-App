@@ -5,8 +5,13 @@ import {
   OutgoingFriendRequest,
   UserType,
 } from "@/types/UserTypes";
-import { getNewReference } from "@/utils/utils";
+import {
+  getDisplayNameFromID,
+  getNewReference,
+  getProfilePictureFromID,
+} from "@/utils/utils";
 import { Check, X } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 
 const FriendRequestsComponent = ({
@@ -122,13 +127,19 @@ const FriendRequestsComponent = ({
             key={friendRequest.fromID}
             className={styles["incoming-friend-request"]}
           >
-            <p>
-              {
-                userDetailsList.find(
-                  (userDetails) => userDetails.id === friendRequest.fromID
-                )?.displayName
-              }
-            </p>
+            <Image
+              src={getProfilePictureFromID(
+                userDetailsList,
+                friendRequest.fromID
+              )}
+              alt={`${getDisplayNameFromID(
+                userDetailsList,
+                friendRequest.fromID
+              )}'s profile picture`}
+              height={35}
+              width={35}
+            />
+            <p>{getDisplayNameFromID(userDetailsList, friendRequest.fromID)}</p>
             <Check onClick={() => acceptFriendRequest(friendRequest, index)} />
             <X onClick={() => declineFriendRequest(friendRequest, index)} />
           </div>
@@ -138,12 +149,7 @@ const FriendRequestsComponent = ({
             key={friendRequest.toID}
             className={styles["outgoing-friend-request"]}
           >
-            <p>
-              {
-                userDetailsList.find((val) => val.id === friendRequest.toID)
-                  ?.displayName
-              }
-            </p>
+            <p>{getDisplayNameFromID(userDetailsList, friendRequest.toID)}</p>
             <X onClick={() => deleteMyFriendRequest(friendRequest, index)} />
           </div>
         ))}

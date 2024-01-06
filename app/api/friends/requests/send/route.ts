@@ -57,8 +57,8 @@ export async function POST(request: NextRequest) {
     }
 
     const friendBeingAddedID = userDetailsList.find(
-      (usernameWIthID) =>
-        usernameWIthID.name.toLowerCase() ===
+      (userDetails) =>
+        userDetails.name.toLowerCase() ===
         friendBeingAddedUsername.toLowerCase()
     )?.id;
 
