@@ -1,6 +1,5 @@
 import { IncomingFriendRequest, UserType } from "@/types/UserTypes";
 import { redis } from "@/utils/redis";
-import { compareObjects } from "@/utils/utils";
 import { trigger } from "@/utils/websocketsServer";
 import { UUID, randomUUID } from "crypto";
 import { headers } from "next/headers";
@@ -23,9 +22,10 @@ export async function POST(request: NextRequest) {
     const user = JSON.parse(requestHeaders.get("user") as string) as UserType;
 
     if (
-      user.incomingFriendRequests.every(
-        (val) => !compareObjects(val, friendRequestBeingAccepted)
-      )
+      user.incomingFriendRequests.findIndex(
+        (friendRequest) =>
+          friendRequest.fromID === friendRequestBeingAccepted.fromID
+      ) === -1
     ) {
       return NextResponse.json(
         { message: "Friend request not found" },
@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     const chatID = randomUUID();
 
     user.incomingFriendRequests = user.incomingFriendRequests.filter(
-      (val) => !compareObjects(val, friendRequestBeingAccepted)
+      (friendRequest) =>
+        friendRequest.fromID !== friendRequestBeingAccepted.fromID
     );
     user.chats.push({
       id: chatID,
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
       friends: otherUser.friends,
       chats: otherUser.chats,
     });
+
     const redisPipeline = redis.pipeline();
 
     redisPipeline.hset(JSON.parse(requestHeaders.get("key") as string), {
