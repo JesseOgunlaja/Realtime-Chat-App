@@ -149,6 +149,15 @@ const FriendRequestsComponent = ({
             key={friendRequest.toID}
             className={styles["outgoing-friend-request"]}
           >
+            <Image
+              src={getProfilePictureFromID(userDetailsList, friendRequest.toID)}
+              alt={`${getDisplayNameFromID(
+                userDetailsList,
+                friendRequest.toID
+              )}'s profile picture`}
+              height={35}
+              width={35}
+            />
             <p>{getDisplayNameFromID(userDetailsList, friendRequest.toID)}</p>
             <X onClick={() => deleteMyFriendRequest(friendRequest, index)} />
           </div>
