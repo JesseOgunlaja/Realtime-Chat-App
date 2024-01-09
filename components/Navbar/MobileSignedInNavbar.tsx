@@ -12,7 +12,7 @@ type PropsType = {
   logout: () => Promise<void>;
   user: UserType;
   // eslint-disable-next-line no-unused-vars
-  hideChat(e: MouseEvent, chatID: UUID, index: number): Promise<void>;
+  hideChat(e: MouseEvent, chatID: UUID): Promise<void>;
   userDetailsList: UserDetailsList;
 };
 
@@ -107,7 +107,7 @@ const MobileSignedInNavbar = ({
         <div className={styles.chats}>
           {user.chats
             .filter((chat) => chat.visible)
-            .map((chat, index) => (
+            .map((chat) => (
               <Link
                 onClick={() => setMobileNavbarVisibility(false)}
                 href={`/chats/${chat.id}`}
@@ -118,15 +118,15 @@ const MobileSignedInNavbar = ({
                   src={String(
                     getProfilePictureFromID(userDetailsList, chat.withID)
                   )}
+                  priority
+                  loading="eager"
                   alt="Profile Picture"
                   height={22.5}
                   width={22.5}
                 />
                 {getDisplayNameFromID(userDetailsList, chat.withID)}
                 <X
-                  onClick={(e) =>
-                    hideChat(e as unknown as MouseEvent, chat.id, index)
-                  }
+                  onClick={(e) => hideChat(e as unknown as MouseEvent, chat.id)}
                 />
               </Link>
             ))}

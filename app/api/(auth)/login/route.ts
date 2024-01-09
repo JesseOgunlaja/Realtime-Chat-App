@@ -1,7 +1,7 @@
 import { UserType } from "@/types/UserTypes";
 import { signJWT } from "@/utils/auth";
 import { decryptString } from "@/utils/encryption";
-import { getUserByName } from "@/utils/redis";
+import { getUserByUsername } from "@/utils/redis";
 import { compare as comparePasswords } from "bcrypt";
 import { UUID } from "crypto";
 import { cookies } from "next/headers";
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-    const result = (await getUserByName(username, true)) as
+    const result = (await getUserByUsername(username, true)) as
       | {
           user: UserType;
           key: UUID;

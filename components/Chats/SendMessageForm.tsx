@@ -1,31 +1,27 @@
+import { generateUUID } from "@/actions/actions";
+import { sendMessageAction } from "@/actions/chats/message/send";
 import { StylesType } from "@/types/ComponentTypes";
-import { DispatchUserType, UserType } from "@/types/UserTypes";
-import { getNewReference, removeUndefinedFromObject } from "@/utils/utils";
+import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { SendHorizontal, X } from "lucide-react";
 import { Dispatch, RefObject, SetStateAction, useState } from "react";
-import { toast } from "sonner";
 
 type PropsType = {
-  setUser: DispatchUserType;
-  setMessageBeingRepliedID: Dispatch<SetStateAction<UUID | undefined>>;
-  messageBeingRepliedID: UUID | undefined;
-  styles: StylesType;
   user: UserType;
-  chatIndex: number;
-  messagesContainer: RefObject<HTMLDivElement>;
-  chatID: UUID;
-  sendMessageBox: RefObject<HTMLTextAreaElement>;
+  userKey: UUID;
   chatWithDisplayName: string;
+  sendMessageBox: RefObject<HTMLTextAreaElement>;
+  chatIndex: number;
+  messageBeingRepliedID: UUID | undefined;
+  setMessageBeingRepliedID: Dispatch<SetStateAction<UUID | undefined>>;
+  styles: StylesType;
 };
 
 const SendMessageForm = ({
   user,
-  messagesContainer,
+  userKey,
   chatWithDisplayName,
   sendMessageBox,
-  chatID,
-  setUser,
   chatIndex,
   messageBeingRepliedID,
   setMessageBeingRepliedID,
@@ -36,55 +32,22 @@ const SendMessageForm = ({
   async function sendMessage() {
     if (message === "") return;
 
-    const currentUser = getNewReference(user) as UserType;
-    const timestamp = Date.now();
-    currentUser.chats[chatIndex as number].messages.push(
-      removeUndefinedFromObject({
-        message: message.replaceAll("’", "'"),
-        fromYou: true,
-        timestamp,
-        id: null as never,
-        replyID: messageBeingRepliedID,
-      })
-    );
-    currentUser.chats[chatIndex as number].visible = true;
+    const newMessage = {
+      message: message.replaceAll("’", "'"),
+      timestamp: Date.now(),
+      replyID: messageBeingRepliedID,
+      id: await generateUUID(),
+    };
+
     setMessageBeingRepliedID(undefined);
     setMessage("");
-    setUser(currentUser);
-    messagesContainer.current!.scrollTop =
-      messagesContainer.current!.scrollHeight;
 
-    const res = await fetch("/api/chat/message/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        message,
-        chatID: chatID,
-        replyID: messageBeingRepliedID,
-      }),
-    });
-    const data = await res.json();
-    if (data.message !== "Success") {
-      setUser(user);
-      setMessage(message);
-      toast.error(
-        "An unexpected error occured, while trying to send the message."
-      );
-    } else {
-      currentUser.chats[chatIndex as number].messages.pop();
-      currentUser.chats[chatIndex as number].messages.push(
-        removeUndefinedFromObject({
-          message: message.replaceAll("’", "'"),
-          fromYou: true,
-          timestamp,
-          id: data.messageID,
-          replyID: messageBeingRepliedID,
-        })
-      );
-      setUser(getNewReference(currentUser));
-    }
+    await sendMessageAction(
+      userKey,
+      user.chats[chatIndex].id,
+      user,
+      newMessage
+    );
   }
 
   return (

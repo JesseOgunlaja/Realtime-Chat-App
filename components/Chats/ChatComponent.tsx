@@ -1,7 +1,8 @@
+import { deleteMessageAction } from "@/actions/chats/message/delete";
+import { editMessageAction } from "@/actions/chats/message/edit";
 import { usePreviousValue } from "@/hooks/usePreviousValue";
 import styles from "@/styles/chat.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
-import { UserType } from "@/types/UserTypes";
 import {
   getNewReference,
   getUserDetailsFromID,
@@ -19,8 +20,8 @@ import SendMessageForm from "./SendMessageForm";
 
 const ChatComponent = ({
   user,
-  setUser,
   chatID,
+  userKey,
   chatIndex,
   userDetailsList,
 }: ProtectedPageComponentPropsType & {
@@ -40,7 +41,7 @@ const ChatComponent = ({
 
   const messagesContainer = useRef<HTMLDivElement>(null);
   const sendMessageBox = useRef<HTMLTextAreaElement>(null);
-  const editMessageBox = useRef<HTMLInputElement>(null);
+  const editMessageBox = useRef<HTMLDivElement>(null);
 
   const dialog = useRef<HTMLDialogElement>(null);
   const dialog2 = useRef<HTMLDialogElement>(null);
@@ -80,7 +81,20 @@ const ChatComponent = ({
     messageBeingEditedID.current = ID;
     dialog.current?.show();
     dialog.current!.style.display = "flex";
-    editMessageBox.current?.focus();
+    setTimeout(() => {
+      if (editMessageBox.current) {
+        const range = document.createRange();
+        const selection = window.getSelection();
+
+        if (selection) {
+          range.selectNodeContents(editMessageBox.current);
+          range.collapse(false); // Move to the end of the content
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        setMessageBeingEdited(editMessageBox.current.innerText);
+      }
+    }, 0);
   }
 
   function hideEditMessageBox() {
@@ -89,38 +103,21 @@ const ChatComponent = ({
   }
 
   async function editMessage() {
-    const currentUser = getNewReference(user) as UserType;
+    const loadingToastID = toast.loading("Loading");
 
-    currentUser.chats[chatIndex].messages[
-      user.chats[chatIndex].messages.findIndex(
-        (message) => message.id === messageBeingEditedID.current
-      )
-    ].message = messageBeingEdited.replaceAll("’", "'");
-    setUser(currentUser);
-    hideEditMessageBox();
+    await editMessageAction(
+      userKey,
+      chatID,
+      messageBeingEditedID.current!,
+      messageBeingEdited,
+      user
+    );
 
-    const res = await fetch("/api/chat/message/edit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chatID,
-        messageID: messageBeingEditedID.current,
-        newMessage: messageBeingEdited,
-      }),
+    toast.success("Success", {
+      id: loadingToastID,
     });
-    const data = await res.json();
 
-    if (data.message !== "Success") {
-      toast.error(
-        "An unexpected error occured, while trying to edit the message."
-      );
-      showEditMessageBox(messageBeingEditedID.current!);
-      setUser(user);
-    } else {
-      toast.success("Success");
-    }
+    hideEditMessageBox();
   }
 
   function showDeleteMessageBox(ID: UUID) {
@@ -135,33 +132,20 @@ const ChatComponent = ({
   }
 
   async function deleteMessage() {
-    const currentUser = getNewReference(user) as UserType;
-    const messageBeingDeletedIndex = user.chats[chatIndex].messages.findIndex(
-      (message) => message.id == messageBeingDeletedID.current
-    );
-    currentUser.chats[chatIndex].messages.splice(messageBeingDeletedIndex, 1);
-    setUser(currentUser);
     hideDeleteMessageBox();
 
-    const res = await fetch("/api/chat/message/delete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chatID: chatID,
-        messageID: messageBeingDeletedID.current,
-      }),
+    const loadingToastID = toast.loading("Loading");
+
+    await deleteMessageAction(
+      userKey,
+      chatID,
+      messageBeingDeletedID.current!,
+      user
+    );
+
+    toast.success("Success", {
+      id: loadingToastID,
     });
-    const data = await res.json();
-    if (data.message !== "Success") {
-      setUser(user);
-      toast.error(
-        "An unexpected error occured, while trying to delete the message."
-      );
-    } else {
-      toast.success("Success");
-    }
   }
 
   useEffect(() => {
@@ -192,11 +176,7 @@ const ChatComponent = ({
           </div>
           <div className={styles["edit-message-form-container"]}>
             <div
-              ref={(node) => {
-                if (node) {
-                  setMessageBeingEdited(node.innerText);
-                }
-              }}
+              ref={editMessageBox}
               role="textbox"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
@@ -208,7 +188,7 @@ const ChatComponent = ({
                 setMessageBeingEdited((e.target as HTMLDivElement).innerText);
               }}
               key={messageBeingEditedID.current}
-              contentEditable={true}
+              contentEditable
             >
               {
                 user.chats[chatIndex]?.messages[
@@ -243,6 +223,8 @@ const ChatComponent = ({
           alt={`${chatWith.displayName}'s profile picture`}
           height={40}
           width={40}
+          priority
+          loading="eager"
         />
         <div>
           <p>{chatWith.displayName}</p>
@@ -334,7 +316,8 @@ const ChatComponent = ({
                           messageBeingFound.id === message.replyID
                       )?.fromYou
                         ? "You"
-                        : chatWith.displayName}{" "}
+                        : chatWith.displayName}
+                      {": "}
                       &quot;
                       {
                         user.chats[chatIndex].messages.find(
@@ -408,14 +391,12 @@ const ChatComponent = ({
       </div>
       <SendMessageForm
         user={user}
-        setUser={setUser}
+        userKey={userKey}
         chatWithDisplayName={chatWith.displayName}
-        chatID={chatID}
         chatIndex={chatIndex}
         styles={styles}
         messageBeingRepliedID={messageBeingRepliedID}
         setMessageBeingRepliedID={setMessageBeingRepliedID}
-        messagesContainer={messagesContainer}
         sendMessageBox={sendMessageBox}
       />
     </div>

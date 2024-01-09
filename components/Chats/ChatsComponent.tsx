@@ -13,30 +13,30 @@ const ChatsComponent = ({
   user,
   userDetailsList,
 }: ProtectedPageComponentPropsType) => {
-  function shortenMessage(message: string) {
-    const maxLength = 45;
-    if (message.length > maxLength) {
-      const truncatedStr = message.substring(0, maxLength);
+  // function shortenMessage(message: string) {
+  //   const maxLength = 45;
+  //   if (message.length > maxLength) {
+  //     const truncatedStr = message.substring(0, maxLength);
 
-      if (truncatedStr[maxLength - 1] === " ") {
-        return truncatedStr.trim() + "...";
-      }
+  //     if (truncatedStr[maxLength - 1] === " ") {
+  //       return truncatedStr.trim() + "...";
+  //     }
 
-      const restOfStr = message.substring(maxLength, message.length);
+  //     const restOfStr = message.substring(maxLength, message.length);
 
-      if (restOfStr.length < 4) {
-        return message;
-      }
+  //     if (restOfStr.length < 4) {
+  //       return message;
+  //     }
 
-      if (restOfStr.includes(" ") && restOfStr.indexOf(" ") < 5) {
-        return truncatedStr + restOfStr.split(" ")[0] + "...";
-      }
+  //     if (restOfStr.includes(" ") && restOfStr.indexOf(" ") < 5) {
+  //       return truncatedStr + restOfStr.split(" ")[0] + "...";
+  //     }
 
-      return truncatedStr + "...";
-    } else {
-      return message;
-    }
-  }
+  //     return truncatedStr + "...";
+  //   } else {
+  //     return message;
+  //   }
+  // }
 
   return (
     <>
@@ -61,6 +61,8 @@ const ChatsComponent = ({
                     src={String(
                       getProfilePictureFromID(userDetailsList, chat.withID)
                     )}
+                    priority
+                    loading="eager"
                     alt="Profile Picture"
                     height={47.5}
                     width={47.5}
@@ -71,10 +73,8 @@ const ChatsComponent = ({
                       <span style={{ fontWeight: 400 }}>
                         {chat.messages.at(-1)?.fromYou && "You: "}
                       </span>
-                      {shortenMessage(
-                        renderChatMessage(
-                          (chat.messages.at(-1) as Message).message
-                        )
+                      {renderChatMessage(
+                        (chat.messages.at(-1) as Message).message
                       )}
                     </p>
                   </div>

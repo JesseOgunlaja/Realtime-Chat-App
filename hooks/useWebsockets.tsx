@@ -1,7 +1,6 @@
 import {
   Chat,
   DispatchUserType,
-  Friend,
   IncomingFriendRequest,
   Message,
   OutgoingFriendRequest,
@@ -28,117 +27,122 @@ export function useWebsockets(
     const channel = websocketChannel(uuid);
     const binds = [
       {
-        event: "friend-request-declined",
-        receiveFunction: function (data: {
-          outgoingFriendRequests: OutgoingFriendRequest[];
-        }) {
+        event: "friend-request-canceled",
+        receiveFunction: function (
+          data: (
+            | (IncomingFriendRequest & { type: "incoming" })
+            | (OutgoingFriendRequest & { type: "outgoing" })
+          ) & { sendToast: boolean }
+        ) {
           const currentUser = getNewReference(user) as UserType;
-          currentUser.outgoingFriendRequests = data.outgoingFriendRequests;
-          const indexDeleted = user.outgoingFriendRequests.findIndex(
-            (request) => {
-              return (
-                request.toID ===
-                user.outgoingFriendRequests.filter(
-                  (val) =>
-                    data.outgoingFriendRequests.findIndex(
-                      (val2) => val.toID === val2.toID
-                    ) === -1
-                )[0].toID
+          if (data.type === "outgoing") {
+            const friendRequestBeingDeclinedIndex =
+              user.outgoingFriendRequests.findIndex(
+                (friendRequest) => friendRequest.toID === data.toID
               );
+            currentUser.outgoingFriendRequests.splice(
+              friendRequestBeingDeclinedIndex,
+              1
+            );
+            if (data.sendToast) {
+              toast.info("Friend request declined", {
+                description: `${getDisplayNameFromID(
+                  userDetailsList,
+                  user.outgoingFriendRequests[friendRequestBeingDeclinedIndex]
+                    .toID
+                )} declined your friend request`,
+              });
             }
-          );
-          toast.info("Friend request declined", {
-            description: `${getDisplayNameFromID(
-              userDetailsList,
-              user.outgoingFriendRequests[indexDeleted].toID
-            )} has declined your friend request`,
-          });
-          setUser(currentUser);
+            setUser(currentUser);
+          } else {
+            const friendRequestBeingDeclinedIndex =
+              user.incomingFriendRequests.findIndex(
+                (friendRequest) => friendRequest.fromID === data.fromID
+              );
+            currentUser.incomingFriendRequests.splice(
+              friendRequestBeingDeclinedIndex,
+              1
+            );
+            if (data.sendToast) {
+              toast.info("Friend request deleted", {
+                description: `${getDisplayNameFromID(
+                  userDetailsList,
+                  user.incomingFriendRequests[friendRequestBeingDeclinedIndex]
+                    .fromID
+                )} cancelled the friend request they sent you`,
+              });
+            }
+            setUser(currentUser);
+          }
         },
       },
       {
         event: "friend-request-sent",
         receiveFunction: function (data: {
-          newFriendRequest: IncomingFriendRequest;
+          newIncomingFriendRequest?: IncomingFriendRequest;
+          newOutgoingFriendRequest?: OutgoingFriendRequest;
         }) {
           const currentUser = getNewReference(user) as UserType;
-          currentUser.incomingFriendRequests.push(data.newFriendRequest);
-          setUser(currentUser);
-          toast.info("New friend request", {
-            description: `${getDisplayNameFromID(
-              userDetailsList,
-              data.newFriendRequest.fromID
-            )} has sent you a friend request`,
-          });
-        },
-      },
-      {
-        event: "friend-request-deleted",
-        receiveFunction: function (data: {
-          incomingFriendRequests: IncomingFriendRequest[];
-        }) {
-          const currentUser = getNewReference(user) as UserType;
-          currentUser.incomingFriendRequests = data.incomingFriendRequests;
-          const indexDeleted = user.incomingFriendRequests.findIndex(
-            (request) => {
-              return (
-                request.fromID ===
-                user.incomingFriendRequests.filter(
-                  (val) =>
-                    data.incomingFriendRequests.findIndex(
-                      (val2) => val.fromID === val2.fromID
-                    ) === -1
-                )[0].fromID
-              );
-            }
-          );
-          toast.info("Friend request declined", {
-            description: `${getDisplayNameFromID(
-              userDetailsList,
-              user.incomingFriendRequests[indexDeleted].fromID
-            )} has cancelled the friend request they sent you`,
-          });
+          if (data.newIncomingFriendRequest) {
+            currentUser.incomingFriendRequests.push(
+              data.newIncomingFriendRequest
+            );
+            toast.info("New friend request", {
+              description: `${getDisplayNameFromID(
+                userDetailsList,
+                data.newIncomingFriendRequest.fromID
+              )} sent you a friend request`,
+            });
+          } else {
+            currentUser.outgoingFriendRequests.push(
+              data.newOutgoingFriendRequest!
+            );
+          }
           setUser(currentUser);
         },
       },
       {
         event: "friend-request-accepted",
         receiveFunction: function (data: {
-          outgoingFriendRequests: OutgoingFriendRequest[];
-          friends: Friend[];
-          chats: Chat[];
+          friendRequestID: UUID;
+          sendToast?: boolean;
+          newChat: Chat;
         }) {
           const currentUser = getNewReference(user) as UserType;
-          currentUser.outgoingFriendRequests = data.outgoingFriendRequests;
-          currentUser.friends = data.friends;
-          currentUser.chats = data.chats;
-
-          const newIndex = data.friends.findIndex((friend) => {
-            return (
-              friend.id ===
-              data.friends.filter(
-                (val) =>
-                  user.friends.findIndex((val2) => val.id === val2.id) === -1
-              )[0].id
-            );
+          if (data.sendToast) {
+            currentUser.outgoingFriendRequests =
+              user.outgoingFriendRequests.filter(
+                (friendRequest) => friendRequest.toID !== data.friendRequestID
+              );
+          } else {
+            currentUser.incomingFriendRequests =
+              user.incomingFriendRequests.filter(
+                (friendRequest) => friendRequest.fromID !== data.friendRequestID
+              );
+          }
+          currentUser.friends.push({
+            id: data.friendRequestID,
           });
+          currentUser.chats.push(data.newChat);
 
-          toast.info("Accepted friend request", {
-            description: `${getDisplayNameFromID(
-              userDetailsList,
-              data.friends[newIndex].id
-            )} accepted the friend request you sent them`,
-          });
+          if (data.sendToast) {
+            toast.info("Accepted friend request", {
+              description: `${getDisplayNameFromID(
+                userDetailsList,
+                data.friendRequestID
+              )} accepted the friend request you sent them`,
+            });
+          }
           setUser(currentUser);
         },
       },
       {
-        event: "new-message",
+        event: "message-sent",
         receiveFunction: function (data: { chatID: UUID; message: Message }) {
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
-          if (!pathname.includes(data.chatID)) {
+          if (!pathname.includes(data.chatID) && !data.message.fromYou) {
             toast(
               <Link
                 prefetch={false}
@@ -184,72 +188,49 @@ export function useWebsockets(
           const chatIndex = user.chats.findIndex(
             (chat) => chat.id === data.chatID
           );
-          if (
-            user.chats[chatIndex].messages.findIndex(
-              // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-              (message) => message.id === data.message.id || message.id === null
-            ) === -1
-          ) {
-            const currentUser = getNewReference(user) as UserType;
-            currentUser.chats[chatIndex].visible = true;
-            currentUser.chats[chatIndex].messages.push(data.message);
-            setUser(currentUser);
-          }
+          const currentUser = getNewReference(user) as UserType;
+          currentUser.chats[chatIndex].visible = true;
+          currentUser.chats[chatIndex].messages.push(data.message);
+          setUser(currentUser);
         },
       },
       {
         event: "friend-removed",
         receiveFunction: function (data: {
-          newUser: UserType;
-          friendDeletedID: UUID;
+          friendID: UUID;
+          sendToast: boolean;
         }) {
-          setUser(data.newUser);
-          toast.info("Removed friend", {
-            description: `${getDisplayNameFromID(
-              userDetailsList,
-              data.friendDeletedID
-            )} has removed you as a friend`,
-          });
-        },
-      },
-      {
-        event: "message-edited",
-        receiveFunction: function (data: { chats: Chat[] }) {
           const currentUser = getNewReference(user);
-          currentUser.chats = data.chats;
+          currentUser.friends = currentUser.friends.filter(
+            (friend) => friend.id !== data.friendID
+          );
+          currentUser.chats = currentUser.chats.filter(
+            (chat) => chat.withID !== data.friendID
+          );
           setUser(currentUser);
-        },
-      },
-      {
-        event: "message-edited-sent",
-        receiveFunction: function (data: { chats: Chat[]; chatID: UUID }) {
-          if (
-            JSON.stringify(
-              user.chats.find((chat) => chat.id === data.chatID)?.messages
-            ) !==
-            JSON.stringify(
-              data.chats.find((chat) => chat.id === data.chatID)?.messages
-            )
-          ) {
-            const currentUser = getNewReference(user);
-            currentUser.chats = data.chats;
-            setUser(currentUser);
+          if (data.sendToast) {
+            toast.info("Removed friend", {
+              description: `${getDisplayNameFromID(
+                userDetailsList,
+                data.friendID
+              )} removed you as a friend`,
+            });
           }
         },
       },
       {
-        event: "deleted-message",
-        receiveFunction: function (data: { chatID: UUID; messageID: UUID }) {
-          const currentUser = getNewReference(user) as UserType;
-          const chatIndex = user.chats.findIndex(
-            (chat) => chat.id === data.chatID
-          );
-          currentUser.chats[chatIndex].messages.splice(
-            user.chats[chatIndex].messages.findIndex(
+        event: "message-edited",
+        receiveFunction: function (data: {
+          messageID: UUID;
+          chatID: UUID;
+          newMessageText: string;
+        }) {
+          const currentUser = getNewReference(user);
+          currentUser.chats
+            .find((chat) => chat.id === data.chatID)!
+            .messages.find(
               (message) => message.id === data.messageID
-            ),
-            1
-          );
+            )!.message = data.newMessageText;
           setUser(currentUser);
         },
       },

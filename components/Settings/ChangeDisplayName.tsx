@@ -1,4 +1,4 @@
-import { setDisplayname } from "@/actions/settingsActions";
+import setDisplayname from "@/actions/settings/displayName";
 import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { DisplayNameSchema } from "@/utils/zod";

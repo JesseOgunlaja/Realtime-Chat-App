@@ -7,9 +7,7 @@ import { cookies } from "next/headers";
 const Page = async () => {
   const token = cookies().get("token")?.value;
   const res = await fetch(`${process.env.URL}/api/user`, {
-    next: {
-      revalidate: 0,
-    },
+    cache: "no-store",
     headers: {
       cookie: `token=${token}`,
     },

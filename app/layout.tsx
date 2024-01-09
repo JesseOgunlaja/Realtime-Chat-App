@@ -35,7 +35,7 @@ export default function RootLayout({ children }: LayoutPropsType) {
           richColors
           expand
           visibleToasts={3}
-          closeButton={true}
+          closeButton
           position="top-center"
           toastOptions={{ style: { fontSize: "17px" } }}
           theme="dark"

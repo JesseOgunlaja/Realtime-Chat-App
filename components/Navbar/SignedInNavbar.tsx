@@ -1,54 +1,30 @@
+import hideChatAction from "@/actions/chats/hide";
+import logoutAction from "@/actions/logout";
 import styles from "@/styles/signed-in-navbar.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
-import { UserType } from "@/types/UserTypes";
-import {
-  getDisplayNameFromID,
-  getNewReference,
-  getProfilePictureFromID,
-} from "@/utils/utils";
+import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
 import { UUID } from "crypto";
 import { LogOut, MessagesSquare, Settings, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { toast } from "sonner";
 import MobileSignedInNavbar from "./MobileSignedInNavbar";
 
 const SignedInNavbar = ({
   user,
-  setUser,
+  userKey,
   userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   const pathname = usePathname();
 
-  async function hideChat(e: MouseEvent, chatID: UUID, index: number) {
+  async function hideChat(e: MouseEvent, chatID: UUID) {
     e.preventDefault();
-    const currentUser = getNewReference(user) as UserType;
-    currentUser.chats[index].visible = false;
-    setUser(currentUser);
-    const res = await fetch("/api/chat/hide", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chatID,
-      }),
-    });
-    const data = await res.json();
-    if (data.message !== "Success") setUser(user);
+    await hideChatAction(userKey, user, chatID, pathname);
   }
 
   async function logout() {
-    const res = await fetch("/api/logout");
-    const data = await res.json();
-    if (data.message === "Success") {
-      window.location.reload();
-    } else {
-      toast.error(
-        "An unexpected error occured when trying to log out, please try again."
-      );
-    }
+    await logoutAction();
+    window.location.reload();
   }
 
   return (
@@ -115,7 +91,7 @@ const SignedInNavbar = ({
         <div className={styles.chats}>
           {user.chats
             .filter((chat) => chat.visible)
-            .map((chat, index) => (
+            .map((chat) => (
               <Link
                 href={`/chats/${chat.id}`}
                 className={styles.chat}
@@ -125,15 +101,15 @@ const SignedInNavbar = ({
                   src={String(
                     getProfilePictureFromID(userDetailsList, chat.withID)
                   )}
+                  priority
+                  loading="eager"
                   alt="Profile Picture"
                   height={22.5}
                   width={22.5}
                 />
                 {getDisplayNameFromID(userDetailsList, chat.withID)}
                 <X
-                  onClick={(e) =>
-                    hideChat(e as unknown as MouseEvent, chat.id, index)
-                  }
+                  onClick={(e) => hideChat(e as unknown as MouseEvent, chat.id)}
                 />
               </Link>
             ))}

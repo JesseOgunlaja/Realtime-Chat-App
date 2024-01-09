@@ -1,118 +1,65 @@
+import acceptFriendRequestAction from "@/actions/friend/requests/accept";
+import cancelMyFriendRequestAction from "@/actions/friend/requests/cancel";
+import declineFriendRequestAction from "@/actions/friend/requests/decline";
 import styles from "@/styles/friend-requests.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
 import {
   IncomingFriendRequest,
   OutgoingFriendRequest,
-  UserType,
 } from "@/types/UserTypes";
-import {
-  getDisplayNameFromID,
-  getNewReference,
-  getProfilePictureFromID,
-} from "@/utils/utils";
+import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
 const FriendRequestsComponent = ({
   user,
-  setUser,
+  userKey,
   userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   async function declineFriendRequest(
-    friendRequestBeingDeclined: IncomingFriendRequest,
-    index: number
+    friendRequestBeingDeclined: IncomingFriendRequest
   ) {
-    const currentUser = getNewReference(user) as UserType;
-    currentUser.incomingFriendRequests.splice(index, 1);
-    setUser(currentUser);
-    const loadingToastID = toast.loading("Loading", { duration: Infinity });
-    const res = await fetch("/api/friends/requests/deny", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ friendRequestBeingDeclined }),
+    const loadingToastID = toast.loading("Loading");
+
+    await declineFriendRequestAction(
+      userKey,
+      user,
+      friendRequestBeingDeclined.fromID
+    );
+    toast.success("Success", {
+      id: loadingToastID,
     });
-    const data = await res.json();
-    if (data.message !== "Success") {
-      setUser(user);
-      toast.error("An unexpected error occurred, please try again", {
-        id: loadingToastID,
-      });
-    } else {
-      toast.success("Success", {
-        id: loadingToastID,
-      });
-    }
-    setTimeout(() => {
-      toast.dismiss(loadingToastID);
-    }, 1000);
   }
 
   async function deleteMyFriendRequest(
-    friendRequestBeingDeleted: OutgoingFriendRequest,
-    index: number
+    friendRequestBeingDeleted: OutgoingFriendRequest
   ) {
-    const currentUser = getNewReference(user) as UserType;
-    currentUser.outgoingFriendRequests.splice(index, 1);
-    setUser(currentUser);
-    const loadingToastID = toast.loading("Loading", { duration: Infinity });
-    const res = await fetch("/api/friends/requests/delete", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        friendRequestBeingDeleted: friendRequestBeingDeleted,
-      }),
+    const loadingToastID = toast.loading("Loading");
+
+    await cancelMyFriendRequestAction(
+      userKey,
+      user,
+      friendRequestBeingDeleted.toID
+    );
+
+    toast.success("Success", {
+      id: loadingToastID,
     });
-    const data = await res.json();
-    if (data.message !== "Success") {
-      setUser(user);
-      toast.error("An unexpected error occurred, please try again", {
-        id: loadingToastID,
-      });
-    } else {
-      toast.success("Success", {
-        id: loadingToastID,
-      });
-    }
-    setTimeout(() => {
-      toast.dismiss(loadingToastID);
-    }, 1000);
   }
 
   async function acceptFriendRequest(
-    friendRequestBeingAccepted: IncomingFriendRequest,
-    index: number
+    friendRequestBeingAccepted: IncomingFriendRequest
   ) {
-    const currentUser = getNewReference(user) as UserType;
-    currentUser.incomingFriendRequests.splice(index, 1);
-    setUser(currentUser);
-    const loadingToastID = toast.loading("Loading", { duration: Infinity });
-    const res = await fetch("/api/friends/requests/accept", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ friendRequestBeingAccepted }),
+    const loadingToastID = toast.loading("Loading");
+    await acceptFriendRequestAction(
+      userKey,
+      user,
+      friendRequestBeingAccepted.fromID
+    );
+    toast.success("Success", {
+      id: loadingToastID,
     });
-    const data = await res.json();
-    if (data.message !== "Success") {
-      setUser(user);
-      toast.error("An unexpected error occurred, please try again", {
-        id: loadingToastID,
-      });
-    } else {
-      setUser(data.user);
-      toast.success("Success", {
-        id: loadingToastID,
-      });
-    }
-    setTimeout(() => {
-      toast.dismiss(loadingToastID);
-    }, 1000);
   }
 
   return (
@@ -122,7 +69,7 @@ const FriendRequestsComponent = ({
         user.outgoingFriendRequests.length ===
         0 && <p className={styles["no-friend-requests"]}>No friend requests</p>}
       <div className={styles["all-requests"]}>
-        {user.incomingFriendRequests.map((friendRequest, index: number) => (
+        {user.incomingFriendRequests.map((friendRequest) => (
           <div
             key={friendRequest.fromID}
             className={styles["incoming-friend-request"]}
@@ -132,6 +79,8 @@ const FriendRequestsComponent = ({
                 userDetailsList,
                 friendRequest.fromID
               )}
+              priority
+              loading="eager"
               alt={`${getDisplayNameFromID(
                 userDetailsList,
                 friendRequest.fromID
@@ -140,17 +89,19 @@ const FriendRequestsComponent = ({
               width={35}
             />
             <p>{getDisplayNameFromID(userDetailsList, friendRequest.fromID)}</p>
-            <Check onClick={() => acceptFriendRequest(friendRequest, index)} />
-            <X onClick={() => declineFriendRequest(friendRequest, index)} />
+            <Check onClick={() => acceptFriendRequest(friendRequest)} />
+            <X onClick={() => declineFriendRequest(friendRequest)} />
           </div>
         ))}
-        {user.outgoingFriendRequests.map((friendRequest, index: number) => (
+        {user.outgoingFriendRequests.map((friendRequest) => (
           <div
             key={friendRequest.toID}
             className={styles["outgoing-friend-request"]}
           >
             <Image
               src={getProfilePictureFromID(userDetailsList, friendRequest.toID)}
+              priority
+              loading="eager"
               alt={`${getDisplayNameFromID(
                 userDetailsList,
                 friendRequest.toID
@@ -159,7 +110,7 @@ const FriendRequestsComponent = ({
               width={35}
             />
             <p>{getDisplayNameFromID(userDetailsList, friendRequest.toID)}</p>
-            <X onClick={() => deleteMyFriendRequest(friendRequest, index)} />
+            <X onClick={() => deleteMyFriendRequest(friendRequest)} />
           </div>
         ))}
       </div>

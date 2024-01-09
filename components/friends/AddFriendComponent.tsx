@@ -1,14 +1,16 @@
+import sendFriendRequest from "@/actions/friend/requests/send";
 import styles from "@/styles/add-friend.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
-import { getNewReference } from "@/utils/utils";
 import { FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const AddFriendComponent = ({
   user,
-  setUser,
+  userKey,
+  userDetailsList,
 }: ProtectedPageComponentPropsType) => {
-  const [friendBeingAdded, setFriendBeingAdded] = useState<string>("");
+  const [friendBeingAddedUsername, setFriendBeingAddedUsername] =
+    useState<string>("");
   const submitButtonRef = useRef<HTMLInputElement>(null);
 
   async function addFriend(e: FormEvent<HTMLFormElement>) {
@@ -16,13 +18,13 @@ const AddFriendComponent = ({
     submitButtonRef.current!.disabled = true;
     submitButtonRef.current!.value = "...";
 
-    if (friendBeingAdded === "") {
+    if (friendBeingAddedUsername === "") {
       submitButtonRef.current!.disabled = false;
       submitButtonRef.current!.value = "Add";
 
-      return toast.error("Invalid username submitted");
+      return toast.error("Please enter a username");
     }
-    if (friendBeingAdded.toLowerCase() === user.username) {
+    if (friendBeingAddedUsername.toLowerCase() === user.username) {
       submitButtonRef.current!.disabled = false;
       submitButtonRef.current!.value = "Add";
 
@@ -32,55 +34,47 @@ const AddFriendComponent = ({
     const loadingToastID = toast.loading("Loading", {
       duration: Infinity,
     });
-    const res = await fetch("/api/friends/requests/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        usernameBeingBefriended: friendBeingAdded,
-      }),
-    });
-    const data = await res.json();
-    if (data.message === "Success") {
-      const currentUser = getNewReference(user);
-      user!.outgoingFriendRequests = data.newOutgoingFriendRequests;
-      setUser(currentUser);
-      toast.success("Your friend request was sent successfully", {
-        id: loadingToastID,
-      });
-    } else if (data.message === "User doesn't exist") {
-      toast.error("No user with that username was found", {
-        id: loadingToastID,
-      });
-    } else if (data.message === "You've already added this user as a friend") {
-      toast.error("This user's already your friend", {
-        id: loadingToastID,
-      });
-    } else if (
-      data.message === "You've already sent this user a friend request"
-    ) {
-      toast.error(data.message, {
-        id: loadingToastID,
-      });
-    } else if (data.message === "This user has sent you a friend request") {
-      toast.error(data.message, {
-        id: loadingToastID,
-      });
-    } else if (data.message === "Error") {
-      toast.error("An unexpected error occurred, please try again", {
-        id: loadingToastID,
-      });
-    } else {
-      toast.error("An unexpected error occurred, please try again", {
-        id: loadingToastID,
-      });
+
+    const result = await sendFriendRequest(
+      userKey,
+      user,
+      userDetailsList,
+      friendBeingAddedUsername
+    );
+
+    submitButtonRef.current!.value = "Add";
+    submitButtonRef.current!.disabled = false;
+
+    switch (result.message) {
+      case "Success":
+        setFriendBeingAddedUsername("");
+        toast.success("Your friend request was sent successfully", {
+          id: loadingToastID,
+        });
+        break;
+      case "User not found":
+        toast.error("No user with that username was found", {
+          id: loadingToastID,
+        });
+        break;
+      case "You've already sent this user a friend request":
+        toast.error(result.message, {
+          id: loadingToastID,
+        });
+        break;
+      case "This user has already sent you a friend request":
+        toast.error(result.message, {
+          id: loadingToastID,
+        });
+        break;
+      case "This user is already your friend":
+        toast.error(result.message, {
+          id: loadingToastID,
+        });
     }
+
     setTimeout(() => {
       toast.dismiss(loadingToastID);
-      submitButtonRef.current!.value = "Add";
-      submitButtonRef.current!.disabled = false;
-      setFriendBeingAdded("");
     }, 1000);
   }
 
@@ -98,8 +92,8 @@ const AddFriendComponent = ({
         <div className={styles["add-friend-container"]}>
           <input
             autoFocus
-            value={friendBeingAdded}
-            onChange={(e) => setFriendBeingAdded(e.target.value)}
+            value={friendBeingAddedUsername}
+            onChange={(e) => setFriendBeingAddedUsername(e.target.value)}
             className={styles["text-input"]}
             type="text"
             name="add-friend"

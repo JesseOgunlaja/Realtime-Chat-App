@@ -1,4 +1,5 @@
 import { Redis } from "@upstash/redis";
+import { UUID } from "crypto";
 import { UserDetailsList, UserType } from "../types/UserTypes";
 
 export const redis = new Redis({
@@ -6,7 +7,7 @@ export const redis = new Redis({
   token: String(process.env.REDIS_SECRET),
 });
 
-export async function getUserByName(
+export async function getUserByUsername(
   name: string,
   getKey?: boolean
 ): Promise<UserType | { user: UserType; key: string } | undefined> {
@@ -22,4 +23,8 @@ export async function getUserByName(
   } else {
     return undefined;
   }
+}
+
+export async function getUserByID(userID: UUID) {
+  return (await redis.hgetall(userID)) as UserType;
 }

@@ -24,6 +24,7 @@
     "filestack-js": "^3.28.0",
     "filestack-react": "^5.0.0",
     "fs": "^0.0.1-security",
+    "idb": "^8.0.0",
     "install": "^0.13.0",
     "jose": "^5.0.1",
     "lucide-react": "^0.304.0",

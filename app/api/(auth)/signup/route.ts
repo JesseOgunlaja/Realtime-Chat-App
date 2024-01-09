@@ -1,5 +1,5 @@
 import { decryptString } from "@/utils/encryption";
-import { getUserByName, redis } from "@/utils/redis";
+import { getUserByUsername, redis } from "@/utils/redis";
 import { PasswordSchema, UsernameSchema } from "@/utils/zod";
 import { hash as hashPassword } from "bcrypt";
 import { randomUUID } from "crypto";
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
 
-    if ((await getUserByName(username)) !== undefined)
+    if ((await getUserByUsername(username)) !== undefined)
       return NextResponse.json(
         { message: "Error", error: "Duplicate username" },
         { status: 400 }

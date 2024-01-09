@@ -28,21 +28,13 @@
   cursor: pointer;
 }
 
-.nav ul li a {
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-}
-
-.nav ul li a p {
+.nav ul li p {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.nav ul li a span {
+.nav ul li span {
   margin-left: 10px;
   height: 20px;
   width: 20px;
@@ -66,7 +58,7 @@
     padding-top: 60px;
   }
 
-  .nav ul li a svg {
+  .nav ul li svg {
     display: none;
   }
 }
@@ -85,9 +77,12 @@
   .nav ul li {
     padding: 10px 15px;
     width: 33%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .nav ul li a p {
+  .nav ul li p {
     display: none;
   }
 }

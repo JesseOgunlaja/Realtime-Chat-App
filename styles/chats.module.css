@@ -9,16 +9,14 @@
 
 .recent-chats {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, calc(50% - 5px));
   gap: 5px;
-  position: relative;
 }
 
 .recent-chat {
   cursor: pointer;
   text-decoration: none;
   color: white;
-  width: 100%;
   padding: 10px;
   display: flex;
   border-radius: 5px;
@@ -35,6 +33,7 @@
   display: flex;
   font-size: 15.5px;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .message-and-username p:nth-child(1) {
@@ -44,6 +43,12 @@
 
 .message-and-username p:nth-child(2) {
   font-weight: 300;
+}
+
+.most-recent-message {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 @media (min-width: 100vh) and (min-width: 800px) {
@@ -62,11 +67,9 @@
     width: 100vw;
   }
   .recent-chats {
-    grid-template-columns: 1fr;
-    position: relative;
+    grid-template-columns: calc(100% - 20px);
   }
   .recent-chat {
-    width: calc(100% - 20px);
     padding-left: 10px;
     padding-right: 10px;
   }

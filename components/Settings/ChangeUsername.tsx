@@ -1,4 +1,4 @@
-import { setUsername } from "@/actions/settingsActions";
+import setUsername from "@/actions/settings/username";
 import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { UsernameSchema } from "@/utils/zod";

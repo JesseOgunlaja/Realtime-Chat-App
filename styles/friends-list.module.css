@@ -1,11 +1,10 @@
 .page {
-  padding-top: 20px;
+  padding-top: 27.5px;
   overflow-x: hidden;
 }
 
 .page h1 {
-  margin-bottom: 10px;
-  padding-left: 7.5px;
+  padding-left: 10.5px;
   font-size: 27.5px;
 }
 
@@ -19,6 +18,7 @@
   display: flex;
   border-radius: 5px;
   padding: 5px;
+  padding-right: 10px;
   margin-left: 5px;
   cursor: pointer;
 }
@@ -128,6 +128,7 @@
 .no-friends {
   opacity: 0.8;
   font-size: 20px;
+  padding-left: 10.5px;
   text-decoration: none;
 }
 
@@ -145,7 +146,7 @@
 @media (min-height: 100vw), (max-width: 800px) {
   .page {
     width: 99vw;
-    padding: 0px;
+    padding-left: 5px;
   }
 
   .friend {

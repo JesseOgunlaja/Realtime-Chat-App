@@ -1,4 +1,4 @@
-import { setProfilePicture } from "@/actions/settingsActions";
+import setProfilePicture from "@/actions/settings/profilePicture";
 import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getNewReference } from "@/utils/utils";
 import { PickerOverlay } from "filestack-react";

@@ -1,4 +1,4 @@
-import { setPassword } from "@/actions/settingsActions";
+import setPassword from "@/actions/settings/password";
 import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
 import { getNewReference } from "@/utils/utils";
 import { PasswordSchema } from "@/utils/zod";

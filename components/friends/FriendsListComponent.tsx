@@ -1,6 +1,6 @@
+import removeFriendAction from "@/actions/friend/remove";
 import styles from "@/styles/friends-list.module.css";
 import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
-import { UserType } from "@/types/UserTypes";
 import {
   getDisplayNameFromID,
   getNewReference,
@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 const FriendsListComponent = ({
   user,
-  setUser,
+  userKey,
   userDetailsList,
 }: ProtectedPageComponentPropsType) => {
   const [popupVisibility, setPopupVisibility] = useState(
@@ -40,45 +40,11 @@ const FriendsListComponent = ({
 
   async function removeFriend() {
     hideModal();
-    const currentUser = getNewReference(user) as UserType;
-    currentUser.chats.splice(
-      user.chats.findIndex(
-        (chat) => chat.withID === friendBeingDeletedID.current
-      ),
-      1
-    );
-    currentUser.friends.splice(
-      user.friends.findIndex(
-        (friend) => friend.id === friendBeingDeletedID.current
-      ),
-      1
-    );
-    const loadingToastID = toast.loading("Loading", { duration: Infinity });
-    setUser(currentUser);
-    const res = await fetch("/api/friends/remove", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id: friendBeingDeletedID.current,
-      }),
+    const loadingToastID = toast.loading("Loading");
+    await removeFriendAction(userKey, user, friendBeingDeletedID.current!);
+    toast.success("Success", {
+      id: loadingToastID,
     });
-    const data = await res.json();
-
-    if (data.message !== "Success") {
-      toast.error("An unexpected error occurred. Please try again.", {
-        id: loadingToastID,
-      });
-      setUser(user);
-    } else {
-      toast.success("Success", {
-        id: loadingToastID,
-      });
-    }
-    setTimeout(() => {
-      toast.dismiss(loadingToastID);
-    }, 1000);
   }
 
   function hideModal() {
@@ -120,14 +86,14 @@ const FriendsListComponent = ({
             <div className={styles.friend}>
               <Link
                 href={`/chats/${
-                  user.chats[
-                    user.chats.findIndex((chat) => chat.withID === friend.id)
-                  ].id
+                  user.chats.find((chat) => chat.withID === friend.id)?.id
                 }`}
               >
                 <Image
                   height={35}
                   width={35}
+                  priority
+                  loading="eager"
                   src={getProfilePictureFromID(userDetailsList, friend.id)}
                   alt="Friend profile picture"
                 />
@@ -145,9 +111,7 @@ const FriendsListComponent = ({
               >
                 <Link
                   href={`/chats/${
-                    user.chats[
-                      user.chats.findIndex((chat) => chat.withID === friend.id)
-                    ].id
+                    user.chats.find((chat) => chat.withID === friend.id)?.id
                   }`}
                 >
                   Open chat
