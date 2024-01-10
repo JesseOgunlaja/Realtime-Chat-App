@@ -1,20 +1,31 @@
-import { LayoutPropsType } from "@/types/ComponentTypes";
+import SignedInNavbar from "@/components/Navbar/SignedInNavbar";
+import { UserDetailsList, UserType } from "@/types/UserTypes";
+import { UUID } from "crypto";
+import { headers } from "next/headers";
 import "./globals.css";
 
-export default async function RootLayout({ children }: LayoutPropsType) {
-  // const token = cookies().get("token")?.value;
-  // const res = await fetch(`${process.env.URL}/api/user`, {
-  //   cache: "no-store",
-  //   headers: {
-  //     cookie: `token=${token}`,
-  //   },
-  // });
-  // const data = await res.json();
-  // const user: UserType = data.user;
+export default async function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const headersList = headers();
+  const user: UserType = JSON.parse(
+    headersList.get("user") as string
+  ) as UserType;
+  const key = JSON.parse(headersList.get("key") as string) as UUID;
+
+  const userDetailsList = JSON.parse(
+    headersList.get("UserDetails") as string
+  ) as UserDetailsList;
 
   return (
     <>
-      {/* <Test user={user} /> */}
+      <SignedInNavbar
+        user={user}
+        userDetailsList={userDetailsList}
+        userKey={key}
+      />
       <main>{children}</main>
     </>
   );

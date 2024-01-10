@@ -1,6 +1,6 @@
 import { generateUUID } from "@/actions/actions";
 import { sendMessageAction } from "@/actions/chats/message/send";
-import { StylesType } from "@/types/ComponentTypes";
+import styles from "@/styles/chat.module.css";
 import { UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { SendHorizontal, X } from "lucide-react";
@@ -14,7 +14,6 @@ type PropsType = {
   chatIndex: number;
   messageBeingRepliedID: UUID | undefined;
   setMessageBeingRepliedID: Dispatch<SetStateAction<UUID | undefined>>;
-  styles: StylesType;
 };
 
 const SendMessageForm = ({
@@ -25,7 +24,6 @@ const SendMessageForm = ({
   chatIndex,
   messageBeingRepliedID,
   setMessageBeingRepliedID,
-  styles,
 }: PropsType) => {
   const [message, setMessage] = useState<string>("");
 

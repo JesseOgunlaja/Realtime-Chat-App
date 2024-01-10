@@ -1,4 +1,4 @@
-import { StylesType } from "@/types/ComponentTypes";
+import styles from "@/styles/signed-in-navbar.module.css";
 import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
 import { UUID } from "crypto";
@@ -8,7 +8,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 type PropsType = {
-  styles: StylesType;
   logout: () => Promise<void>;
   user: UserType;
   // eslint-disable-next-line no-unused-vars
@@ -17,7 +16,6 @@ type PropsType = {
 };
 
 const MobileSignedInNavbar = ({
-  styles,
   logout,
   user,
   hideChat,

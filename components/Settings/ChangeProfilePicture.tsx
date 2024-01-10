@@ -1,16 +1,25 @@
+"use client";
+
 import setProfilePicture from "@/actions/settings/profilePicture";
-import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
+import styles from "@/styles/settings.module.css";
 import { getNewReference } from "@/utils/utils";
+import {
+  UserDetailsStore,
+  UserStore,
+  getUser,
+  getUserDetailsList,
+  getUserKey,
+} from "@/utils/zustand";
 import { PickerOverlay } from "filestack-react";
 import { useState } from "react";
 
-const ChangeProfilePicture = ({
-  user,
-  setUser,
-  styles,
-  userKey,
-  userDetailsList,
-}: SettingsPageComponentPropsType) => {
+const ChangeProfilePicture = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const userDetailsList = getUserDetailsList();
+  const { setUser } = UserStore((state) => state);
+  const { setUserDetailsList } = UserDetailsStore((state) => state);
+
   const [pickerShown, setPickerShown] = useState<boolean>(false);
 
   return (

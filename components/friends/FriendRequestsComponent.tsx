@@ -2,21 +2,21 @@ import acceptFriendRequestAction from "@/actions/friend/requests/accept";
 import cancelMyFriendRequestAction from "@/actions/friend/requests/cancel";
 import declineFriendRequestAction from "@/actions/friend/requests/decline";
 import styles from "@/styles/friend-requests.module.css";
-import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
 import {
   IncomingFriendRequest,
   OutgoingFriendRequest,
 } from "@/types/UserTypes";
 import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
+import { getUser, getUserDetailsList, getUserKey } from "@/utils/zustand";
 import { Check, X } from "lucide-react";
 import Image from "next/image";
 import { toast } from "sonner";
 
-const FriendRequestsComponent = ({
-  user,
-  userKey,
-  userDetailsList,
-}: ProtectedPageComponentPropsType) => {
+const FriendRequestsComponent = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const userDetailsList = getUserDetailsList();
+
   async function declineFriendRequest(
     friendRequestBeingDeclined: IncomingFriendRequest
   ) {

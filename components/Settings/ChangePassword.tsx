@@ -1,16 +1,18 @@
+"use client";
+
 import setPassword from "@/actions/settings/password";
-import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
+import styles from "@/styles/settings.module.css";
 import { getNewReference } from "@/utils/utils";
 import { PasswordSchema } from "@/utils/zod";
+import { UserStore, getUser, getUserKey } from "@/utils/zustand";
 import { FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const ChangePassword = ({
-  user,
-  styles,
-  setUser,
-  userKey,
-}: SettingsPageComponentPropsType) => {
+const ChangePassword = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const { setUser } = UserStore((state) => state);
+
   const passwordForm = useRef<HTMLFormElement>(null);
 
   const [oldPassword, setOldPassword] = useState<string>("");

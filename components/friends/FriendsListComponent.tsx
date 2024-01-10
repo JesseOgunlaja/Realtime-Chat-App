@@ -1,11 +1,11 @@
 import removeFriendAction from "@/actions/friend/remove";
 import styles from "@/styles/friends-list.module.css";
-import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
 import {
   getDisplayNameFromID,
   getNewReference,
   getProfilePictureFromID,
 } from "@/utils/utils";
+import { getUser, getUserDetailsList, getUserKey } from "@/utils/zustand";
 import { UUID } from "crypto";
 import { MessageSquare, MoreVertical } from "lucide-react";
 import Image from "next/image";
@@ -14,11 +14,11 @@ import { useRef, useState } from "react";
 import Foco from "react-foco";
 import { toast } from "sonner";
 
-const FriendsListComponent = ({
-  user,
-  userKey,
-  userDetailsList,
-}: ProtectedPageComponentPropsType) => {
+const FriendsListComponent = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const userDetailsList = getUserDetailsList();
+
   const [popupVisibility, setPopupVisibility] = useState(
     user.friends.map(() => false)
   );

@@ -1,32 +1,78 @@
-import FriendsContainer from "@/components/friends/FriendsContainer";
-import { UserDetailsList, UserType } from "@/types/UserTypes";
-import { decryptString } from "@/utils/encryption";
-import { UUID } from "crypto";
-import { cookies } from "next/headers";
+"use client";
 
-const Page = async () => {
-  const token = cookies().get("token")?.value;
-  const res = await fetch(`${process.env.URL}/api/user`, {
-    cache: "no-store",
-    headers: {
-      cookie: `token=${token}`,
-    },
-  });
-  const data = await res.json();
-  const user: UserType = data.user;
-  const key: UUID = data.key;
+import AddFriendComponent from "@/components/friends/AddFriendComponent";
+import FriendRequestsComponent from "@/components/friends/FriendRequestsComponent";
+import FriendsListComponent from "@/components/friends/FriendsListComponent";
+import styles from "@/styles/friends.module.css";
+import { getUser } from "@/utils/zustand";
+import { Mail, UserPlus2, Users } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
-  const userDetailsList = JSON.parse(
-    decryptString(data.userDetailsList, false)
-  ) as UserDetailsList;
+type PageParamType = "list" | "add" | "requests";
+
+const FriendsComponent = () => {
+  const router = useRouter();
+  const validValues = ["list", "add", "requests"];
+
+  const pageSearchParam = useSearchParams().get("page");
+
+  const [page, setPage] = useState<PageParamType>(
+    pageSearchParam && validValues.includes(pageSearchParam)
+      ? (pageSearchParam as PageParamType)
+      : "list"
+  );
+
+  const user = getUser();
 
   return (
-    <FriendsContainer
-      user={user}
-      userKey={key}
-      userDetailsList={userDetailsList}
-    />
+    <>
+      <nav className={styles.nav}>
+        <ul>
+          <li
+            onClick={() => {
+              router.replace("/friends?page=list");
+              setPage("list");
+            }}
+            className={page === "list" ? styles["active-page"] : ""}
+          >
+            <p>All</p>
+            <Users />
+          </li>
+          <li
+            onClick={() => {
+              router.replace("/friends?page=requests");
+              setPage("requests");
+            }}
+            className={page === "requests" ? styles["active-page"] : ""}
+          >
+            <p>
+              Requests
+              {user.incomingFriendRequests.length !== 0 && (
+                <span>{user.incomingFriendRequests.length}</span>
+              )}
+            </p>
+            <Mail />
+          </li>
+          <li
+            onClick={() => {
+              router.replace("/friends?page=add");
+              setPage("add");
+            }}
+            className={page === "add" ? styles["active-page"] : ""}
+          >
+            <p>Add friend</p>
+            <UserPlus2 />
+          </li>
+        </ul>
+      </nav>
+      <div className={styles.page}>
+        {page === "add" && <AddFriendComponent />}
+        {page === "list" && <FriendsListComponent />}
+        {page === "requests" && <FriendRequestsComponent />}
+      </div>
+    </>
   );
 };
 
-export default Page;
+export default FriendsComponent;

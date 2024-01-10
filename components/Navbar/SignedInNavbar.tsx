@@ -1,21 +1,42 @@
+"use client";
+
 import hideChatAction from "@/actions/chats/hide";
 import logoutAction from "@/actions/logout";
 import styles from "@/styles/signed-in-navbar.module.css";
-import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
+import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
+import { UserDetailsStore, UserStore } from "@/utils/zustand";
 import { UUID } from "crypto";
 import { LogOut, MessagesSquare, Settings, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 import MobileSignedInNavbar from "./MobileSignedInNavbar";
 
+type PropsType = {
+  user: UserType;
+  userKey: UUID;
+  userDetailsList: UserDetailsList;
+};
+
 const SignedInNavbar = ({
-  user,
+  user: userProp,
   userKey,
   userDetailsList,
-}: ProtectedPageComponentPropsType) => {
+}: PropsType) => {
   const pathname = usePathname();
+
+  const user = UserStore((state) => state.user) as UserType;
+
+  UserStore((state) => state.setUser)(user || userProp);
+  UserStore((state) => state.setKey)(userKey);
+  UserDetailsStore((state) => state.setUserDetailsList)(userDetailsList);
+  const initWebsockets = UserStore((state) => state.initWebsockets);
+
+  useEffect(() => {
+    initWebsockets(pathname, userDetailsList);
+  }, [initWebsockets]);
 
   async function hideChat(e: MouseEvent, chatID: UUID) {
     e.preventDefault();
@@ -133,7 +154,6 @@ const SignedInNavbar = ({
       <MobileSignedInNavbar
         user={user}
         hideChat={hideChat}
-        styles={styles}
         logout={logout}
         userDetailsList={userDetailsList}
       />

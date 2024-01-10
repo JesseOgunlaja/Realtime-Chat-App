@@ -36,17 +36,20 @@ export async function sendMessageAction(
     ...newMessage,
     fromYou: true,
   });
+  user.chats[chatIndex].visible = true;
 
   const otherUser = await getUserByID(otherUserID);
 
-  const otherUserChats = otherUser.chats;
+  const otherUserChatIndex = otherUser.chats.findIndex(
+    (chat) => chat.id === chatID
+  );
 
-  otherUserChats
-    .find((chat) => chat.id === chatID)
-    ?.messages.push({
-      ...newMessage,
-      fromYou: false,
-    });
+  otherUser.chats[otherUserChatIndex]?.messages.push({
+    ...newMessage,
+    fromYou: false,
+  });
+
+  otherUser.chats[otherUserChatIndex].visible = true;
 
   const redisPipeline = redis.pipeline();
 
@@ -55,7 +58,7 @@ export async function sendMessageAction(
   });
 
   redisPipeline.hset(otherUserID, {
-    chats: otherUserChats,
+    chats: otherUser.chats,
   });
 
   await redisPipeline.exec();

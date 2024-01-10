@@ -48,42 +48,42 @@ function customStringify(obj: UserType) {
 
 export async function checkSignedIn(
   requestOrToken: NextRequest | string,
-  isApiEndpoint: boolean,
+  returnUser?: boolean,
   plainToken?: boolean
 ): Promise<
   | boolean
-  | { isSignedIn: boolean; user: UserType; key: UUID }
-  | { isSignedIn: boolean }
+  | { isSignedIn: true; user: UserType; key: UUID }
+  | { isSignedIn: false }
 > {
   const token = plainToken
     ? (requestOrToken as string)
     : (requestOrToken as NextRequest).cookies.get("token")?.value;
   if (token == undefined) {
-    if (isApiEndpoint) return { isSignedIn: false };
+    if (returnUser) return { isSignedIn: false };
     return false;
   }
   const decodedToken = await decodeJWT(token, false);
   if (decodedToken == undefined) {
-    if (isApiEndpoint) return { isSignedIn: false };
+    if (returnUser) return { isSignedIn: false };
     return false;
   }
   const decodedPayload = decodedToken.payload as z.infer<typeof UserJWTSchema>;
   if (UserJWTSchema.safeParse(decodedPayload).success === false) {
-    if (isApiEndpoint) return { isSignedIn: false };
+    if (returnUser) return { isSignedIn: false };
     return false;
   }
   const user = (await redis.hgetall(decodedPayload.key)) as
     | UserType
     | undefined;
   if (user == undefined) {
-    if (isApiEndpoint) return { isSignedIn: false };
+    if (returnUser) return { isSignedIn: false };
     return false;
   }
   if (user.uuid !== decodedPayload.uuid) {
-    if (isApiEndpoint) return { isSignedIn: false };
+    if (returnUser) return { isSignedIn: false };
     return false;
   }
-  if (isApiEndpoint)
+  if (returnUser)
     return { isSignedIn: true, user: user, key: decodedPayload.key as UUID };
   return true;
 }

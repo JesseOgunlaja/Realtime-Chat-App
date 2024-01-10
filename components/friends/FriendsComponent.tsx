@@ -1,5 +1,5 @@
 import styles from "@/styles/friends.module.css";
-import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
+import { getUser } from "@/utils/zustand";
 import { Mail, UserPlus2, Users } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -9,7 +9,7 @@ import FriendsListComponent from "./FriendsListComponent";
 
 type PageParamType = "list" | "add" | "requests";
 
-const FriendsComponent = (props: ProtectedPageComponentPropsType) => {
+const FriendsComponent = () => {
   const router = useRouter();
   const validValues = ["list", "add", "requests"];
 
@@ -21,13 +21,15 @@ const FriendsComponent = (props: ProtectedPageComponentPropsType) => {
       : "list"
   );
 
+  const user = getUser();
+
   return (
     <>
       <nav className={styles.nav}>
         <ul>
           <li
             onClick={() => {
-              router.replace("/friends?page=list");
+              router.replace("?page=list");
               setPage("list");
             }}
             className={page === "list" ? styles["active-page"] : ""}
@@ -37,22 +39,22 @@ const FriendsComponent = (props: ProtectedPageComponentPropsType) => {
           </li>
           <li
             onClick={() => {
-              router.replace("/friends?page=requests");
+              router.replace("?page=requests");
               setPage("requests");
             }}
             className={page === "requests" ? styles["active-page"] : ""}
           >
             <p>
               Requests
-              {props.user.incomingFriendRequests.length !== 0 && (
-                <span>{props.user.incomingFriendRequests.length}</span>
+              {user.incomingFriendRequests.length !== 0 && (
+                <span>{user.incomingFriendRequests.length}</span>
               )}
             </p>
             <Mail />
           </li>
           <li
             onClick={() => {
-              router.replace("/friends?page=add");
+              router.replace("?page=add");
               setPage("add");
             }}
             className={page === "add" ? styles["active-page"] : ""}
@@ -63,9 +65,9 @@ const FriendsComponent = (props: ProtectedPageComponentPropsType) => {
         </ul>
       </nav>
       <div className={styles.page}>
-        {page === "add" && <AddFriendComponent {...props} />}
-        {page === "list" && <FriendsListComponent {...props} />}
-        {page === "requests" && <FriendRequestsComponent {...props} />}
+        {page === "add" && <AddFriendComponent />}
+        {page === "list" && <FriendsListComponent />}
+        {page === "requests" && <FriendRequestsComponent />}
       </div>
     </>
   );

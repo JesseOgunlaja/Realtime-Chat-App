@@ -1,8 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { UUID } from "crypto";
-import { Dispatch, SetStateAction } from "react";
 
-export type DispatchUserType = Dispatch<SetStateAction<UserType>>;
-export type DispatchUsernamesList = Dispatch<SetStateAction<UserDetailsList>>;
+export type DispatchUserType = (newUser: UserType) => void;
+export type SetUserDetailsList = (newUserDetailsList: UserDetailsList) => void;
 
 export type Message = {
   message: string;

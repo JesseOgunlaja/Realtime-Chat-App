@@ -1,18 +1,26 @@
+"use client";
+
 import setDisplayname from "@/actions/settings/displayName";
-import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
+import styles from "@/styles/settings.module.css";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { DisplayNameSchema } from "@/utils/zod";
+import {
+  UserDetailsStore,
+  UserStore,
+  getUser,
+  getUserDetailsList,
+  getUserKey,
+} from "@/utils/zustand";
 import { FormEvent, useRef } from "react";
 import { toast } from "sonner";
 
-const ChangeDisplayName = ({
-  user,
-  styles,
-  userKey,
-  setUser,
-  userDetailsList,
-  setUserDetailsList,
-}: SettingsPageComponentPropsType) => {
+const ChangeDisplayName = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const userDetailsList = getUserDetailsList();
+  const { setUserDetailsList } = UserDetailsStore((state) => state);
+  const { setUser } = UserStore((state) => state);
+
   const displayNameForm = useRef<HTMLFormElement>(null);
 
   async function changeDisplayName(e: FormEvent<HTMLFormElement>) {

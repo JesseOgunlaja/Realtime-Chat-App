@@ -1,31 +1,20 @@
-import SettingsContainer from "@/components/Settings/SettingsContainer";
-import { UserDetailsList, UserType } from "@/types/UserTypes";
-import { decryptString } from "@/utils/encryption";
-import { UUID } from "crypto";
-import { cookies } from "next/headers";
+import ChangeDisplayName from "@/components/Settings/ChangeDisplayName";
+import ChangePassword from "@/components/Settings/ChangePassword";
+import ChangeProfilePicture from "@/components/Settings/ChangeProfilePicture";
+import ChangeUsername from "@/components/Settings/ChangeUsername";
+import styles from "@/styles/settings.module.css";
 
-const Page = async () => {
-  const token = cookies().get("token")?.value;
-  const res = await fetch(`${process.env.URL}/api/user`, {
-    cache: "no-store",
-    headers: {
-      cookie: `token=${token}`,
-    },
-  });
-  const data = await res.json();
-  const user: UserType = data.user;
-  const key: UUID = data.key;
-
-  const userDetailsList = JSON.parse(
-    decryptString(data.userDetailsList, false)
-  ) as UserDetailsList;
-
+const Page = () => {
   return (
-    <SettingsContainer
-      userDetailsList={userDetailsList}
-      user={user}
-      userKey={key}
-    />
+    <div className={styles.page}>
+      <h1>Settings</h1>
+      <div className={styles.sections}>
+        <ChangeUsername />
+        <ChangeDisplayName />
+        <ChangePassword />
+        <ChangeProfilePicture />
+      </div>
+    </div>
   );
 };
 

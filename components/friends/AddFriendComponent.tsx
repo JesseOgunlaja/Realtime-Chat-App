@@ -1,14 +1,14 @@
 import sendFriendRequest from "@/actions/friend/requests/send";
 import styles from "@/styles/add-friend.module.css";
-import { ProtectedPageComponentPropsType } from "@/types/ComponentTypes";
+import { getUser, getUserDetailsList, getUserKey } from "@/utils/zustand";
 import { FormEvent, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const AddFriendComponent = ({
-  user,
-  userKey,
-  userDetailsList,
-}: ProtectedPageComponentPropsType) => {
+const AddFriendComponent = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const userDetailsList = getUserDetailsList();
+
   const [friendBeingAddedUsername, setFriendBeingAddedUsername] =
     useState<string>("");
   const submitButtonRef = useRef<HTMLInputElement>(null);

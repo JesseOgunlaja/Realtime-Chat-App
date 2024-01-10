@@ -1,18 +1,26 @@
+"use client";
+
 import setUsername from "@/actions/settings/username";
-import { SettingsPageComponentPropsType } from "@/types/ComponentTypes";
+import styles from "@/styles/settings.module.css";
 import { getFormValues, getNewReference } from "@/utils/utils";
 import { UsernameSchema } from "@/utils/zod";
+import {
+  UserDetailsStore,
+  UserStore,
+  getUser,
+  getUserDetailsList,
+  getUserKey,
+} from "@/utils/zustand";
 import { FormEvent, useRef } from "react";
 import { toast } from "sonner";
 
-const ChangeUsername = ({
-  user,
-  styles,
-  setUser,
-  userKey,
-  userDetailsList,
-  setUserDetailsList,
-}: SettingsPageComponentPropsType) => {
+const ChangeUsername = () => {
+  const user = getUser();
+  const userKey = getUserKey();
+  const userDetailsList = getUserDetailsList();
+  const { setUser } = UserStore((state) => state);
+  const { setUserDetailsList } = UserDetailsStore((state) => state);
+
   const usernameForm = useRef<HTMLFormElement>(null);
 
   async function changeUsername(e: FormEvent<HTMLFormElement>) {
