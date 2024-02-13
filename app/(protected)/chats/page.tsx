@@ -1,22 +1,25 @@
 "use client";
 
 import styles from "@/styles/chats.module.css";
-import { Message } from "@/types/UserTypes";
+import { Message, UserDetailsList, UserType } from "@/types/UserTypes";
 import {
   getDisplayNameFromID,
   getProfilePictureFromID,
   renderChatMessage,
 } from "@/utils/utils";
-import { getUser, getUserDetailsList } from "@/utils/zustand";
+import { UserDetailsStore, UserStore } from "@/utils/zustand";
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
 
 const ChatsComponent = () => {
-  const user = getUser();
-  const userDetailsList = getUserDetailsList();
+  const user = UserStore((state) => state.user) as UserType;
+  const userDetailsList = UserDetailsStore(
+    (state) => state.userDetailsList
+  ) as UserDetailsList;
 
   return (
-    <>
+    <Suspense>
       <div className={styles.page}>
         <h1 className={styles.title}>Recent chats</h1>
         {user.chats
@@ -60,7 +63,7 @@ const ChatsComponent = () => {
           )}
         </div>
       </div>
-    </>
+    </Suspense>
   );
 };
 

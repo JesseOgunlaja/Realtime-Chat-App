@@ -27,7 +27,7 @@ const SignedInNavbar = ({
 }: PropsType) => {
   const pathname = usePathname();
 
-  const user = UserStore((state) => state.user) as UserType;
+  const user = UserStore((state) => state.user) || (userProp as UserType);
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   UserStore((state) => state.setUser)(user || userProp);
