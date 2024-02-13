@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start -p 8000",
+    "start": "next start",
     "lint": "next lint",
     "sitemap": "next-sitemap",
-    "update": "npm i next@latest react@latest react-dom@latest eslint-config-next@latest @types/react@latest @types/react-dom@latest",
+    "upgrade": "npm i next@latest react@latest react-dom@latest eslint-config-next@latest @types/react@latest @types/react-dom@latest",
     "unlighthouse-test": "npx unlighthouse --site https://whispernet.chat --desktop --no-cache"
   },
   "dependencies": {
@@ -28,7 +28,7 @@
     "install": "^0.13.0",
     "jose": "^5.0.1",
     "lucide-react": "^0.304.0",
-    "next": "^14.0.4",
+    "next": "^14.1.0",
     "next-sitemap": "^4.2.3",
     "polished": "^4.2.2",
     "react": "^18.2.0",
@@ -44,12 +44,12 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18.2.45",
-    "@types/react-dom": "^18.2.18",
+    "@types/react": "^18.2.55",
+    "@types/react-dom": "^18.2.19",
     "@typescript-eslint/eslint-plugin": "^6.16.0",
     "@typescript-eslint/parser": "^6.16.0",
     "eslint": "^8",
-    "eslint-config-next": "^14.0.4",
+    "eslint-config-next": "^14.1.0",
     "typescript": "^5"
   }
 }
