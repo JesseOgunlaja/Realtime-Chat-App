@@ -29,6 +29,7 @@ const SignedInNavbar = ({
 
   const user = UserStore((state) => state.user) as UserType;
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   UserStore((state) => state.setUser)(user || userProp);
   UserStore((state) => state.setKey)(userKey);
   UserDetailsStore((state) => state.setUserDetailsList)(userDetailsList);

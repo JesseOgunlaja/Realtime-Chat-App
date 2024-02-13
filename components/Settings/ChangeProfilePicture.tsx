@@ -4,7 +4,6 @@ import setProfilePicture from "@/actions/settings/profilePicture";
 import styles from "@/styles/settings.module.css";
 import { getNewReference } from "@/utils/utils";
 import {
-  UserDetailsStore,
   UserStore,
   getUser,
   getUserDetailsList,
@@ -18,7 +17,6 @@ const ChangeProfilePicture = () => {
   const userKey = getUserKey();
   const userDetailsList = getUserDetailsList();
   const { setUser } = UserStore((state) => state);
-  const { setUserDetailsList } = UserDetailsStore((state) => state);
 
   const [pickerShown, setPickerShown] = useState<boolean>(false);
 

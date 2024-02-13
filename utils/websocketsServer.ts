@@ -4,6 +4,9 @@ const socket = io(process.env.WEBSOCKET_URL, {
   auth: {
     password: process.env.WEBSOCKET_KEY,
   },
+  query: {
+    test: "hi",
+  },
 });
 
 export function trigger(id: string, event: string, data: unknown) {
