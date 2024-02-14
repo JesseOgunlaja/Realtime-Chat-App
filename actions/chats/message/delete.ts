@@ -28,6 +28,7 @@ export async function deleteMessageAction(
   });
 
   user.chats[chatIndex].messages.splice(messageIndex, 1);
+  user.chats[chatIndex].visible = true;
 
   const otherUser = await getUserByID(otherUserID);
   const otherUserChatIndex = otherUser.chats.findIndex(

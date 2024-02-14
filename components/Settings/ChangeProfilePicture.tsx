@@ -16,6 +16,7 @@ const ChangeProfilePicture = () => {
   const user = getUser();
   const userKey = getUserKey();
   const userDetailsList = getUserDetailsList();
+
   const { setUser } = UserStore((state) => state);
 
   const [pickerShown, setPickerShown] = useState<boolean>(false);

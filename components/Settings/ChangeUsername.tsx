@@ -18,6 +18,7 @@ const ChangeUsername = () => {
   const user = getUser();
   const userKey = getUserKey();
   const userDetailsList = getUserDetailsList();
+
   const { setUser } = UserStore((state) => state);
   const { setUserDetailsList } = UserDetailsStore((state) => state);
 

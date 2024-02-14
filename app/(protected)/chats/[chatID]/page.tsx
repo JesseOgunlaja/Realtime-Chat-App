@@ -23,7 +23,6 @@ import { toast } from "sonner";
 
 const Page = ({ params }: { params: { chatID: string } }) => {
   const user = getUser();
-
   const userKey = getUserKey();
 
   const userDetailsList = getUserDetailsList();

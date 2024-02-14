@@ -18,6 +18,7 @@ const ChangeDisplayName = () => {
   const user = getUser();
   const userKey = getUserKey();
   const userDetailsList = getUserDetailsList();
+
   const { setUserDetailsList } = UserDetailsStore((state) => state);
   const { setUser } = UserStore((state) => state);
 

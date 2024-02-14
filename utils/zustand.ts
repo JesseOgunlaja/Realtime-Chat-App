@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import { getHeader } from "@/actions/actions";
 import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { create } from "zustand";
@@ -8,6 +9,7 @@ export type UserStateType = {
   user: UserType | undefined;
   key: UUID | undefined;
   setUser: (newUser: UserType) => void;
+  getFromHeader: () => Promise<UserType>;
   setKey: (newKey: UUID) => void;
   initWebsockets: (pathname: string, userDetailsList: UserDetailsList) => void;
 };
@@ -20,6 +22,10 @@ type UserDetailsStoreType = {
 export const UserStore = create<UserStateType>()((set, getState) => ({
   user: undefined,
   key: undefined,
+  getFromHeader: async () => {
+    const user = JSON.parse((await getHeader("user"))!) as UserType;
+    return user;
+  },
   setUser: (newUser: UserType) => set({ user: newUser }),
   setKey: (newKey: UUID) => set({ key: newKey }),
 

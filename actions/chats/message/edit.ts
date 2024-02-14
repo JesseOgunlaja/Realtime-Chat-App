@@ -19,6 +19,7 @@ export async function editMessageAction(
   const otherUserID = user.chats[chatIndex].withID;
 
   user.chats[chatIndex].messages[messageIndex].message = newMessageText;
+  user.chats[chatIndex].visible = true;
 
   trigger(userKey, "message-edited", {
     messageID,
@@ -39,6 +40,7 @@ export async function editMessageAction(
   const otherUserMessageIndex = otherUser.chats[
     otherUserChatIndex
   ].messages.findIndex((message) => message.id === messageID);
+  otherUser.chats[otherUserChatIndex].visible = true;
 
   otherUser.chats[otherUserChatIndex].messages[otherUserMessageIndex].message =
     newMessageText;

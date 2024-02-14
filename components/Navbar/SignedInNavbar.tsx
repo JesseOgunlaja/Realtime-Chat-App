@@ -27,17 +27,22 @@ const SignedInNavbar = ({
 }: PropsType) => {
   const pathname = usePathname();
 
-  const user = UserStore((state) => state.user) || (userProp as UserType);
+  const user = UserStore((state) => state.user) || userProp;
 
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  UserStore((state) => state.setUser)(user || userProp);
-  UserStore((state) => state.setKey)(userKey);
-  UserDetailsStore((state) => state.setUserDetailsList)(userDetailsList);
-  const initWebsockets = UserStore((state) => state.initWebsockets);
+  const { setUser, setKey, initWebsockets } = UserStore((state) => state);
+  const setUserDetailsList = UserDetailsStore(
+    (state) => state.setUserDetailsList
+  );
+
+  useEffect(() => {
+    setUser(user);
+    setKey(userKey);
+    setUserDetailsList(userDetailsList);
+  }, []);
 
   useEffect(() => {
     initWebsockets(pathname, userDetailsList);
-  }, [initWebsockets]);
+  }, [initWebsockets, pathname]);
 
   async function hideChat(e: MouseEvent, chatID: UUID) {
     e.preventDefault();

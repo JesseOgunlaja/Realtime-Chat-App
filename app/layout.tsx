@@ -1,4 +1,4 @@
-import MainContainer from "@/components/MainContainer";
+import MainContainer from "@/components/Layouts/MainContainer";
 import Navbar from "@/components/Navbar/Navbar";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";

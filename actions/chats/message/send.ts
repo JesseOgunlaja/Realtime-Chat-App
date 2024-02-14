@@ -49,8 +49,6 @@ export async function sendMessageAction(
     fromYou: false,
   });
 
-  otherUser.chats[otherUserChatIndex].visible = true;
-
   const redisPipeline = redis.pipeline();
 
   redisPipeline.hset(userKey, {

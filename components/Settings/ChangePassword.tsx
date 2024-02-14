@@ -11,6 +11,7 @@ import { toast } from "sonner";
 const ChangePassword = () => {
   const user = getUser();
   const userKey = getUserKey();
+
   const { setUser } = UserStore((state) => state);
 
   const passwordForm = useRef<HTMLFormElement>(null);
