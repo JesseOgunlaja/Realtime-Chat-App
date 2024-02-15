@@ -3,11 +3,26 @@
 import { io, Socket } from "socket.io-client";
 import { encryptString } from "./encryption";
 
+export function trigger(id: string, event: string, msg: unknown) {
+  fetch(`${process.env.WEBSOCKET_URL}/emit-event`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      id,
+      event,
+      msg,
+      password: process.env.WEBSOCKET_KEY,
+    }),
+  });
+}
+
 export function websocketChannel(key: string) {
-  const encryptedString = encryptString(key, true);
+  const encryptedString = encryptString(key, true) as string;
   const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
     auth: {
-      token: String(encryptedString),
+      token: encryptedString,
     },
     query: {
       id: key,
@@ -37,11 +52,9 @@ function bindToEvents(
     receiveFunction: (data: any) => void;
   }[]
 ) {
-  socket.on(id, (message, data) => {
-    connections.forEach((connection) => {
-      if (connection.event === message) {
-        connection.receiveFunction(data);
-      }
+  connections.forEach((connection) => {
+    socket.on(connection.event, (data) => {
+      connection.receiveFunction(data);
     });
   });
 }

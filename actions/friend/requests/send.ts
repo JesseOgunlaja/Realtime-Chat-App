@@ -2,7 +2,7 @@
 
 import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { getUserByUsername, redis } from "@/utils/redis";
-import { trigger } from "@/utils/websocketsServer";
+import { trigger } from "@/utils/websockets";
 import { UUID } from "crypto";
 
 export default async function sendFriendRequest(

@@ -3,7 +3,7 @@
 import { Message, UserType } from "@/types/UserTypes";
 import { getUserByID, redis } from "@/utils/redis";
 import { removeUndefinedFromObject } from "@/utils/utils";
-import { trigger } from "@/utils/websocketsServer";
+import { trigger } from "@/utils/websockets";
 import { UUID } from "crypto";
 
 export async function sendMessageAction(
