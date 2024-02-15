@@ -58,15 +58,32 @@ const Page = ({ params }: { params: { chatID: string } }) => {
     useState<number>();
 
   useEffect(() => {
+    if (!messagesContainer.current) return;
+
+    messagesContainer.current.scrollTop =
+      messagesContainer.current.scrollHeight + 50;
+
     if (
-      !prevUser ||
-      prevUser.chats[chatIndex].messages.length !==
-        user.chats[chatIndex].messages.length
+      messagesContainer.current.scrollHeight <=
+      messagesContainer.current.clientHeight
     ) {
-      messagesContainer.current!.scrollTop =
-        messagesContainer.current!.scrollHeight;
+      messagesContainer.current.style.paddingTop = "60px";
+    } else {
+      messagesContainer.current.style.paddingTop = "17px";
+    }
+
+    if (!prevUser) return;
+
+    if (
+      prevUser.chats[chatIndex].messages.length !==
+      user.chats[chatIndex].messages.length
+    ) {
+      messagesContainer.current.scrollTop =
+        messagesContainer.current.scrollHeight;
     }
   }, [user]);
+
+  useEffect(() => {}, []);
 
   function togglePopupVisibility(index: number) {
     const currentVisibility = [...popupVisibility].map(
@@ -339,6 +356,25 @@ const Page = ({ params }: { params: { chatID: string } }) => {
                     </Balancer>
                   </p>
                   <div
+                    ref={(node) => {
+                      const messagesList = messagesContainer.current;
+                      if (popupVisibility[index] && node && messagesList) {
+                        node.style.bottom = "initial";
+                        node.style.top = "0px";
+
+                        const rect = node.getBoundingClientRect();
+                        const rect2 = messagesList.getBoundingClientRect();
+                        const distance = rect.top - rect2.bottom;
+
+                        if (distance < 0 && distance > -135) {
+                          node.style.bottom = "0px";
+                          node.style.top = "initial";
+                        } else {
+                          node.style.bottom = "initial";
+                          node.style.top = "0px";
+                        }
+                      }
+                    }}
                     style={{
                       display: popupVisibility[index] ? "flex" : "none",
                     }}
@@ -395,8 +431,6 @@ const Page = ({ params }: { params: { chatID: string } }) => {
           ))}
       </div>
       <SendMessageForm
-        user={user}
-        userKey={userKey}
         chatWithDisplayName={chatWith.displayName}
         chatIndex={chatIndex}
         messageBeingRepliedID={messageBeingRepliedID}

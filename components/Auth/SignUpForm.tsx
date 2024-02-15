@@ -21,13 +21,15 @@ const SignUpForm = () => {
 
   function checkValues() {
     const results: boolean[] = [];
-    let result = UsernameSchema.safeParse(username);
-    results.push(result.success);
-    if (!result.success) toast.error(result.error.format()._errors[0]);
+    const usernameResult = UsernameSchema.safeParse(username);
+    results.push(usernameResult.success);
+    if (!usernameResult.success)
+      toast.error(usernameResult.error.format()._errors[0]);
 
-    result = PasswordSchema.safeParse(password);
-    results.push(result.success);
-    if (!result.success) toast.error(result.error.format()._errors[0]);
+    const passwordResult = PasswordSchema.safeParse(password);
+    results.push(passwordResult.success);
+    if (!passwordResult.success)
+      toast.error(passwordResult.error.format()._errors[0]);
 
     results.push(password === repeatedPassword);
     if (password !== repeatedPassword && results[1])

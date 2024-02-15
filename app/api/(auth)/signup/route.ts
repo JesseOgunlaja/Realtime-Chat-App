@@ -32,17 +32,17 @@ export async function POST(request: NextRequest) {
       ? decryptString(body.password, false)
       : body.password;
 
-    let result = UsernameSchema.safeParse(username);
-    if (!result.success)
+    const usernameResult = UsernameSchema.safeParse(username);
+    if (!usernameResult.success)
       return NextResponse.json(
-        { message: "Error", error: result.error.format()._errors },
+        { message: "Error", error: usernameResult.error.format()._errors },
         { status: 400 }
       );
 
-    result = PasswordSchema.safeParse(password);
-    if (!result.success)
+    const passwordResult = PasswordSchema.safeParse(password);
+    if (!passwordResult.success)
       return NextResponse.json(
-        { message: "Error", error: result.error.format()._errors },
+        { message: "Error", error: passwordResult.error.format()._errors },
         { status: 400 }
       );
 

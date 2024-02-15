@@ -220,10 +220,13 @@ export function connectToWebsockets(
       }) {
         const user = getState().user as UserType;
         const currentUser = getNewReference(user);
-        currentUser.chats
-          .find((chat) => chat.id === data.chatID)!
-          .messages.find((message) => message.id === data.messageID)!.message =
-          data.newMessageText;
+        const chatIndex = user.chats.findIndex(
+          (chat) => chat.id === data.chatID
+        );
+        currentUser.chats[chatIndex].visible = true;
+        currentUser.chats[chatIndex].messages.find(
+          (message) => message.id === data.messageID
+        )!.message = data.newMessageText;
         const setUser = (newUser: UserType) => set({ user: newUser });
         setUser(currentUser);
       },
@@ -243,6 +246,7 @@ export function connectToWebsockets(
         const messageIndex = user.chats[chatIndex].messages.findIndex(
           (message) => message.id === data.messageID
         );
+        currentUser.chats[chatIndex].visible = true;
         if (messageIndex !== -1) {
           currentUser.chats[chatIndex].messages.splice(messageIndex, 1);
           const setUser = (newUser: UserType) => set({ user: newUser });

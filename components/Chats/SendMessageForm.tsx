@@ -1,14 +1,12 @@
 import { generateUUID } from "@/actions/actions";
 import { sendMessageAction } from "@/actions/chats/message/send";
 import styles from "@/styles/chat.module.css";
-import { UserType } from "@/types/UserTypes";
+import { getUser, getUserKey } from "@/utils/zustand";
 import { UUID } from "crypto";
 import { SendHorizontal, X } from "lucide-react";
 import { Dispatch, RefObject, SetStateAction, useState } from "react";
 
 type PropsType = {
-  user: UserType;
-  userKey: UUID;
   chatWithDisplayName: string;
   sendMessageBox: RefObject<HTMLTextAreaElement>;
   chatIndex: number;
@@ -17,14 +15,14 @@ type PropsType = {
 };
 
 const SendMessageForm = ({
-  user,
-  userKey,
   chatWithDisplayName,
   sendMessageBox,
   chatIndex,
   messageBeingRepliedID,
   setMessageBeingRepliedID,
 }: PropsType) => {
+  const user = getUser();
+  const userKey = getUserKey();
   const [message, setMessage] = useState<string>("");
 
   async function sendMessage() {
