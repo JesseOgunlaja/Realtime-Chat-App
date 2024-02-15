@@ -5,6 +5,7 @@ import logoutAction from "@/actions/logout";
 import styles from "@/styles/signed-in-navbar.module.css";
 import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
+import { websocketChannel } from "@/utils/websockets";
 import { UserDetailsStore, UserStore } from "@/utils/zustand";
 import { UUID } from "crypto";
 import { LogOut, MessagesSquare, Settings, Users, X } from "lucide-react";
@@ -41,7 +42,11 @@ const SignedInNavbar = ({
   }, []);
 
   useEffect(() => {
-    initWebsockets(pathname, userDetailsList);
+    const channel = websocketChannel(userKey);
+    initWebsockets(pathname, userDetailsList, channel);
+    return () => {
+      channel.disconnect();
+    };
   }, [initWebsockets, pathname]);
 
   async function hideChat(e: MouseEvent, chatID: UUID) {

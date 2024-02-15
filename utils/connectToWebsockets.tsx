@@ -18,10 +18,9 @@ export function connectToWebsockets(
   set: (newValues: Partial<UserStateType>) => void,
   getState: () => UserStateType,
   userDetailsList: UserDetailsList,
-  pathname: string
+  pathname: string,
+  channel: ReturnType<typeof websocketChannel>
 ) {
-  const userKey = getState().key as UUID;
-  const channel = websocketChannel(userKey);
   const binds = [
     {
       event: "friend-request-canceled",
@@ -256,7 +255,4 @@ export function connectToWebsockets(
     },
   ];
   channel.bindToEvents(binds);
-  return () => {
-    channel.disconnect();
-  };
 }

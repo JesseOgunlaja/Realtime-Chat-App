@@ -4,6 +4,7 @@ import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
 import { create } from "zustand";
 import { connectToWebsockets } from "./connectToWebsockets";
+import { websocketChannel } from "./websockets";
 
 export type UserStateType = {
   user: UserType | undefined;
@@ -11,7 +12,11 @@ export type UserStateType = {
   setUser: (newUser: UserType) => void;
   getFromHeader: () => Promise<UserType>;
   setKey: (newKey: UUID) => void;
-  initWebsockets: (pathname: string, userDetailsList: UserDetailsList) => void;
+  initWebsockets: (
+    pathname: string,
+    userDetailsList: UserDetailsList,
+    channel: ReturnType<typeof websocketChannel>
+  ) => void;
 };
 
 type UserDetailsStoreType = {
@@ -29,8 +34,12 @@ export const UserStore = create<UserStateType>()((set, getState) => ({
   setUser: (newUser: UserType) => set({ user: newUser }),
   setKey: (newKey: UUID) => set({ key: newKey }),
 
-  initWebsockets: (pathname: string, userDetailsList: UserDetailsList) => {
-    connectToWebsockets(set, getState, userDetailsList, pathname);
+  initWebsockets: (
+    pathname: string,
+    userDetailsList: UserDetailsList,
+    channel
+  ) => {
+    connectToWebsockets(set, getState, userDetailsList, pathname, channel);
   },
 }));
 
