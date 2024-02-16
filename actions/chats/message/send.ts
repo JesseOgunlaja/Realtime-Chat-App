@@ -16,19 +16,19 @@ export async function sendMessageAction(
   const chatIndex = user.chats.findIndex((chat) => chat.id === chatID);
   const otherUserID = user.chats[chatIndex].withID;
 
-  trigger(otherUserID, "message-sent", {
-    chatID: user.chats[chatIndex].id,
-    message: {
-      ...newMessage,
-      fromYou: false,
-    },
-  });
-
   trigger(userKey, "message-sent", {
     chatID: user.chats[chatIndex].id,
     message: {
       ...newMessage,
       fromYou: true,
+    },
+  });
+
+  trigger(otherUserID, "message-sent", {
+    chatID: user.chats[chatIndex].id,
+    message: {
+      ...newMessage,
+      fromYou: false,
     },
   });
 

@@ -287,13 +287,14 @@ const Page = ({ params }: { params: { chatID: string } }) => {
               >
                 <div
                   onClick={(e) => {
+                    const TargetElement = e.target as HTMLElement | undefined;
                     if (
-                      !(e.target as HTMLElement).className.includes(
-                        "reply-text"
-                      )
+                      TargetElement &&
+                      TargetElement.className.includes("reply-text")
                     ) {
-                      togglePopupVisibility(index);
+                      return;
                     }
+                    togglePopupVisibility(index);
                   }}
                   style={{
                     background:
