@@ -61,6 +61,10 @@ export function getUserDetailsList() {
   return UserDetailsStore((state) => state.userDetailsList) as UserDetailsList;
 }
 
+export function getSetUser() {
+  return UserStore((state) => state.setUser);
+}
+
 export function setUserDetailsList(newUserDetailsList: UserDetailsList) {
   UserDetailsStore((state) => state.setUserDetailsList)(newUserDetailsList);
 }

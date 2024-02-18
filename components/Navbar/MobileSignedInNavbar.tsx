@@ -27,7 +27,7 @@ const MobileSignedInNavbar = ({
   return (
     <div
       style={{
-        minHeight: mobileNavbarVisibility ? "150vh" : "0vh",
+        minHeight: mobileNavbarVisibility ? "100svh" : "0vh",
         overflowY: mobileNavbarVisibility ? "scroll" : "hidden",
       }}
       className={styles["mobile-nav-container"]}

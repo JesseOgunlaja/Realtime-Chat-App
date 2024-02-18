@@ -8,11 +8,11 @@
 # testing
 /coverage
 /.unlighthouse
+app/test
 
 # next.js
 /.next/
 /out/
-.vercel
 
 # production
 /build

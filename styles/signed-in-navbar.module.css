@@ -35,6 +35,7 @@
 }
 
 .chats {
+  overflow-y: auto;
   margin-bottom: auto;
 }
 

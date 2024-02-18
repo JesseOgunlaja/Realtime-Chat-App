@@ -3,7 +3,7 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       NODE_ENV: "development" | "production" | "test";
-      PORT: string;
+      PORT: number;
       TZ: string;
       REDIS_URL: string;
       NEXT_PUBLIC_REDIS_URL: string;

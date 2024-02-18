@@ -1,4 +1,4 @@
-import ConditionalRenderPage from "@/components/Layouts/ConditionalRenderPage";
+import ProtectedPageLayout from "@/components/Layouts/ProtectedPageLayout";
 import SignedInNavbar from "@/components/Navbar/SignedInNavbar";
 import { UserDetailsList, UserType } from "@/types/UserTypes";
 import { UUID } from "crypto";
@@ -27,7 +27,7 @@ export default async function RootLayout({
         userDetailsList={userDetailsList}
         userKey={key}
       />
-      <ConditionalRenderPage>{children}</ConditionalRenderPage>
+      <ProtectedPageLayout>{children}</ProtectedPageLayout>
     </>
   );
 }

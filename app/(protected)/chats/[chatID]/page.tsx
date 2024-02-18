@@ -156,18 +156,12 @@ const Page = ({ params }: { params: { chatID: string } }) => {
   async function deleteMessage() {
     hideDeleteMessageBox();
 
-    const loadingToastID = toast.loading("Loading");
-
     await deleteMessageAction(
       userKey,
       chatID,
       messageBeingDeletedID.current!,
       user
     );
-
-    toast.success("Success", {
-      id: loadingToastID,
-    });
   }
 
   useEffect(() => {
@@ -179,7 +173,7 @@ const Page = ({ params }: { params: { chatID: string } }) => {
 
     if (element.scrollHeight - element.scrollTop - element.clientHeight <= 51) {
       messagesContainer.current!.scrollTop =
-        messagesContainer.current!.scrollTop + 50;
+        messagesContainer.current!.scrollTop + 500;
     }
   }, [messageBeingRepliedID]);
 
@@ -290,7 +284,8 @@ const Page = ({ params }: { params: { chatID: string } }) => {
                     const TargetElement = e.target as HTMLElement | undefined;
                     if (
                       TargetElement &&
-                      TargetElement.className.includes("reply-text")
+                      TargetElement.className &&
+                      TargetElement.className!.includes("reply-text")
                     ) {
                       return;
                     }
