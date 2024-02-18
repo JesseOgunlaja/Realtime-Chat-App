@@ -74,3 +74,18 @@ export function getProfilePictureFromID(
   return userDetailsList.find((userDetails) => userDetails.id === id)
     ?.profilePicture as string;
 }
+
+export function isSafari() {
+  const userAgent = navigator.userAgent;
+  const isChrome = userAgent.includes("Chrome");
+  const isChromium = userAgent.includes("Chromium");
+  const isOpera = userAgent.includes("OPX");
+  const isSafari = userAgent.includes("Safari");
+
+  // Safari's user agent contains 'Safari' but not 'Chrome' or 'Chromium'
+  if (isSafari && !isChrome && !isChromium && !isOpera) {
+    return true;
+  } else {
+    return false;
+  }
+}

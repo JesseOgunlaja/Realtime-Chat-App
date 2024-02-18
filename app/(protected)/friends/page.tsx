@@ -4,6 +4,7 @@ import AddFriendComponent from "@/components/friends/AddFriendComponent";
 import FriendRequestsComponent from "@/components/friends/FriendRequestsComponent";
 import FriendsListComponent from "@/components/friends/FriendsListComponent";
 import styles from "@/styles/friends.module.css";
+import { isSafari } from "@/utils/utils";
 import { getUser } from "@/utils/zustand";
 import { Mail, UserPlus2, Users } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,9 +12,10 @@ import { useState } from "react";
 
 type PageParamType = "list" | "add" | "requests";
 
-const FriendsComponent = () => {
+const Page = () => {
   const router = useRouter();
   const validValues = ["list", "add", "requests"];
+  const is_safari = isSafari();
 
   const pageSearchParam = useSearchParams().get("page");
 
@@ -27,7 +29,10 @@ const FriendsComponent = () => {
 
   return (
     <>
-      <nav className={styles.nav}>
+      <nav
+        style={{ transform: is_safari ? "translate(-10px, -70px)" : "" }}
+        className={styles.nav}
+      >
         <ul>
           <li
             onClick={() => {
@@ -75,4 +80,4 @@ const FriendsComponent = () => {
   );
 };
 
-export default FriendsComponent;
+export default Page;

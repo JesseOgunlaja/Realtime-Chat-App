@@ -1,11 +1,15 @@
 import styles from "@/styles/signed-in-navbar.module.css";
 import { UserDetailsList, UserType } from "@/types/UserTypes";
-import { getDisplayNameFromID, getProfilePictureFromID } from "@/utils/utils";
+import {
+  getDisplayNameFromID,
+  getProfilePictureFromID,
+  isSafari,
+} from "@/utils/utils";
 import { UUID } from "crypto";
 import { LogOut, Menu, MessagesSquare, Settings, Users, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type PropsType = {
   logout: () => Promise<void>;
@@ -21,14 +25,24 @@ const MobileSignedInNavbar = ({
   hideChat,
   userDetailsList,
 }: PropsType) => {
+  const is_safari = isSafari();
   const [mobileNavbarVisibility, setMobileNavbarVisibility] =
     useState<boolean>(false);
+  const chatsContainer = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const element = chatsContainer.current;
+    if (element && isSafari()) {
+      const currentHeight = window.getComputedStyle(element).height;
+      element.style.maxHeight =
+        Number(currentHeight.replace("px", "")) - 47 + "px";
+    }
+  }, []);
 
   return (
     <div
       style={{
-        minHeight: mobileNavbarVisibility ? "100svh" : "0vh",
-        overflowY: mobileNavbarVisibility ? "scroll" : "hidden",
+        minHeight: mobileNavbarVisibility ? "100vh" : "0vh",
       }}
       className={styles["mobile-nav-container"]}
     >
@@ -102,7 +116,7 @@ const MobileSignedInNavbar = ({
         </div>
 
         <p className={styles["chats-text"]}>Chats</p>
-        <div className={styles.chats}>
+        <div ref={chatsContainer} className={styles.chats}>
           {user.chats
             .filter((chat) => chat.visible)
             .map((chat) => (
@@ -129,7 +143,10 @@ const MobileSignedInNavbar = ({
               </Link>
             ))}
         </div>
-        <div className={styles["user-snippet"]}>
+        <div
+          style={{ transform: is_safari ? "translateY(-70px)" : "" }}
+          className={styles["user-snippet"]}
+        >
           <div className={styles["user-details-container"]}>
             <Image
               loading="eager"

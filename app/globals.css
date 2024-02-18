@@ -5,6 +5,12 @@
   box-sizing: border-box;
 }
 
+html,
+body {
+  height: 100vh; /* standard definition (as fallback) */
+  height: 100dvh; /* dynamic vh will make the trick on iOS */
+}
+
 html {
   overflow-x: hidden;
 }
